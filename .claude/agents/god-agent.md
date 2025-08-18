@@ -1,7 +1,7 @@
 ---
 name: god
 description: Use proactively for any agent-related tasks including creating new agents, modifying existing agents, updating agent configurations, fixing agent issues, enhancing agent capabilities, or any task mentioning 'agent'. This agent specializes in architecting and managing all sub-agent configurations.
-tools: Write, WebFetch, Read, Edit, MultiEdit, Glob
+tools: Write, WebFetch, Read, Edit, MultiEdit, Glob, mcp__workspace__find, mcp__docs__register, mcp__docs__find
 model: opus
 color: purple
 ---

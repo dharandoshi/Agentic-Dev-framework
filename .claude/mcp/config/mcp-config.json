@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "description": "MCP Server Configuration for Agent Army Framework",
+  "mcpServers": {
+    "document-registry": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/document-registry.py"],
+      "env": {},
+      "startup": "auto",
+      "description": "Document registry and discovery service",
+      "tools": [
+        "doc_get_path",
+        "doc_register",
+        "doc_list_by_owner",
+        "doc_find_related",
+        "doc_migrate",
+        "doc_get_version",
+        "doc_search",
+        "doc_validate_structure"
+      ]
+    }
+  },
+  "settings": {
+    "log_level": "info",
+    "log_directory": ".claude/mcp/logs",
+    "data_directory": ".claude/mcp/data",
+    "auto_start": false,
+    "restart_on_failure": true,
+    "max_restarts": 3
+  }
+}

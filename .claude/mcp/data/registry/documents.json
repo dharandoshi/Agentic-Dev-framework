@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-08-18T05:34:32.936990",
+  "documents": {
+    "requirements": {
+      "history": [
+        {
+          "path": "docs/requirements/v2/requirements.md",
+          "version": "2.0.0",
+          "timestamp": "2025-08-18T05:34:32.933936"
+        },
+        {
+          "action": "migrate",
+          "from": "docs/requirements/v2/requirements.md",
+          "to": "docs/requirements/v3/requirements.md",
+          "timestamp": "2025-08-18T05:34:32.936989"
+        }
+      ],
+      "category": "requirements",
+      "current_path": "docs/requirements/v3/requirements.md",
+      "version": "2.0.0",
+      "last_modified": "2025-08-18T05:34:32.936981"
+    },
+    "api_specification": {
+      "history": [
+        {
+          "path": "docs/architecture/api-spec.yaml",
+          "version": "1.0.0",
+          "timestamp": "2025-08-18T05:34:32.934688"
+        }
+      ],
+      "category": "architecture",
+      "current_path": "docs/architecture/api-spec.yaml",
+      "version": "1.0.0",
+      "last_modified": "2025-08-18T05:34:32.934681"
+    }
+  },
+  "categories": {
+    "requirements": {
+      "owner": "requirements-analyst",
+      "documents": [
+        "requirements"
+      ]
+    },
+    "architecture": {
+      "owner": "system-architect",
+      "documents": [
+        "api_specification"
+      ]
+    },
+    "technical": {
+      "owner": "tech-lead",
+      "documents": []
+    },
+    "testing": {
+      "owner": "qa-engineer",
+      "documents": []
+    },
+    "project": {
+      "owner": "scrum-master",
+      "documents": []
+    },
+    "security": {
+      "owner": "security-engineer",
+      "documents": []
+    },
+    "deployment": {
+      "owner": "devops-engineer",
+      "documents": []
+    },
+    "api": {
+      "owner": "technical-writer",
+      "documents": []
+    }
+  }
+}
