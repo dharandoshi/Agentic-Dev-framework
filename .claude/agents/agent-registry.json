@@ -1,0 +1,155 @@
+{
+  "version": "2.0.0",
+  "last_updated": "2025-08-08",
+  "total_agents": 16,
+  "hierarchy": {
+    "level_0_meta": [
+      {
+        "name": "god-agent",
+        "model": "opus",
+        "specialization": "Agent Architecture & Management",
+        "status": "available",
+        "capacity": 100
+      }
+    ],
+    "level_1_strategic": [
+      {
+        "name": "requirements-analyst",
+        "model": "opus",
+        "specialization": "Requirements, Flows, Wireframes & Product Decisions",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "system-architect",
+        "model": "opus",
+        "specialization": "Technical Architecture & System Design",
+        "status": "available",
+        "capacity": 100
+      }
+    ],
+    "level_2_tactical": [
+      {
+        "name": "scrum-master",
+        "model": "sonnet",
+        "specialization": "Project Management & Feature Coordination",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "tech-lead",
+        "model": "opus",
+        "specialization": "Technical Director - Task Assignment & Developer Coordination",
+        "status": "available",
+        "capacity": 100
+      }
+    ],
+    "level_3_implementation": [
+      {
+        "name": "project-initializer",
+        "model": "sonnet",
+        "specialization": "Project Setup (Managed by Tech-Lead)",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "senior-backend-engineer",
+        "model": "sonnet",
+        "specialization": "Backend Development (Managed by Tech-Lead)",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "senior-frontend-engineer",
+        "model": "sonnet",
+        "specialization": "Frontend Development (Managed by Tech-Lead)",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "integration-engineer",
+        "model": "sonnet",
+        "specialization": "API Integration (Managed by Tech-Lead)",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "data-engineer",
+        "model": "sonnet",
+        "specialization": "Data Engineering (Managed by Tech-Lead)",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "qa-engineer",
+        "model": "sonnet",
+        "specialization": "Testing, Automation & Performance",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "security-engineer",
+        "model": "sonnet",
+        "specialization": "Security & Compliance",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "cloud-architect",
+        "model": "sonnet",
+        "specialization": "Cloud Infrastructure Design",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "devops-engineer",
+        "model": "sonnet",
+        "specialization": "CI/CD & Deployment",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "sre-engineer",
+        "model": "sonnet",
+        "specialization": "Site Reliability & Monitoring",
+        "status": "available",
+        "capacity": 100
+      },
+      {
+        "name": "technical-writer",
+        "model": "sonnet",
+        "specialization": "Documentation & User Content",
+        "status": "available",
+        "capacity": 100
+      }
+    ]
+  },
+  "communication": {
+    "protocol_version": "3.0.0",
+    "project_coordinator": "scrum-master",
+    "technical_director": "tech-lead",
+    "flow": {
+      "phase_1": "requirements-analyst → system-architect",
+      "phase_2": "scrum-master (feature planning) → tech-lead (technical orchestration)",
+      "phase_3": "tech-lead assigns tasks to developers",
+      "phase_4": "parallel development coordinated by tech-lead (backend, frontend, integrations, data)",
+      "phase_5": "quality gates (tech-lead review, qa-engineer testing, security-engineer audit)",
+      "phase_6": "deployment (cloud-architect, devops-engineer, sre-engineer)",
+      "phase_7": "documentation (technical-writer)"
+    },
+    "authority_structure": {
+      "project_level": "scrum-master manages features, sprints, and stakeholder communication",
+      "technical_level": "tech-lead manages all technical implementation and developer coordination"
+    },
+    "quality_gates": [
+      "tech-lead (code review & technical approval)",
+      "qa-engineer (testing)",
+      "security-engineer (security audit)"
+    ]
+  },
+  "models": {
+    "opus": 4,
+    "sonnet": 12,
+    "haiku": 0
+  }
+}
