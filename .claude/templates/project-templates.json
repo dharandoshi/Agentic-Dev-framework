@@ -1,0 +1,412 @@
+{
+  "project_templates": {
+    "web_application": {
+      "name": "Full-Stack Web Application",
+      "description": "Complete web application with frontend, backend, and database",
+      "agents_required": [
+        "requirements-analyst",
+        "system-architect",
+        "senior-backend-engineer",
+        "senior-frontend-engineer",
+        "qa-engineer",
+        "devops-engineer"
+      ],
+      "workflow_phases": [
+        {
+          "phase": "Planning",
+          "duration": "1-2 days",
+          "agents": ["requirements-analyst", "scrum-master"],
+          "deliverables": ["requirements.md", "sprint-plan.md", "user-stories.md"]
+        },
+        {
+          "phase": "Architecture",
+          "duration": "2-3 days",
+          "agents": ["system-architect", "tech-lead"],
+          "deliverables": ["architecture.md", "database-schema.sql", "api-spec.yaml"]
+        },
+        {
+          "phase": "Backend Development",
+          "duration": "5-7 days",
+          "agents": ["senior-backend-engineer", "data-engineer"],
+          "deliverables": ["api/", "models/", "services/", "tests/backend/"]
+        },
+        {
+          "phase": "Frontend Development",
+          "duration": "5-7 days",
+          "agents": ["senior-frontend-engineer"],
+          "deliverables": ["src/components/", "src/pages/", "src/services/", "tests/frontend/"]
+        },
+        {
+          "phase": "Integration",
+          "duration": "2-3 days",
+          "agents": ["integration-engineer", "senior-backend-engineer", "senior-frontend-engineer"],
+          "deliverables": ["integration-tests/", "e2e-tests/"]
+        },
+        {
+          "phase": "Testing",
+          "duration": "3-4 days",
+          "agents": ["qa-engineer"],
+          "deliverables": ["test-plan.md", "test-cases/", "bug-reports/", "test-results.md"]
+        },
+        {
+          "phase": "Deployment",
+          "duration": "1-2 days",
+          "agents": ["devops-engineer", "cloud-architect"],
+          "deliverables": ["Dockerfile", "docker-compose.yml", ".github/workflows/", "kubernetes/"]
+        },
+        {
+          "phase": "Documentation",
+          "duration": "2-3 days",
+          "agents": ["technical-writer"],
+          "deliverables": ["README.md", "docs/api/", "docs/user-guide/", "docs/deployment/"]
+        }
+      ],
+      "tech_stack": {
+        "frontend": ["React", "Vue", "Angular", "Next.js"],
+        "backend": ["Node.js", "Python/Django", "Ruby on Rails", "Go"],
+        "database": ["PostgreSQL", "MongoDB", "MySQL", "Redis"],
+        "deployment": ["Docker", "Kubernetes", "AWS", "Vercel"]
+      },
+      "project_structure": {
+        "root": {
+          "frontend/": "Frontend application",
+          "backend/": "Backend API",
+          "database/": "Database schemas and migrations",
+          "docs/": "Documentation",
+          "tests/": "Test suites",
+          "scripts/": "Utility scripts",
+          ".github/": "CI/CD workflows",
+          "docker/": "Docker configurations"
+        }
+      },
+      "commands": [
+        "Act as requirements-analyst and gather requirements for {project_name}",
+        "Act as system-architect and design the architecture",
+        "Act as senior-backend-engineer and implement the API",
+        "Act as senior-frontend-engineer and build the UI",
+        "Act as qa-engineer and test the application",
+        "Act as devops-engineer and deploy to production"
+      ]
+    },
+    
+    "api_service": {
+      "name": "RESTful API Service",
+      "description": "Backend API service with authentication and database",
+      "agents_required": [
+        "system-architect",
+        "senior-backend-engineer",
+        "security-engineer",
+        "qa-engineer",
+        "devops-engineer"
+      ],
+      "workflow_phases": [
+        {
+          "phase": "API Design",
+          "duration": "1-2 days",
+          "agents": ["system-architect"],
+          "deliverables": ["openapi.yaml", "data-models.md"]
+        },
+        {
+          "phase": "Implementation",
+          "duration": "4-5 days",
+          "agents": ["senior-backend-engineer"],
+          "deliverables": ["src/routes/", "src/controllers/", "src/models/", "src/middleware/"]
+        },
+        {
+          "phase": "Security",
+          "duration": "1-2 days",
+          "agents": ["security-engineer"],
+          "deliverables": ["auth/", "security-audit.md"]
+        },
+        {
+          "phase": "Testing",
+          "duration": "2-3 days",
+          "agents": ["qa-engineer"],
+          "deliverables": ["tests/unit/", "tests/integration/", "postman-collection.json"]
+        },
+        {
+          "phase": "Deployment",
+          "duration": "1 day",
+          "agents": ["devops-engineer"],
+          "deliverables": ["Dockerfile", "helm-charts/", "ci-cd.yml"]
+        }
+      ],
+      "tech_stack": {
+        "languages": ["Node.js/Express", "Python/FastAPI", "Go/Gin", "Java/Spring"],
+        "database": ["PostgreSQL", "MongoDB", "DynamoDB"],
+        "auth": ["JWT", "OAuth2", "Auth0"],
+        "deployment": ["Docker", "Kubernetes", "AWS Lambda"]
+      },
+      "project_structure": {
+        "root": {
+          "src/": "Source code",
+          "tests/": "Test files",
+          "docs/": "API documentation",
+          "config/": "Configuration files",
+          "scripts/": "Utility scripts"
+        }
+      },
+      "commands": [
+        "Act as system-architect and design REST API for {feature}",
+        "Act as senior-backend-engineer and implement {endpoint}",
+        "Act as security-engineer and add authentication",
+        "Act as qa-engineer and test the API endpoints"
+      ]
+    },
+    
+    "microservices": {
+      "name": "Microservices Architecture",
+      "description": "Distributed microservices system with service mesh",
+      "agents_required": [
+        "system-architect",
+        "senior-backend-engineer",
+        "cloud-architect",
+        "devops-engineer",
+        "sre-engineer"
+      ],
+      "workflow_phases": [
+        {
+          "phase": "Architecture",
+          "duration": "2-3 days",
+          "agents": ["system-architect", "cloud-architect"],
+          "deliverables": ["architecture.md", "service-map.md", "communication-patterns.md"]
+        },
+        {
+          "phase": "Service Development",
+          "duration": "7-10 days",
+          "agents": ["senior-backend-engineer"],
+          "deliverables": ["services/", "shared-libs/", "proto/"]
+        },
+        {
+          "phase": "Service Mesh",
+          "duration": "2-3 days",
+          "agents": ["devops-engineer", "cloud-architect"],
+          "deliverables": ["istio/", "consul/", "service-mesh-config/"]
+        },
+        {
+          "phase": "Orchestration",
+          "duration": "2-3 days",
+          "agents": ["devops-engineer"],
+          "deliverables": ["kubernetes/", "helm/", "terraform/"]
+        },
+        {
+          "phase": "Monitoring",
+          "duration": "1-2 days",
+          "agents": ["sre-engineer"],
+          "deliverables": ["monitoring/", "alerts/", "dashboards/"]
+        }
+      ],
+      "tech_stack": {
+        "services": ["Go", "Node.js", "Python", "Java"],
+        "communication": ["gRPC", "REST", "GraphQL", "Message Queue"],
+        "service_mesh": ["Istio", "Linkerd", "Consul"],
+        "orchestration": ["Kubernetes", "Docker Swarm"],
+        "monitoring": ["Prometheus", "Grafana", "Jaeger", "ELK Stack"]
+      },
+      "project_structure": {
+        "root": {
+          "services/": "Individual microservices",
+          "api-gateway/": "API gateway service",
+          "shared/": "Shared libraries",
+          "infrastructure/": "Infrastructure as code",
+          "monitoring/": "Monitoring configuration"
+        }
+      },
+      "commands": [
+        "Act as system-architect and design microservices architecture",
+        "Act as senior-backend-engineer and implement {service_name} service",
+        "Act as cloud-architect and design service mesh",
+        "Act as devops-engineer and set up Kubernetes cluster",
+        "Act as sre-engineer and implement monitoring"
+      ]
+    },
+    
+    "mobile_app": {
+      "name": "Mobile Application",
+      "description": "Cross-platform mobile application with backend",
+      "agents_required": [
+        "requirements-analyst",
+        "system-architect",
+        "senior-frontend-engineer",
+        "senior-backend-engineer",
+        "qa-engineer"
+      ],
+      "workflow_phases": [
+        {
+          "phase": "Design",
+          "duration": "2-3 days",
+          "agents": ["requirements-analyst", "system-architect"],
+          "deliverables": ["wireframes/", "user-flows.md", "tech-spec.md"]
+        },
+        {
+          "phase": "Mobile Development",
+          "duration": "7-10 days",
+          "agents": ["senior-frontend-engineer"],
+          "deliverables": ["src/screens/", "src/components/", "src/navigation/", "src/services/"]
+        },
+        {
+          "phase": "Backend API",
+          "duration": "4-5 days",
+          "agents": ["senior-backend-engineer"],
+          "deliverables": ["api/", "push-notifications/", "data-sync/"]
+        },
+        {
+          "phase": "Testing",
+          "duration": "3-4 days",
+          "agents": ["qa-engineer"],
+          "deliverables": ["tests/unit/", "tests/e2e/", "test-reports/"]
+        }
+      ],
+      "tech_stack": {
+        "mobile": ["React Native", "Flutter", "Ionic", "Native (iOS/Android)"],
+        "backend": ["Node.js", "Firebase", "AWS Amplify"],
+        "database": ["SQLite", "Realm", "Firebase Firestore"]
+      },
+      "project_structure": {
+        "root": {
+          "mobile/": "Mobile app source",
+          "backend/": "Backend API",
+          "shared/": "Shared types/utils",
+          "assets/": "Images and resources"
+        }
+      },
+      "commands": [
+        "Act as requirements-analyst and define mobile app requirements",
+        "Act as senior-frontend-engineer and build React Native app",
+        "Act as senior-backend-engineer and create mobile backend",
+        "Act as qa-engineer and test on iOS and Android"
+      ]
+    },
+    
+    "data_pipeline": {
+      "name": "Data Pipeline",
+      "description": "ETL/ELT data processing pipeline",
+      "agents_required": [
+        "data-engineer",
+        "system-architect",
+        "senior-backend-engineer",
+        "devops-engineer"
+      ],
+      "workflow_phases": [
+        {
+          "phase": "Data Architecture",
+          "duration": "1-2 days",
+          "agents": ["data-engineer", "system-architect"],
+          "deliverables": ["data-flow.md", "schema-design.md"]
+        },
+        {
+          "phase": "Pipeline Development",
+          "duration": "4-5 days",
+          "agents": ["data-engineer", "senior-backend-engineer"],
+          "deliverables": ["etl/", "transformations/", "data-quality/"]
+        },
+        {
+          "phase": "Orchestration",
+          "duration": "1-2 days",
+          "agents": ["data-engineer", "devops-engineer"],
+          "deliverables": ["airflow/", "scheduling/", "monitoring/"]
+        }
+      ],
+      "tech_stack": {
+        "processing": ["Apache Spark", "Apache Beam", "Pandas"],
+        "orchestration": ["Apache Airflow", "Prefect", "Dagster"],
+        "storage": ["S3", "Data Lake", "Data Warehouse"],
+        "streaming": ["Kafka", "Kinesis", "Pub/Sub"]
+      },
+      "project_structure": {
+        "root": {
+          "pipelines/": "Pipeline definitions",
+          "transformations/": "Data transformations",
+          "schemas/": "Data schemas",
+          "tests/": "Data quality tests"
+        }
+      },
+      "commands": [
+        "Act as data-engineer and design ETL pipeline",
+        "Act as data-engineer and implement data transformations",
+        "Act as devops-engineer and deploy pipeline to production"
+      ]
+    },
+    
+    "machine_learning": {
+      "name": "Machine Learning Project",
+      "description": "ML model development and deployment",
+      "agents_required": [
+        "data-engineer",
+        "senior-backend-engineer",
+        "devops-engineer",
+        "sre-engineer"
+      ],
+      "workflow_phases": [
+        {
+          "phase": "Data Preparation",
+          "duration": "2-3 days",
+          "agents": ["data-engineer"],
+          "deliverables": ["data/", "preprocessing/", "feature-engineering/"]
+        },
+        {
+          "phase": "Model Development",
+          "duration": "4-5 days",
+          "agents": ["senior-backend-engineer"],
+          "deliverables": ["models/", "training/", "evaluation/"]
+        },
+        {
+          "phase": "Deployment",
+          "duration": "2-3 days",
+          "agents": ["devops-engineer"],
+          "deliverables": ["serving/", "api/", "monitoring/"]
+        }
+      ],
+      "tech_stack": {
+        "frameworks": ["TensorFlow", "PyTorch", "Scikit-learn"],
+        "serving": ["TensorFlow Serving", "TorchServe", "MLflow"],
+        "platforms": ["Kubeflow", "SageMaker", "Vertex AI"]
+      },
+      "project_structure": {
+        "root": {
+          "data/": "Training data",
+          "notebooks/": "Experiments",
+          "models/": "Model artifacts",
+          "src/": "Training code",
+          "api/": "Serving API"
+        }
+      },
+      "commands": [
+        "Act as data-engineer and prepare training data",
+        "Act as senior-backend-engineer and train ML model",
+        "Act as devops-engineer and deploy model to production"
+      ]
+    }
+  },
+  
+  "quick_start_commands": {
+    "new_project": [
+      "# Choose a template",
+      "Act as scrum-master and help me choose the right project template",
+      "",
+      "# Initialize project",
+      "Act as project-initializer and set up a {template_type} project",
+      "",
+      "# Start development",
+      "Act as tech-lead and coordinate the development workflow"
+    ],
+    
+    "use_template": [
+      "# Load template",
+      "Use the {template_name} template for my project",
+      "",
+      "# Customize template",
+      "Act as system-architect and adapt the template for {specific_requirements}",
+      "",
+      "# Execute workflow",
+      "Start the {phase_name} phase with the assigned agents"
+    ]
+  },
+  
+  "template_customization": {
+    "add_agent": "Act as god and add {agent_name} to the workflow",
+    "modify_phase": "Act as scrum-master and adjust the {phase_name} timeline",
+    "change_tech": "Act as tech-lead and switch from {old_tech} to {new_tech}",
+    "add_deliverable": "Act as {agent_name} and add {deliverable} to the outputs"
+  }
+}

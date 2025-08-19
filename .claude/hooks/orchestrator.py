@@ -12,6 +12,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
+# Add integration with new monitoring system
+sys.path.append(str(Path(__file__).parent.parent / "scripts"))
+try:
+    from monitoring_system import AgentArmyMonitor, MonitoringEvent, EventType, AlertSeverity
+    monitor = AgentArmyMonitor()
+except ImportError:
+    monitor = None
+
 class AgentArmyOrchestrator:
     """Main orchestrator for agent army hooks"""
     

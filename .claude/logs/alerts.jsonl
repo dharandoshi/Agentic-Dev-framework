@@ -1,0 +1,1 @@
+{"timestamp": "2025-08-19T09:17:28.961563", "error_id": "7a7543e3", "severity": "critical", "type": "mcp_failure", "component": "Test", "message": "\ud83d\udea8 CRITICAL ALERT \ud83d\udea8\nAlert: MCP server connection failure\nComponent: Test\nMessage: Test critical alert\nFrequency: 1 events in 60s\nError ID: 7a7543e3", "details": {}}

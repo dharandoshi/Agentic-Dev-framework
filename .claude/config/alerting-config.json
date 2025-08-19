@@ -1,0 +1,269 @@
+{
+  "alert_rules": [
+    {
+      "name": "critical_mcp_failure",
+      "description": "Critical MCP server failure requiring immediate attention",
+      "enabled": true,
+      "conditions": {
+        "event_type": "mcp_failure",
+        "severity": "critical",
+        "frequency": 1,
+        "time_window_seconds": 60
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification",
+        "webhook_notification",
+        "create_escalation_file"
+      ],
+      "notification_template": "🚨 CRITICAL: MCP Server Failure\nComponent: {component}\nMessage: {message}\nError ID: {error_id}\nTime: {timestamp}"
+    },
+    {
+      "name": "security_breach",
+      "description": "Security violation or unauthorized access attempt",
+      "enabled": true,
+      "conditions": {
+        "event_type": "security_violation",
+        "severity": "critical",
+        "frequency": 1,
+        "time_window_seconds": 1
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification",
+        "webhook_notification",
+        "create_escalation_file",
+        "trigger_lockdown"
+      ],
+      "notification_template": "🔒 SECURITY ALERT: Potential security breach detected\nComponent: {component}\nDetails: {message}\nImmediate action required!"
+    },
+    {
+      "name": "workflow_timeout",
+      "description": "Agent workflow execution timeout",
+      "enabled": true,
+      "conditions": {
+        "event_type": "workflow_timeout",
+        "severity": "high",
+        "frequency": 2,
+        "time_window_seconds": 300
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification"
+      ],
+      "notification_template": "⏱️ Workflow timeout detected\nWorkflow: {component}\nDetails: {message}"
+    },
+    {
+      "name": "agent_errors_spike",
+      "description": "Multiple agent errors in short time period",
+      "enabled": true,
+      "conditions": {
+        "event_type": "agent_error",
+        "severity": "high",
+        "frequency": 5,
+        "time_window_seconds": 300
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification",
+        "webhook_notification"
+      ],
+      "notification_template": "⚠️ Agent Error Spike: {frequency} errors in {time_window} seconds\nAffected agents: {component}\nLatest error: {message}"
+    },
+    {
+      "name": "resource_exhaustion",
+      "description": "System resource limits approaching",
+      "enabled": true,
+      "conditions": {
+        "event_type": "resource_limit",
+        "severity": "high",
+        "frequency": 3,
+        "time_window_seconds": 180
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification",
+        "trigger_cleanup"
+      ],
+      "notification_template": "💾 Resource Alert: System resources approaching limits\nResource: {component}\nDetails: {message}"
+    },
+    {
+      "name": "handoff_failures",
+      "description": "Agent handoff failures affecting workflow",
+      "enabled": true,
+      "conditions": {
+        "event_type": "handoff_failure",
+        "severity": "medium",
+        "frequency": 3,
+        "time_window_seconds": 600
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification"
+      ],
+      "notification_template": "🤝 Handoff Issues: Multiple handoff failures detected\nAgents involved: {component}\nDetails: {message}"
+    },
+    {
+      "name": "performance_degradation",
+      "description": "System performance below acceptable thresholds",
+      "enabled": true,
+      "conditions": {
+        "event_type": "performance_degradation",
+        "severity": "medium",
+        "frequency": 5,
+        "time_window_seconds": 900
+      },
+      "actions": [
+        "log_to_file",
+        "console_notification",
+        "trigger_performance_analysis"
+      ],
+      "notification_template": "📉 Performance Alert: System performance degradation detected\nComponent: {component}\nMetrics: {message}"
+    },
+    {
+      "name": "communication_issues",
+      "description": "Inter-agent communication problems",
+      "enabled": true,
+      "conditions": {
+        "event_type": "communication_error",
+        "severity": "low",
+        "frequency": 10,
+        "time_window_seconds": 1800
+      },
+      "actions": [
+        "log_to_file"
+      ],
+      "notification_template": "📡 Communication Notice: Elevated communication errors\nFrequency: {frequency} errors in {time_window} seconds"
+    }
+  ],
+  
+  "notification_channels": {
+    "file": {
+      "enabled": true,
+      "path": ".claude/logs/alerts.jsonl",
+      "rotation": {
+        "enabled": true,
+        "max_size_mb": 100,
+        "max_files": 10
+      }
+    },
+    
+    "console": {
+      "enabled": true,
+      "colored_output": true,
+      "verbosity": "medium"
+    },
+    
+    "webhook": {
+      "enabled": false,
+      "url": "${AGENT_ARMY_WEBHOOK_URL}",
+      "timeout_seconds": 5,
+      "retry_attempts": 2,
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    },
+    
+    "email": {
+      "enabled": false,
+      "smtp_server": "${SMTP_SERVER}",
+      "smtp_port": 587,
+      "use_tls": true,
+      "from_address": "${ALERT_FROM_EMAIL}",
+      "to_addresses": ["${ALERT_TO_EMAIL}"],
+      "subject_prefix": "[Agent Army Alert]"
+    },
+    
+    "slack": {
+      "enabled": false,
+      "webhook_url": "${SLACK_WEBHOOK_URL}",
+      "channel": "#agent-army-alerts",
+      "username": "Agent Army Monitor",
+      "icon_emoji": ":robot_face:"
+    }
+  },
+  
+  "escalation_policies": {
+    "critical_escalation": {
+      "description": "Escalation for critical issues",
+      "triggers": ["critical_mcp_failure", "security_breach"],
+      "actions": [
+        "create_incident_ticket",
+        "notify_on_call",
+        "start_recovery_procedure"
+      ],
+      "escalation_delay_seconds": 300,
+      "max_escalations": 3
+    },
+    
+    "high_priority_escalation": {
+      "description": "Escalation for high priority issues",
+      "triggers": ["agent_errors_spike", "resource_exhaustion"],
+      "actions": [
+        "notify_team_lead",
+        "create_investigation_task"
+      ],
+      "escalation_delay_seconds": 900,
+      "max_escalations": 2
+    }
+  },
+  
+  "monitoring_settings": {
+    "check_interval_seconds": 60,
+    "event_retention_hours": 168,
+    "metric_aggregation_interval": 300,
+    "health_check_timeout": 15,
+    "resource_monitoring": {
+      "cpu_threshold_percent": 90,
+      "memory_threshold_percent": 90,
+      "disk_threshold_percent": 90
+    }
+  },
+  
+  "recovery_procedures": {
+    "mcp_server_restart": {
+      "description": "Restart failed MCP servers",
+      "trigger": "mcp_failure",
+      "steps": [
+        "identify_failed_server",
+        "attempt_graceful_restart",
+        "verify_server_health",
+        "restore_connections"
+      ],
+      "timeout_seconds": 120
+    },
+    
+    "agent_reset": {
+      "description": "Reset malfunctioning agents",
+      "trigger": "agent_error",
+      "steps": [
+        "identify_affected_agents",
+        "clear_agent_state",
+        "reload_agent_definitions",
+        "verify_agent_functionality"
+      ],
+      "timeout_seconds": 60
+    },
+    
+    "resource_cleanup": {
+      "description": "Clean up system resources",
+      "trigger": "resource_limit",
+      "steps": [
+        "identify_resource_consumers",
+        "cleanup_temp_files",
+        "compact_logs",
+        "restart_heavy_processes"
+      ],
+      "timeout_seconds": 180
+    }
+  },
+  
+  "dashboard_settings": {
+    "refresh_interval_seconds": 5,
+    "max_events_display": 50,
+    "show_system_metrics": true,
+    "show_mcp_status": true,
+    "show_agent_status": true,
+    "theme": "dark"
+  }
+}

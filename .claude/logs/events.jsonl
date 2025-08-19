@@ -1,0 +1,3 @@
+{"timestamp": "2025-08-19T09:17:28.961563", "error_id": "7a7543e3", "type": "mcp_failure", "severity": "critical", "component": "Test", "message": "Test critical alert", "details": {}}
+{"timestamp": "2025-08-19T09:17:28.961677", "error_id": "9e482ec5", "type": "agent_error", "severity": "high", "component": "Test", "message": "Test high severity alert", "details": {}}
+{"timestamp": "2025-08-19T09:17:28.961686", "error_id": "9d71d039", "type": "communication_error", "severity": "medium", "component": "Test", "message": "Test medium severity alert", "details": {}}

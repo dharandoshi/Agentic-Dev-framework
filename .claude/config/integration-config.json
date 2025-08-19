@@ -1,0 +1,277 @@
+{
+  "integration_points": {
+    "claude_code_hooks": {
+      "description": "Hooks that connect Claude Code events to Agent Army systems",
+      "mappings": {
+        "ToolUse": {
+          "primary_handler": "./.claude/hooks/orchestrator.py",
+          "secondary_handlers": [
+            "./.claude/hooks/monitoring-integration.py"
+          ],
+          "triggers_monitoring": true,
+          "logs_to": "./.claude/logs/tool-use.jsonl"
+        },
+        "UserPromptSubmit": {
+          "primary_handler": "./.claude/hooks/smart-suggestions.py",
+          "secondary_handlers": [
+            "./.claude/hooks/monitoring-integration.py"
+          ],
+          "triggers_monitoring": true,
+          "analyzes_intent": true
+        },
+        "Stop": {
+          "primary_handler": "./.claude/hooks/communication-tracker.py",
+          "secondary_handlers": [
+            "./.claude/hooks/monitoring-integration.py"
+          ],
+          "triggers_monitoring": true,
+          "tracks_duration": true
+        },
+        "Error": {
+          "primary_handler": "./.claude/hooks/monitoring-integration.py",
+          "triggers_alerts": true,
+          "severity_threshold": "medium"
+        }
+      }
+    },
+    
+    "mcp_tool_mappings": {
+      "description": "How MCP tools are exposed to Claude Code",
+      "workspace_tools": {
+        "mcp__workspace__analyze": "Analyze project structure",
+        "mcp__workspace__detect": "Detect frameworks",
+        "mcp__workspace__context": "Get project context",
+        "mcp__workspace__find": "Find files by pattern",
+        "mcp__workspace__test_command": "Get test command",
+        "mcp__workspace__build_command": "Get build command"
+      },
+      "coordination_tools": {
+        "mcp__coord__task_create": "Create new task",
+        "mcp__coord__task_assign": "Assign task to agent",
+        "mcp__coord__task_status": "Update task status",
+        "mcp__coord__task_handoff": "Hand off task between agents",
+        "mcp__coord__message_send": "Send message to agent",
+        "mcp__coord__workflow_start": "Start workflow"
+      },
+      "execution_tools": {
+        "mcp__execution__run": "Execute code snippet",
+        "mcp__execution__test": "Run tests",
+        "mcp__execution__debug": "Debug code",
+        "mcp__execution__profile": "Profile performance"
+      },
+      "validation_tools": {
+        "mcp__validation__syntax": "Check syntax",
+        "mcp__validation__lint": "Lint code",
+        "mcp__validation__format": "Format code",
+        "mcp__validation__validate": "Full validation"
+      },
+      "docs_tools": {
+        "mcp__docs__register": "Register document",
+        "mcp__docs__find": "Find documents",
+        "mcp__docs__create": "Create document",
+        "mcp__docs__update": "Update document"
+      }
+    },
+    
+    "agent_invocation": {
+      "description": "How agents are invoked from Claude Code",
+      "patterns": [
+        {
+          "pattern": "Act as {agent_name}",
+          "example": "Act as scrum-master and create a sprint plan",
+          "handler": "Load agent definition and apply context"
+        },
+        {
+          "pattern": "Task(subagent_type='{agent_name}')",
+          "example": "Task(subagent_type='tech-lead', prompt='Review code')",
+          "handler": "Invoke agent through Task tool"
+        },
+        {
+          "pattern": "@{agent_name}",
+          "example": "@qa-engineer please test this feature",
+          "handler": "Direct agent mention"
+        }
+      ],
+      "available_agents": [
+        "scrum-master",
+        "tech-lead",
+        "system-architect",
+        "requirements-analyst",
+        "senior-backend-engineer",
+        "senior-frontend-engineer",
+        "qa-engineer",
+        "technical-writer",
+        "devops-engineer",
+        "security-engineer",
+        "sre-engineer",
+        "data-engineer",
+        "cloud-architect",
+        "integration-engineer",
+        "project-initializer",
+        "god"
+      ]
+    },
+    
+    "monitoring_integration": {
+      "description": "How monitoring system observes Claude Code activities",
+      "event_sources": [
+        {
+          "source": "claude_hooks",
+          "events": ["tool_use", "user_prompt", "completion", "error"],
+          "handler": "monitoring-integration.py"
+        },
+        {
+          "source": "mcp_servers",
+          "events": ["connection", "tool_execution", "failure"],
+          "handler": "MCP server stdout/stderr"
+        },
+        {
+          "source": "agent_activities",
+          "events": ["invocation", "handoff", "completion"],
+          "handler": "orchestrator.py"
+        }
+      ],
+      "metrics_collected": {
+        "tool_usage": "Count and duration of tool executions",
+        "agent_performance": "Task completion times by agent",
+        "error_rates": "Failures per component",
+        "workflow_duration": "End-to-end workflow times"
+      },
+      "alert_channels": {
+        "console": "Direct output to Claude Code terminal",
+        "file": ".claude/logs/alerts.jsonl",
+        "webhook": "Optional external notifications"
+      }
+    },
+    
+    "orchestrator_integration": {
+      "description": "How the master orchestrator coordinates everything",
+      "responsibilities": {
+        "health_monitoring": "Check all component health",
+        "workflow_execution": "Manage multi-agent workflows",
+        "recovery": "Restart failed components",
+        "coordination": "Route tasks between agents"
+      },
+      "communication_flow": [
+        "Claude Code → Hooks → Orchestrator → Agents → MCP Tools",
+        "MCP Tools → Results → Orchestrator → Monitoring → Claude Code"
+      ]
+    },
+    
+    "data_flow": {
+      "user_request": {
+        "flow": [
+          "User input in Claude Code",
+          "UserPromptSubmit hook fires",
+          "Smart suggestions analyzes",
+          "Orchestrator routes to agent",
+          "Agent uses MCP tools",
+          "Results returned to user"
+        ],
+        "monitoring_points": [
+          "Hook execution",
+          "Agent selection",
+          "Tool usage",
+          "Task completion"
+        ]
+      },
+      "background_processes": {
+        "monitoring_daemon": {
+          "process": "monitoring-system.py",
+          "polls": ["MCP health", "System resources", "Log files"],
+          "interval": 60
+        },
+        "orchestrator_daemon": {
+          "process": "agent-army-orchestrator.py",
+          "manages": ["Component health", "Workflow state", "Recovery"],
+          "interval": 60
+        }
+      }
+    },
+    
+    "testing_integration": {
+      "description": "How tests validate the integration",
+      "test_types": {
+        "environment": "Validates all components exist",
+        "mcp": "Tests MCP server connectivity",
+        "agents": "Validates agent definitions",
+        "workflows": "Tests agent handoffs",
+        "integration": "End-to-end workflow tests"
+      },
+      "automation": {
+        "pre_commit": "Run environment tests",
+        "ci_pipeline": "Full test suite",
+        "monitoring": "Continuous health checks"
+      }
+    },
+    
+    "startup_sequence": {
+      "description": "Order of operations when starting Agent Army",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Validate environment",
+          "script": "validate-environment.py",
+          "critical": true
+        },
+        {
+          "step": 2,
+          "action": "Register MCP servers",
+          "script": "register-mcp-servers.sh",
+          "critical": true
+        },
+        {
+          "step": 3,
+          "action": "Start monitoring daemon",
+          "script": "monitoring-system.py --daemon",
+          "critical": false
+        },
+        {
+          "step": 4,
+          "action": "Start orchestrator",
+          "script": "agent-army-orchestrator.py --daemon",
+          "critical": false
+        },
+        {
+          "step": 5,
+          "action": "Verify integration",
+          "script": "integration-tests.py",
+          "critical": false
+        }
+      ]
+    },
+    
+    "configuration_files": {
+      "claude_code_configs": {
+        ".claude/settings.json": "Hook configuration for Claude Code",
+        ".claude/settings.local.json": "Local overrides",
+        ".claude.json": "Project-level Claude Code settings"
+      },
+      "agent_army_configs": {
+        ".claude/config/alerting-config.json": "Alert rules and channels",
+        ".claude/config/integration-config.json": "This file - integration mappings",
+        ".claude/agents/agent-registry.json": "Agent definitions and hierarchy",
+        ".claude/scripts/test-scenarios.json": "Test workflow definitions"
+      }
+    },
+    
+    "usage_examples": {
+      "invoke_agent": {
+        "command": "Act as senior-backend-engineer and implement user authentication",
+        "flow": "Hook → Orchestrator → Agent → MCP tools → Monitoring"
+      },
+      "use_mcp_tool": {
+        "command": "Use mcp__workspace__analyze to understand the project",
+        "flow": "Direct MCP tool invocation → Monitoring"
+      },
+      "start_workflow": {
+        "command": "Start feature development workflow for user management",
+        "flow": "Orchestrator → Multiple agents → Coordinated execution"
+      },
+      "check_status": {
+        "command": "python3 .claude/scripts/monitoring-dashboard.py",
+        "flow": "Dashboard → Read monitoring data → Display"
+      }
+    }
+  }
+}
