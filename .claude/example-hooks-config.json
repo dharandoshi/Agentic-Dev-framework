@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "opus",
+  "hooks": {
+    "user-prompt-submit-hook": {
+      "command": "bash",
+      "args": ["-c", "echo 'User said: $USER_PROMPT' >> .claude/prompts.log && echo '{\"action\": \"allow\"}'"]
+    },
+    "agent-prompt-submit-hook": {
+      "command": "python3",
+      "args": [".claude/hooks/validate-tool-use.py"]
+    },
+    "tool-result-hook": {
+      "command": "node",
+      "args": [".claude/hooks/process-results.js"]
+    }
+  },
+  "customInstructions": "Always use the TodoWrite tool to track your tasks.",
+  "environment": {
+    "PROJECT_ENV": "development",
+    "ENABLE_LOGGING": "true"
+  }
+}

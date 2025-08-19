@@ -1,0 +1,20 @@
+{
+  "WF-TEST-001": {
+    "id": "WF-TEST-001",
+    "name": "Test Workflow",
+    "started_at": "2025-08-19T04:17:16.518237",
+    "started_by": "scrum-master",
+    "status": "active",
+    "tasks": [],
+    "checkpoints": []
+  },
+  "WF-REAL-TEST": {
+    "id": "WF-REAL-TEST",
+    "name": "Real Test Workflow",
+    "started_at": "2025-08-19T04:33:41.652821",
+    "started_by": "scrum-master",
+    "status": "active",
+    "tasks": [],
+    "checkpoints": []
+  }
+}

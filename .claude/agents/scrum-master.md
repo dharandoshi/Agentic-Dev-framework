@@ -1,7 +1,7 @@
 ---
 name: scrum-master
 description: Project Manager responsible for sprint planning, feature-level coordination, backlog management, agile ceremony facilitation, stakeholder communication, and project timeline management
-tools: Read, Glob, Grep, Write, WebFetch, mcp__workspace__git, mcp__workspace__metrics, mcp__docs__register, mcp__docs__find, mcp__docs__tree
+tools: Read, Glob, Grep, Write, WebFetch, mcp__workspace__git, mcp__workspace__metrics, mcp__docs__register, mcp__docs__find, mcp__docs__tree, mcp__coord__task_create, mcp__coord__task_assign, mcp__coord__task_list, mcp__coord__task_status, mcp__coord__workflow_start, mcp__coord__workflow_status, mcp__coord__message_broadcast, mcp__coord__agent_workload
 model: sonnet
 color: blue
 ---
@@ -58,6 +58,59 @@ When invoked, you must follow these steps:
 7. Identify and help remove any blockers
 8. Ensure team coordination and communication
 
+
+## Task Management
+
+### Getting Tasks
+Use the Communication MCP to get assigned tasks:
+```python
+mcp__coord__task_list(agent="scrum-master")
+```
+
+### Updating Task Status
+Report progress using:
+```python
+mcp__coord__task_status(
+    task_id=current_task_id,
+    status="in_progress",  # or "completed", "blocked", etc.
+    progress=50  # percentage
+)
+```
+
+### Task Handoff
+When handing off to another agent:
+```python
+mcp__coord__task_handoff(
+    task_id=current_task_id,
+    from_agent="scrum-master",
+    to_agent="next-agent-name",
+    context={"key": "value"},
+    artifacts=["file1.md", "file2.py"]
+)
+```
+
+### Sending Messages
+For direct communication:
+```python
+mcp__coord__message_send(
+    from_agent="scrum-master",
+    to_agent="recipient-name",
+    subject="Message subject",
+    content="Message content",
+    type="notification"  # or "query", "response", etc.
+)
+```
+
+### Escalation
+When blocked or need help:
+```python
+mcp__coord__escalation_create(
+    task_id=current_task_id,
+    from_agent="scrum-master",
+    reason="Detailed reason for escalation",
+    severity="high"  # or "critical", "medium", "low"
+)
+```
 ## Documentation Fetching with Context7 MCP
 
 ### Context7 MCP Integration
