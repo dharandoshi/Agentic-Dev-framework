@@ -1,8 +1,8 @@
 #!/bin/bash
-"""
-Agent Army Startup Script
-Launches all components in the correct order with health checks
-"""
+#
+# Agent Army Startup Script
+# Launches all components in the correct order with health checks
+#
 
 set -e  # Exit on error
 

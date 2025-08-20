@@ -79,11 +79,17 @@ class ProjectAnalyzer:
             "kotlin": ["*.kt", "*.kts"]
         }
         
+        # Directories to exclude from language detection
+        excluded_dirs = {".claude", ".git", "node_modules", "venv", "env", "__pycache__", 
+                        "dist", "build", ".vscode", ".idea", "target", "bin", "obj"}
+        
         for lang, patterns in language_patterns.items():
             for pattern in patterns:
                 if pattern.startswith("*"):
-                    # Check for file extensions
-                    if list(self.root.rglob(pattern)):
+                    # Check for file extensions, excluding tooling directories
+                    files = [f for f in self.root.rglob(pattern) 
+                            if not any(excluded in str(f) for excluded in excluded_dirs)]
+                    if files:
                         if lang not in self.context["languages"]:
                             self.context["languages"].append(lang)
                         break
@@ -639,7 +645,11 @@ async def handle_call_tool(
         limit = arguments.get("limit", 20)
         
         try:
-            files = list(PROJECT_ROOT.rglob(pattern))[:limit]
+            all_files = list(PROJECT_ROOT.rglob(pattern))
+            # Exclude tooling and build directories
+            excluded_dirs = [".claude", ".git", "node_modules", "venv", "env", "__pycache__", 
+                           "dist", "build", ".vscode", ".idea", "target", "bin", "obj"]
+            files = [f for f in all_files if not any(excluded in str(f) for excluded in excluded_dirs)][:limit]
             file_list = [str(f.relative_to(PROJECT_ROOT)) for f in files]
             
             return [types.TextContent(
@@ -842,8 +852,10 @@ async def handle_call_tool(
             
             for ext in extensions:
                 files = list(PROJECT_ROOT.rglob(f"*{ext}"))
-                # Exclude node_modules, venv, etc.
-                files = [f for f in files if not any(p in str(f) for p in ["node_modules", "venv", ".git", "__pycache__", "dist", "build"])]
+                # Exclude tooling and build directories
+                excluded_dirs = [".claude", ".git", "node_modules", "venv", "env", "__pycache__", 
+                               "dist", "build", ".vscode", ".idea", "target", "bin", "obj"]
+                files = [f for f in files if not any(p in str(f) for p in excluded_dirs)]
                 
                 file_count += len(files)
                 

@@ -1,109 +1,16 @@
 {
   "version": "2.0.0",
-  "last_updated": "2025-08-18T11:09:59.060629",
+  "last_updated": "2025-08-20T08:37:13.264518",
   "statistics": {
-    "total_documents": 1,
-    "total_categories": 1,
-    "documents_by_type": {
-      "requirements": 1
-    },
-    "documents_by_owner": {
-      "requirements-analyst": 1
-    },
+    "total_documents": 0,
+    "total_categories": 0,
+    "documents_by_type": {},
+    "documents_by_owner": {},
     "recently_accessed": [],
-    "recently_created": [
-      "f9a590eb943f"
-    ]
+    "recently_created": []
   },
-  "documents": {
-    "f9a590eb943f": {
-      "id": "f9a590eb943f",
-      "path": "login-requirements.md",
-      "title": "Web-Based Login Page - Complete Requirements Specification",
-      "owner": "requirements-analyst",
-      "description": "Comprehensive requirements specification for a production-ready web-based login page with email/password authentication following OWASP 2025 and NIST 2025 guidelines",
-      "category": "requirements",
-      "type": "requirements",
-      "tags": [
-        "agent-army-trial",
-        "home",
-        "edge-cases",
-        "pensionid",
-        "requirements",
-        "login",
-        "NIST",
-        "security",
-        "authentication",
-        "wireframes",
-        "dhara",
-        "login-requirements.md",
-        "OWASP",
-        "user-stories"
-      ],
-      "version": "1.0",
-      "created": "2025-08-18T11:09:59.060575",
-      "modified": "2025-08-18T11:09:59.060604",
-      "access_count": 0,
-      "references": [],
-      "referenced_by": []
-    }
-  },
-  "categories": {
-    "requirements": {
-      "document_count": 1,
-      "owners": [
-        "requirements-analyst"
-      ],
-      "document_ids": [
-        "f9a590eb943f"
-      ]
-    }
-  },
-  "tags": {
-    "agent-army-trial": [
-      "f9a590eb943f"
-    ],
-    "home": [
-      "f9a590eb943f"
-    ],
-    "edge-cases": [
-      "f9a590eb943f"
-    ],
-    "pensionid": [
-      "f9a590eb943f"
-    ],
-    "requirements": [
-      "f9a590eb943f"
-    ],
-    "login": [
-      "f9a590eb943f"
-    ],
-    "NIST": [
-      "f9a590eb943f"
-    ],
-    "security": [
-      "f9a590eb943f"
-    ],
-    "authentication": [
-      "f9a590eb943f"
-    ],
-    "wireframes": [
-      "f9a590eb943f"
-    ],
-    "dhara": [
-      "f9a590eb943f"
-    ],
-    "login-requirements.md": [
-      "f9a590eb943f"
-    ],
-    "OWASP": [
-      "f9a590eb943f"
-    ],
-    "user-stories": [
-      "f9a590eb943f"
-    ]
-  },
-  "search_index": {
-    "f9a590eb943f": "web-based login page - complete requirements specification comprehensive requirements specification for a production-ready web-based login page with email/password authentication following owasp 2025 and nist 2025 guidelines /home/dhara/pensionid/agent-army-trial/login-requirements.md agent-army-trial home edge-cases pensionid requirements login nist security authentication wireframes dhara login-requirements.md owasp user-stories"
-  }
+  "documents": {},
+  "categories": {},
+  "tags": {},
+  "search_index": {}
 }

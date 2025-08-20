@@ -61,7 +61,17 @@ class CodeValidator:
                 tools["syntax_checkers"].append("tsc")
         
         # Python tools
-        python_files = list(self.root.glob("*.py")) or list(self.root.rglob("*.py"))
+        # Exclude tooling and build directories when scanning for Python files
+        excluded_dirs = {".claude", ".git", "node_modules", "venv", "env", "__pycache__", 
+                        "dist", "build", ".vscode", ".idea", "target", "bin", "obj"}
+        
+        python_files = [f for f in self.root.glob("*.py") 
+                       if not any(excluded in str(f) for excluded in excluded_dirs)]
+        
+        if not python_files:
+            python_files = [f for f in self.root.rglob("*.py") 
+                           if not any(excluded in str(f) for excluded in excluded_dirs)]
+        
         if python_files:
             # Pylint
             if (self.root / ".pylintrc").exists() or (self.root / "pylintrc").exists():
@@ -91,7 +101,9 @@ class CodeValidator:
                 tools["formatters"].append("autopep8")
         
         # Go tools
-        if list(self.root.glob("*.go")) or (self.root / "go.mod").exists():
+        go_files = [f for f in self.root.glob("*.go") 
+                   if not any(excluded in str(f) for excluded in excluded_dirs)]
+        if go_files or (self.root / "go.mod").exists():
             tools["formatters"].append("gofmt")
             tools["linters"].append("golint")
             tools["syntax_checkers"].append("go")
@@ -103,13 +115,17 @@ class CodeValidator:
             tools["syntax_checkers"].append("rustc")
         
         # Java tools
-        if list(self.root.glob("*.java")) or (self.root / "pom.xml").exists():
+        java_files = [f for f in self.root.glob("*.java") 
+                     if not any(excluded in str(f) for excluded in excluded_dirs)]
+        if java_files or (self.root / "pom.xml").exists():
             tools["syntax_checkers"].append("javac")
             if (self.root / ".checkstyle.xml").exists():
                 tools["linters"].append("checkstyle")
         
         # Ruby tools
-        if list(self.root.glob("*.rb")) or (self.root / "Gemfile").exists():
+        ruby_files = [f for f in self.root.glob("*.rb") 
+                     if not any(excluded in str(f) for excluded in excluded_dirs)]
+        if ruby_files or (self.root / "Gemfile").exists():
             if (self.root / ".rubocop.yml").exists():
                 tools["linters"].append("rubocop")
         

@@ -1,0 +1,74 @@
+🔍 Agent Army Environment Validation
+==================================================
+
+📋 Python Environment
+------------------------------
+ℹ️  Checking Python Environment...
+✅ Python 3.12.3
+✅ MCP virtual environment found
+✅ MCP Python package installed
+
+📋 MCP Servers
+------------------------------
+ℹ️  Checking MCP Servers...
+✅ MCP server found: workspace.py
+✅ MCP server found: docs.py
+✅ MCP server found: execution.py
+✅ MCP server found: coord.py
+✅ MCP server found: validation.py
+
+📋 Claude Code Integration
+------------------------------
+ℹ️  Checking Claude Code Integration...
+✅ Claude Code CLI available
+✅ MCP servers registered with Claude Code
+
+📋 Hook System
+------------------------------
+ℹ️  Checking Hook System...
+✅ Hook script found: orchestrator.py
+✅ Hook script executable: orchestrator.py
+✅ Hook script found: communication-tracker.py
+✅ Hook script executable: communication-tracker.py
+✅ Hook script found: smart-suggestions.py
+✅ Hook script executable: smart-suggestions.py
+✅ Hook configuration found in settings.json
+
+📋 Agent Definitions
+------------------------------
+ℹ️  Checking Agent Definitions...
+✅ Agent registry found
+✅ Agent registry contains 16 agents
+✅ Agent definition found: scrum-master.md
+✅ Agent definition found: tech-lead.md
+✅ Agent definition found: senior-backend-engineer.md
+✅ Agent definition found: senior-frontend-engineer.md
+
+📋 Project Structure
+------------------------------
+ℹ️  Checking Project Structure...
+✅ Directory exists: .claude
+✅ Directory exists: .claude/agents
+✅ Directory exists: .claude/hooks
+✅ Directory exists: .claude/mcp
+✅ Directory exists: .claude/mcp/servers
+✅ Directory exists: .claude/mcp/servers/core
+✅ Directory exists: .claude/scripts
+✅ README.md found
+
+📋 Git Repository
+------------------------------
+ℹ️  Checking Git Repository...
+✅ Git repository initialized
+⚠️  Uncommitted changes in repository
+
+📊 Validation Summary
+==================================================
+✅ Successful checks: 32/32
+❌ Errors: 0
+⚠️  Warnings: 1
+
+⚠️  Warnings:
+  • Uncommitted changes in repository
+
+🎉 Agent Army environment is properly configured!

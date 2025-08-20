@@ -1,0 +1,428 @@
+{
+  "84af2c8f-4fba-4242-ae44-d5eba1a5e957": {
+    "id": "84af2c8f-4fba-4242-ae44-d5eba1a5e957",
+    "title": "Sprint 1 Kickoff Meeting",
+    "description": "Facilitate comprehensive Sprint 1 kickoff meeting covering sprint goal, backlog commitment, development workflow setup, and team coordination. Follow the detailed agenda in the Sprint 1 Kickoff Plan document. Duration: 4 hours.",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "critical",
+    "dependencies": [],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "type": "ceremony",
+      "document": "docs/sprint-1-kickoff-plan.md"
+    },
+    "created_at": "2025-08-20 08:11:21.561217",
+    "updated_at": "2025-08-20 08:11:21.561337",
+    "completed_at": null,
+    "deadline": "2025-08-20T18:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "e1772b50-cc68-4341-942f-31bf34935d6d": {
+    "id": "e1772b50-cc68-4341-942f-31bf34935d6d",
+    "title": "Next.js Project Setup & Technical Foundation",
+    "description": "Initialize Next.js project with TypeScript, configure development environment, set up state management (Zustand), styling (Tailwind CSS), testing framework (Jest + RTL), and establish basic project structure. Includes tasks T-001 through T-015 from Sprint 1 plan.",
+    "created_by": "scrum-master",
+    "assigned_to": "tech-lead",
+    "status": "assigned",
+    "priority": "critical",
+    "dependencies": [],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "type": "development",
+      "story_points": 8,
+      "tasks": [
+        "T-001",
+        "T-002",
+        "T-003",
+        "T-004",
+        "T-005",
+        "T-006",
+        "T-007",
+        "T-008",
+        "T-009",
+        "T-010",
+        "T-011",
+        "T-012",
+        "T-013",
+        "T-014",
+        "T-015"
+      ]
+    },
+    "created_at": "2025-08-20 08:11:29.288052",
+    "updated_at": "2025-08-20 08:15:22.083584",
+    "completed_at": null,
+    "deadline": "2025-08-22T17:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "1cfb7536-fb76-4514-b20e-9d87c9bb3048": {
+    "id": "1cfb7536-fb76-4514-b20e-9d87c9bb3048",
+    "title": "PBI-001: Create Todo List Feature",
+    "description": "Implement user ability to create new todo lists with form validation, success feedback, and immediate display on dashboard. Includes form component, validation logic, state management integration, and responsive design. Story Points: 5",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "e1772b50-cc68-4341-942f-31bf34935d6d"
+    ],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "pbi": "PBI-001",
+      "story_points": 5,
+      "type": "user-story"
+    },
+    "created_at": "2025-08-20 08:11:35.456067",
+    "updated_at": "2025-08-20 08:11:35.456077",
+    "completed_at": null,
+    "deadline": "2025-08-24T17:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "75417c8d-a0db-4c46-bcfa-b2c958ec2db7": {
+    "id": "75417c8d-a0db-4c46-bcfa-b2c958ec2db7",
+    "title": "PBI-002: View Todo Lists Dashboard",
+    "description": "Implement dashboard displaying all todo lists with responsive design, empty states, alphabetical sorting, and click navigation. Includes list display components, responsive layout, and performance optimization for 50+ lists. Story Points: 3",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "1cfb7536-fb76-4514-b20e-9d87c9bb3048"
+    ],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "pbi": "PBI-002",
+      "story_points": 3,
+      "type": "user-story"
+    },
+    "created_at": "2025-08-20 08:11:41.112876",
+    "updated_at": "2025-08-20 08:11:41.112885",
+    "completed_at": null,
+    "deadline": "2025-08-26T17:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "9714f3bc-bd8d-443d-a2df-7c493bddfc4b": {
+    "id": "9714f3bc-bd8d-443d-a2df-7c493bddfc4b",
+    "title": "PBI-003: Edit Todo List Name",
+    "description": "Implement inline editing functionality for todo list names with keyboard shortcuts (Enter to save, Escape to cancel), validation to prevent empty names, and immediate visual feedback. Story Points: 3",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "75417c8d-a0db-4c46-bcfa-b2c958ec2db7"
+    ],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "pbi": "PBI-003",
+      "story_points": 3,
+      "type": "user-story"
+    },
+    "created_at": "2025-08-20 08:11:47.275777",
+    "updated_at": "2025-08-20 08:11:47.275787",
+    "completed_at": null,
+    "deadline": "2025-08-28T17:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "3c2ab0f8-0923-45ab-a6cd-8728958ec25f": {
+    "id": "3c2ab0f8-0923-45ab-a6cd-8728958ec25f",
+    "title": "PBI-004: Delete Todo List",
+    "description": "Implement delete functionality with confirmation modal showing number of todos to be deleted, cascade deletion of all todos, success notification, and proper error handling. Story Points: 5",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "9714f3bc-bd8d-443d-a2df-7c493bddfc4b"
+    ],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "pbi": "PBI-004",
+      "story_points": 5,
+      "type": "user-story"
+    },
+    "created_at": "2025-08-20 08:11:52.834657",
+    "updated_at": "2025-08-20 08:11:52.834679",
+    "completed_at": null,
+    "deadline": "2025-08-30T17:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "0c5a0c0e-f017-4050-9f45-639fd4cd9c16": {
+    "id": "0c5a0c0e-f017-4050-9f45-639fd4cd9c16",
+    "title": "Sprint 1 Daily Standups & Team Coordination",
+    "description": "Facilitate daily 15-minute standups at 9:00 AM for 10 working days, track sprint progress, identify and resolve blockers, monitor team velocity and sprint burndown, and maintain team coordination and communication.",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "84af2c8f-4fba-4242-ae44-d5eba1a5e957"
+    ],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "type": "ceremony",
+      "frequency": "daily",
+      "duration": "10 days"
+    },
+    "created_at": "2025-08-20 08:11:58.751565",
+    "updated_at": "2025-08-20 08:11:58.751574",
+    "completed_at": null,
+    "deadline": "2025-09-03T17:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "3c88d64a-70b1-4f25-8b82-07d1d1552ac7": {
+    "id": "3c88d64a-70b1-4f25-8b82-07d1d1552ac7",
+    "title": "Sprint 1 Review & Retrospective",
+    "description": "Facilitate Sprint 1 review demo (2 hours) showing completed features to stakeholders, conduct sprint retrospective (1 hour) with team to identify improvements, document lessons learned, and prepare Sprint 2 planning inputs.",
+    "created_by": "scrum-master",
+    "assigned_to": null,
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "3c2ab0f8-0923-45ab-a6cd-8728958ec25f"
+    ],
+    "artifacts": [],
+    "context": {
+      "sprint": "sprint-1",
+      "type": "ceremony",
+      "activities": [
+        "review",
+        "retrospective",
+        "planning-prep"
+      ]
+    },
+    "created_at": "2025-08-20 08:12:04.291997",
+    "updated_at": "2025-08-20 08:12:04.292007",
+    "completed_at": null,
+    "deadline": "2025-09-03T18:00:00",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "46649d31-fac9-4593-bce5-4b8d3ba557d1": {
+    "id": "46649d31-fac9-4593-bce5-4b8d3ba557d1",
+    "title": "Next.js Project Setup and Foundation",
+    "description": "Initialize Next.js 14+ project with TypeScript, Tailwind CSS, and complete development environment setup according to system architecture specifications. Create folder structure, configure development tools, and establish project foundation for Sprint 1 development.",
+    "created_by": "scrum-master",
+    "assigned_to": "tech-lead",
+    "status": "pending",
+    "priority": "critical",
+    "dependencies": [],
+    "artifacts": [
+      "docs/system-architecture-enhanced.md",
+      "docs/sprint-1-kickoff-plan.md"
+    ],
+    "context": {
+      "sprint": "Sprint 1",
+      "story_points": 8,
+      "type": "setup",
+      "acceptance_criteria": [
+        "Next.js 14+ project initialized",
+        "TypeScript configuration complete",
+        "Tailwind CSS setup",
+        "Folder structure per architecture",
+        "Development environment ready"
+      ],
+      "handoff_reason": "Project setup requires technical leadership and coordination",
+      "expectations": "Set up complete Next.js foundation according to architecture specs",
+      "timeline": "Complete by Aug 22, 5:00 PM",
+      "support_available": "System architect documentation and scrum master coordination"
+    },
+    "created_at": "2025-08-20 08:18:28.409294",
+    "updated_at": "2025-08-20 08:19:04.388127",
+    "completed_at": null,
+    "deadline": "2025-08-22T17:00:00Z",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "b564ef61-e91e-40a1-8382-e1c3df547d70": {
+    "id": "b564ef61-e91e-40a1-8382-e1c3df547d70",
+    "title": "PBI-001: Create Todo Lists",
+    "description": "Implement the ability to create new todo lists with names. User should be able to add multiple lists and see them displayed in the dashboard. Includes form validation, UI components, and local storage persistence.",
+    "created_by": "scrum-master",
+    "assigned_to": "senior-frontend-engineer",
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "46649d31-fac9-4593-bce5-4b8d3ba557d1"
+    ],
+    "artifacts": [
+      "docs/system-architecture-enhanced.md",
+      "docs/todo-app-business-scope.md"
+    ],
+    "context": {
+      "sprint": "Sprint 1",
+      "story_points": 5,
+      "user_story": "As a user, I can create new todo lists so that I can organize my tasks into different categories",
+      "acceptance_criteria": [
+        "User can enter list name in form",
+        "Form validates required fields",
+        "New list appears in dashboard",
+        "Data persists in local storage"
+      ],
+      "handoff_reason": "Frontend UI development for todo list creation",
+      "expectations": "Implement user-friendly list creation with validation and persistence",
+      "timeline": "Complete by Aug 24, 5:00 PM",
+      "depends_on": "Project setup completion by tech-lead"
+    },
+    "created_at": "2025-08-20 08:18:35.699665",
+    "updated_at": "2025-08-20 08:19:10.344239",
+    "completed_at": null,
+    "deadline": "2025-08-24T17:00:00Z",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "451f943d-38b9-495a-b9e9-eb5821f18e2d": {
+    "id": "451f943d-38b9-495a-b9e9-eb5821f18e2d",
+    "title": "PBI-002: View Todo Lists Dashboard",
+    "description": "Create the main dashboard where users can view all their todo lists. Implement responsive design, list cards with basic information, and navigation to individual lists.",
+    "created_by": "scrum-master",
+    "assigned_to": "senior-frontend-engineer",
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      "46649d31-fac9-4593-bce5-4b8d3ba557d1"
+    ],
+    "artifacts": [
+      "docs/system-architecture-enhanced.md",
+      "docs/todo-app-business-scope.md"
+    ],
+    "context": {
+      "sprint": "Sprint 1",
+      "story_points": 3,
+      "user_story": "As a user, I can view all my todo lists in a dashboard so that I can see what lists I have and access them easily",
+      "acceptance_criteria": [
+        "All lists displayed as cards",
+        "Responsive design works on mobile",
+        "Click to open list",
+        "Empty state when no lists exist"
+      ],
+      "handoff_reason": "Frontend dashboard development with responsive design",
+      "expectations": "Create intuitive dashboard showing all todo lists with mobile support",
+      "timeline": "Complete by Aug 26, 5:00 PM",
+      "depends_on": "Project setup completion by tech-lead"
+    },
+    "created_at": "2025-08-20 08:18:43.050793",
+    "updated_at": "2025-08-20 08:19:15.805355",
+    "completed_at": null,
+    "deadline": "2025-08-26T17:00:00Z",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "48a9400d-d74c-4563-bfe6-e5ee34c496ce": {
+    "id": "48a9400d-d74c-4563-bfe6-e5ee34c496ce",
+    "title": "PBI-003: Edit Todo List Names",
+    "description": "Allow users to edit the names of existing todo lists. Implement inline editing with validation and persistence to local storage.",
+    "created_by": "scrum-master",
+    "assigned_to": "senior-frontend-engineer",
+    "status": "pending",
+    "priority": "medium",
+    "dependencies": [
+      "b564ef61-e91e-40a1-8382-e1c3df547d70",
+      "451f943d-38b9-495a-b9e9-eb5821f18e2d"
+    ],
+    "artifacts": [
+      "docs/system-architecture-enhanced.md",
+      "docs/todo-app-business-scope.md"
+    ],
+    "context": {
+      "sprint": "Sprint 1",
+      "story_points": 3,
+      "user_story": "As a user, I can edit todo list names so that I can update them as my needs change",
+      "acceptance_criteria": [
+        "Click to edit list name inline",
+        "Validate name is not empty",
+        "Changes persist immediately",
+        "Cancel editing restores original name"
+      ],
+      "handoff_reason": "Frontend editing functionality implementation",
+      "expectations": "Implement inline editing with validation for todo list names",
+      "timeline": "Complete by Aug 28, 5:00 PM",
+      "depends_on": "Create and View functionality completion"
+    },
+    "created_at": "2025-08-20 08:18:50.503232",
+    "updated_at": "2025-08-20 08:19:21.658198",
+    "completed_at": null,
+    "deadline": "2025-08-28T17:00:00Z",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  },
+  "d7d5a865-261f-47e2-a381-18f3b00bf222": {
+    "id": "d7d5a865-261f-47e2-a381-18f3b00bf222",
+    "title": "PBI-004: Delete Todo Lists",
+    "description": "Implement the ability to delete todo lists with confirmation dialog. Remove from local storage and update the dashboard view.",
+    "created_by": "scrum-master",
+    "assigned_to": "senior-frontend-engineer",
+    "status": "pending",
+    "priority": "medium",
+    "dependencies": [
+      "b564ef61-e91e-40a1-8382-e1c3df547d70",
+      "451f943d-38b9-495a-b9e9-eb5821f18e2d"
+    ],
+    "artifacts": [
+      "docs/system-architecture-enhanced.md",
+      "docs/todo-app-business-scope.md"
+    ],
+    "context": {
+      "sprint": "Sprint 1",
+      "story_points": 5,
+      "user_story": "As a user, I can delete todo lists so that I can remove lists I no longer need",
+      "acceptance_criteria": [
+        "Delete button available on each list",
+        "Confirmation dialog prevents accidental deletion",
+        "List removed from dashboard immediately",
+        "Data removed from local storage"
+      ],
+      "handoff_reason": "Frontend deletion functionality with confirmation",
+      "expectations": "Implement safe deletion with confirmation dialog and immediate UI updates",
+      "timeline": "Complete by Aug 30, 5:00 PM",
+      "depends_on": "Create and View functionality completion"
+    },
+    "created_at": "2025-08-20 08:18:57.470459",
+    "updated_at": "2025-08-20 08:19:27.544321",
+    "completed_at": null,
+    "deadline": "2025-08-30T17:00:00Z",
+    "parent_workflow": null,
+    "subtasks": [],
+    "blocked_reason": null,
+    "progress_percentage": 0
+  }
+}

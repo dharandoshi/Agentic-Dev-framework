@@ -374,6 +374,20 @@ async def handle_list_tools() -> list[types.Tool]:
                 },
                 "required": ["title", "document_type", "owner", "content"]
             }
+        ),
+        types.Tool(
+            name="reset",
+            description="DANGER: Reset/clear the entire document registry. This will delete all registered documents and cannot be undone. Use with extreme caution.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "confirm": {
+                        "type": "string",
+                        "description": "Must be exactly 'RESET_ALL_DOCUMENTS' to confirm"
+                    }
+                },
+                "required": ["confirm"]
+            }
         )
     ]
 
@@ -1024,6 +1038,51 @@ async def handle_call_tool(
                 "suggested_path": suggested_path,
                 "based_on_patterns": patterns,
                 "reasoning": f"Based on {len(patterns)} similar documents" if patterns else "Using default convention"
+            }, indent=2)
+        )]
+    
+    elif name == "reset":
+        confirm = arguments.get("confirm", "")
+        
+        if confirm != "RESET_ALL_DOCUMENTS":
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "error": "Reset not confirmed. Must provide confirm='RESET_ALL_DOCUMENTS' to proceed.",
+                    "current_documents": len(index["documents"]),
+                    "warning": "This operation cannot be undone"
+                }, indent=2)
+            )]
+        
+        # Reset the entire index to default state
+        index.clear()
+        index.update({
+            "version": "2.0.0",
+            "last_updated": datetime.now().isoformat(),
+            "statistics": {
+                "total_documents": 0,
+                "total_categories": 0,
+                "documents_by_type": {},
+                "documents_by_owner": {},
+                "recently_accessed": [],
+                "recently_created": []
+            },
+            "documents": {},
+            "categories": {},
+            "tags": {},
+            "search_index": {}
+        })
+        
+        # Save the reset index
+        save_index(index)
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "message": "Document registry has been completely reset",
+                "action": "All documents, categories, and tags cleared",
+                "timestamp": datetime.now().isoformat()
             }, indent=2)
         )]
     

@@ -1,0 +1,30 @@
+{
+  "tech-lead": {
+    "name": "tech-lead",
+    "status": "available",
+    "current_tasks": [
+      "e1772b50-cc68-4341-942f-31bf34935d6d",
+      "46649d31-fac9-4593-bce5-4b8d3ba557d1"
+    ],
+    "completed_tasks": [],
+    "capabilities": [],
+    "workload": 40,
+    "last_active": "2025-08-20 08:15:22.083685",
+    "blocked_tasks": []
+  },
+  "senior-frontend-engineer": {
+    "name": "senior-frontend-engineer",
+    "status": "available",
+    "current_tasks": [
+      "b564ef61-e91e-40a1-8382-e1c3df547d70",
+      "451f943d-38b9-495a-b9e9-eb5821f18e2d",
+      "48a9400d-d74c-4563-bfe6-e5ee34c496ce",
+      "d7d5a865-261f-47e2-a381-18f3b00bf222"
+    ],
+    "completed_tasks": [],
+    "capabilities": [],
+    "workload": 80,
+    "last_active": "2025-08-20 08:19:10.344269",
+    "blocked_tasks": []
+  }
+}
