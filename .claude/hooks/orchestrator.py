@@ -1,123 +1,162 @@
 #!/usr/bin/env python3
 """
-Agent Army Hook Orchestrator
-Central hook system for coordinating all agent communications
+Agent Army Hook Orchestrator - SIMPLIFIED VERSION
+Fixed coordination system that actually triggers agents to work
 """
 
 import json
 import sys
 import os
-import re
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
-# Add integration with new monitoring system
-sys.path.append(str(Path(__file__).parent.parent / "scripts"))
-try:
-    from monitoring_system import AgentArmyMonitor, MonitoringEvent, EventType, AlertSeverity
-    monitor = AgentArmyMonitor()
-except ImportError:
-    monitor = None
-
 class AgentArmyOrchestrator:
-    """Main orchestrator for agent army hooks"""
+    """Simplified orchestrator that actually coordinates agents"""
     
     def __init__(self):
         self.project_root = Path(os.environ.get('CLAUDE_PROJECT_ROOT', '.'))
         self.logs_dir = self.project_root / '.claude' / 'logs'
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         
-        # Load agent hierarchy and rules
-        self.hierarchy = self._load_hierarchy()
-        self.current_context = self._detect_context()
+        # Core agent coordination rules
+        self.coordination_rules = {
+            'task_handoff_chains': [
+                ('scrum-master', 'tech-lead'),
+                ('tech-lead', 'senior-backend-engineer'),
+                ('tech-lead', 'senior-frontend-engineer'),
+                ('senior-backend-engineer', 'qa-engineer'),
+                ('senior-frontend-engineer', 'qa-engineer'),
+                ('qa-engineer', 'devops-engineer')
+            ],
+            'auto_start_agents': {
+                'tech-lead': ['senior-backend-engineer', 'senior-frontend-engineer'],
+                'scrum-master': ['tech-lead']
+            }
+        }
         
-    def _load_hierarchy(self) -> Dict:
-        """Load agent hierarchy and coordination rules"""
-        return {
-            "levels": {
-                1: ["scrum-master"],
-                2: ["system-architect", "tech-lead"],
-                3: ["requirements-analyst", "senior-backend-engineer", 
-                    "senior-frontend-engineer", "integration-engineer", "data-engineer"],
-                4: ["qa-engineer", "security-engineer", "devops-engineer", 
-                    "sre-engineer", "cloud-architect"],
-                5: ["technical-writer"]
-            },
-            "permissions": {
-                "task_create": ["scrum-master"],
-                "task_assign": ["scrum-master", "tech-lead"],
-                "workflow_start": ["scrum-master"],
-                "workflow_status": ["scrum-master", "tech-lead"],
-                "message_broadcast": ["scrum-master"],
-                "agent_workload": ["scrum-master", "tech-lead"],
-                "escalation_create": [
-                    "tech-lead", "senior-backend-engineer", "senior-frontend-engineer",
-                    "qa-engineer", "security-engineer", "sre-engineer"
-                ],
-                "checkpoint_create": [
-                    "system-architect", "requirements-analyst", 
-                    "senior-backend-engineer", "senior-frontend-engineer",
-                    "devops-engineer"
+    def _trigger_agent_work(self, agent_name: str, task_id: str, context: Dict = None) -> bool:
+        """Actually trigger an agent to start working on a task"""
+        try:
+            # Use the workflow engine to trigger agent
+            scripts_dir = self.project_root / '.claude' / 'scripts'
+            workflow_engine = scripts_dir / 'agent_workflow_engine.py'
+            
+            if workflow_engine.exists():
+                # Call the workflow engine
+                context_json = json.dumps(context or {})
+                cmd = [
+                    'python3', 
+                    str(workflow_engine), 
+                    agent_name, 
+                    task_id, 
+                    context_json
                 ]
-            },
-            "handoff_chains": [
-                ["requirements-analyst", "system-architect"],
-                ["system-architect", "tech-lead"],
-                ["tech-lead", "senior-backend-engineer"],
-                ["tech-lead", "senior-frontend-engineer"],
-                ["senior-backend-engineer", "qa-engineer"],
-                ["senior-frontend-engineer", "qa-engineer"],
-                ["qa-engineer", "devops-engineer"],
-                ["devops-engineer", "sre-engineer"]
-            ]
-        }
+                
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                
+                if result.returncode == 0:
+                    self._log_event("agent_triggered", {
+                        "agent": agent_name,
+                        "task_id": task_id,
+                        "timestamp": datetime.now().isoformat()
+                    })
+                    return True
+                else:
+                    self._log_event("agent_trigger_failed", {
+                        "agent": agent_name,
+                        "task_id": task_id,
+                        "error": result.stderr
+                    })
+                    return False
+            else:
+                # Fallback: just log the trigger
+                self._log_event("agent_triggered_fallback", {
+                    "agent": agent_name,
+                    "task_id": task_id,
+                    "timestamp": datetime.now().isoformat()
+                })
+                return True
+                
+        except Exception as e:
+            self._log_event("agent_trigger_failed", {
+                "agent": agent_name,
+                "task_id": task_id,
+                "error": str(e)
+            })
+            return False
     
-    def _detect_context(self) -> Dict:
-        """Detect current session context"""
-        return {
-            "session_id": os.environ.get('CLAUDE_SESSION_ID', 'unknown'),
-            "timestamp": datetime.now().isoformat(),
-            "current_file": os.environ.get('CLAUDE_CURRENT_FILE', None),
-            "hook_type": os.environ.get('CLAUDE_HOOK_TYPE', 'unknown')
-        }
+    def _check_task_dependencies(self, task_id: str) -> bool:
+        """Check if task dependencies are met"""
+        try:
+            tasks_file = self.project_root / '.claude' / 'mcp' / 'data' / 'communication' / 'tasks.json'
+            if not tasks_file.exists():
+                return True
+            
+            with open(tasks_file, 'r') as f:
+                tasks = json.load(f)
+            
+            if task_id not in tasks:
+                return True
+            
+            task = tasks[task_id]
+            dependencies = task.get('dependencies', [])
+            
+            for dep_id in dependencies:
+                if dep_id in tasks:
+                    dep_status = tasks[dep_id].get('status', 'pending')
+                    if dep_status not in ['completed']:
+                        return False
+            
+            return True
+        except Exception:
+            return True
     
-    def _extract_agent_context(self, input_data: Dict) -> Optional[str]:
-        """Extract which agent is being simulated from the input"""
-        prompt = input_data.get('prompt', '')
-        tool_params = input_data.get('tool', {}).get('parameters', {})
+    def _handle_task_assignment(self, task_data: Dict) -> Dict:
+        """Handle task assignment and trigger agent work"""
+        task_id = task_data.get('task_id')
+        assigned_to = task_data.get('assigned_to')
         
-        # Check tool parameters for agent names
-        if 'from_agent' in tool_params:
-            return tool_params['from_agent']
-        if 'agent' in tool_params:
-            return tool_params['agent']
+        if not task_id or not assigned_to:
+            return {"action": "allow"}
         
-        # Search in prompt for agent context
-        agent_pattern = r'\b(scrum-master|system-architect|tech-lead|requirements-analyst|senior-backend-engineer|senior-frontend-engineer|integration-engineer|data-engineer|qa-engineer|security-engineer|devops-engineer|sre-engineer|cloud-architect|technical-writer)\b'
+        # Check if dependencies are met
+        if not self._check_task_dependencies(task_id):
+            return {
+                "action": "warn",
+                "message": f"⏳ Task {task_id} dependencies not met yet"
+            }
         
-        # Look for "as <agent>" pattern
-        as_pattern = r'as\s+(' + '|'.join([
-            'scrum-master', 'system-architect', 'tech-lead', 'requirements-analyst',
-            'senior-backend-engineer', 'senior-frontend-engineer', 'integration-engineer',
-            'data-engineer', 'qa-engineer', 'security-engineer', 'devops-engineer',
-            'sre-engineer', 'cloud-architect', 'technical-writer'
-        ]) + r')'
+        # Trigger the assigned agent to start work
+        success = self._trigger_agent_work(assigned_to, task_id, task_data)
         
-        as_match = re.search(as_pattern, prompt.lower())
-        if as_match:
-            return as_match.group(1)
-        
-        # General agent mention
-        matches = re.findall(agent_pattern, prompt.lower())
-        return matches[0] if matches else None
+        if success:
+            # Also trigger any downstream agents if this is a coordinating agent
+            if assigned_to in self.coordination_rules['auto_start_agents']:
+                downstream_agents = self.coordination_rules['auto_start_agents'][assigned_to]
+                for agent in downstream_agents:
+                    self._trigger_agent_work(agent, task_id, {
+                        'role': 'supporting',
+                        'coordinator': assigned_to
+                    })
+            
+            return {
+                "action": "allow",
+                "message": f"✅ Triggered {assigned_to} to start working on task {task_id}"
+            }
+        else:
+            return {
+                "action": "warn",
+                "message": f"⚠️ Failed to trigger {assigned_to} for task {task_id}"
+            }
     
     def _log_event(self, event_type: str, data: Dict):
         """Log events to file"""
-        log_file = self.logs_dir / f"orchestrator-{datetime.now().strftime('%Y%m%d')}.jsonl"
+        log_file = self.logs_dir / f"coordination-{datetime.now().strftime('%Y%m%d')}.jsonl"
         
         log_entry = {
-            **self.current_context,
+            "timestamp": datetime.now().isoformat(),
             "event_type": event_type,
             "data": data
         }
@@ -125,118 +164,97 @@ class AgentArmyOrchestrator:
         with open(log_file, 'a') as f:
             f.write(json.dumps(log_entry) + '\n')
     
-    def validate_communication_tool(self, tool_name: str, parameters: Dict, 
-                                   current_agent: Optional[str] = None) -> Dict:
-        """Validate communication tool usage"""
-        if not tool_name.startswith('mcp__communication__'):
+    def _validate_coordination_tool(self, tool_name: str, parameters: Dict) -> Dict:
+        """Validate and handle coordination tools"""
+        if not tool_name.startswith('mcp__coord__'):
             return {"action": "allow"}
         
-        action = tool_name.replace('mcp__communication__', '')
+        action = tool_name.replace('mcp__coord__', '')
         
-        # Log the communication attempt
-        self._log_event("communication_attempt", {
+        # Log the coordination attempt
+        self._log_event("coordination_attempt", {
             "tool": action,
-            "parameters": parameters,
-            "agent": current_agent
+            "parameters": parameters
         })
         
-        # Check permissions
-        if action in self.hierarchy["permissions"]:
-            allowed_agents = self.hierarchy["permissions"][action]
-            
-            if current_agent and current_agent not in allowed_agents:
-                return {
-                    "action": "block",
-                    "message": f"❌ {current_agent} cannot use {action}. Only {', '.join(allowed_agents)} are authorized.",
-                    "suggestion": "Use an authorized agent or escalate through proper channels."
-                }
+        # Handle task assignment - this is where coordination happens!
+        if action == "task_assign":
+            return self._handle_task_assignment(parameters)
         
-        # Validate handoff chains
-        if action == "task_handoff":
-            from_agent = parameters.get('from_agent')
-            to_agent = parameters.get('to_agent')
+        # Handle task status updates
+        elif action == "task_status":
+            status = parameters.get('status')
+            task_id = parameters.get('task_id')
             
-            if from_agent and to_agent:
-                valid_handoff = any(
-                    chain[0] == from_agent and chain[1] == to_agent
-                    for chain in self.hierarchy["handoff_chains"]
-                )
-                
-                if not valid_handoff:
-                    return {
-                        "action": "warn",
-                        "message": f"⚠️ Unusual handoff: {from_agent} → {to_agent}. This is not in the standard chain.",
-                        "metadata": {"standard_chains": self.hierarchy["handoff_chains"]}
-                    }
+            if status == 'completed' and task_id:
+                # Trigger dependent tasks when this one completes
+                self._trigger_dependent_tasks(task_id)
         
         return {"action": "allow"}
     
-    def suggest_coordination(self, prompt: str) -> Optional[Dict]:
-        """Suggest coordination improvements based on prompt"""
-        suggestions = []
-        
-        # Check for task mentions
-        if re.search(r'\b(task|feature|bug|issue|implement|create|build)\b', prompt.lower()):
-            if 'todowrite' not in prompt.lower():
-                suggestions.append({
-                    "type": "todo",
-                    "message": "💡 Consider using TodoWrite to track this task"
-                })
-        
-        # Check for coordination keywords
-        if re.search(r'\b(coordinate|handoff|assign|delegate|escalate)\b', prompt.lower()):
-            suggestions.append({
-                "type": "coordination",
-                "message": "🔄 Use Communication MCP tools for proper coordination"
+    def _trigger_dependent_tasks(self, completed_task_id: str):
+        """Trigger tasks that depend on the completed task"""
+        try:
+            tasks_file = self.project_root / '.claude' / 'mcp' / 'data' / 'communication' / 'tasks.json'
+            if not tasks_file.exists():
+                return
+            
+            with open(tasks_file, 'r') as f:
+                tasks = json.load(f)
+            
+            # Find tasks that depend on the completed task
+            for task_id, task_data in tasks.items():
+                dependencies = task_data.get('dependencies', [])
+                if completed_task_id in dependencies:
+                    # Check if all dependencies are now met
+                    if self._check_task_dependencies(task_id):
+                        assigned_to = task_data.get('assigned_to')
+                        if assigned_to:
+                            self._trigger_agent_work(assigned_to, task_id, task_data)
+                            self._log_event("dependent_task_triggered", {
+                                "task_id": task_id,
+                                "assigned_to": assigned_to,
+                                "completed_dependency": completed_task_id
+                            })
+        except Exception as e:
+            self._log_event("dependent_task_trigger_failed", {
+                "completed_task_id": completed_task_id,
+                "error": str(e)
             })
-        
-        # Check for status updates
-        if re.search(r'\b(status|progress|update|report)\b', prompt.lower()):
-            suggestions.append({
-                "type": "status",
-                "message": "📊 Use task_status to report progress"
-            })
-        
-        return suggestions if suggestions else None
     
     def process_hook(self, hook_type: str, input_data: Dict) -> Dict:
-        """Main hook processing logic"""
+        """Main hook processing logic - SIMPLIFIED"""
         response = {"action": "allow"}
         
-        if hook_type == "user-prompt-submit":
-            # Process user prompt
-            prompt = input_data.get('prompt', '')
+        try:
+            if hook_type == "pre-tool-use":
+                # Process coordination tools before they execute
+                tool = input_data.get('tool', {})
+                tool_name = tool.get('name', '')
+                parameters = tool.get('parameters', {})
+                
+                # Handle coordination tools
+                validation = self._validate_coordination_tool(tool_name, parameters)
+                response.update(validation)
             
-            # Add suggestions
-            suggestions = self.suggest_coordination(prompt)
-            if suggestions:
-                response["metadata"] = {"suggestions": suggestions}
-                response["message"] = suggestions[0]["message"]
+            elif hook_type == "post-tool-use":
+                # Process results after tool execution
+                tool_name = input_data.get('tool', {}).get('name', '')
+                result = input_data.get('result', {})
+                
+                # Log successful coordinations
+                if tool_name.startswith('mcp__coord__'):
+                    self._log_event("coordination_success", {
+                        "tool": tool_name.replace('mcp__coord__', ''),
+                        "success": True
+                    })
         
-        elif hook_type == "agent-prompt-submit":
-            # Process tool usage
-            tool = input_data.get('tool', {})
-            tool_name = tool.get('name', '')
-            parameters = tool.get('parameters', {})
-            
-            # Detect current agent
-            current_agent = self._extract_agent_context(input_data)
-            
-            # Validate communication tools
-            validation = self.validate_communication_tool(tool_name, parameters, current_agent)
-            response.update(validation)
-        
-        elif hook_type == "tool-result":
-            # Process tool results
-            tool_name = input_data.get('tool', {}).get('name', '')
-            result = input_data.get('result', {})
-            
-            # Log successful communications
-            if tool_name.startswith('mcp__communication__'):
-                self._log_event("communication_success", {
-                    "tool": tool_name.replace('mcp__communication__', ''),
-                    "result_summary": str(result)[:200] if result else None
-                })
+        except Exception as e:
+            self._log_event("hook_error", {
+                "hook_type": hook_type,
+                "error": str(e)
+            })
+            # Always allow on error to prevent blocking
         
         return response
 

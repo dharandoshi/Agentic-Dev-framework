@@ -29,7 +29,7 @@
     "description": "Initialize Next.js project with TypeScript, configure development environment, set up state management (Zustand), styling (Tailwind CSS), testing framework (Jest + RTL), and establish basic project structure. Includes tasks T-001 through T-015 from Sprint 1 plan.",
     "created_by": "scrum-master",
     "assigned_to": "tech-lead",
-    "status": "assigned",
+    "status": "in_progress",
     "priority": "critical",
     "dependencies": [],
     "artifacts": [],
@@ -56,7 +56,7 @@
       ]
     },
     "created_at": "2025-08-20 08:11:29.288052",
-    "updated_at": "2025-08-20 08:15:22.083584",
+    "updated_at": "2025-08-20 09:04:59.638453",
     "completed_at": null,
     "deadline": "2025-08-22T17:00:00",
     "parent_workflow": null,
@@ -235,7 +235,7 @@
     "description": "Initialize Next.js 14+ project with TypeScript, Tailwind CSS, and complete development environment setup according to system architecture specifications. Create folder structure, configure development tools, and establish project foundation for Sprint 1 development.",
     "created_by": "scrum-master",
     "assigned_to": "tech-lead",
-    "status": "pending",
+    "status": "in_progress",
     "priority": "critical",
     "dependencies": [],
     "artifacts": [
@@ -259,7 +259,7 @@
       "support_available": "System architect documentation and scrum master coordination"
     },
     "created_at": "2025-08-20 08:18:28.409294",
-    "updated_at": "2025-08-20 08:19:04.388127",
+    "updated_at": "2025-08-20 09:04:59.639215",
     "completed_at": null,
     "deadline": "2025-08-22T17:00:00Z",
     "parent_workflow": null,
@@ -273,7 +273,7 @@
     "description": "Implement the ability to create new todo lists with names. User should be able to add multiple lists and see them displayed in the dashboard. Includes form validation, UI components, and local storage persistence.",
     "created_by": "scrum-master",
     "assigned_to": "senior-frontend-engineer",
-    "status": "pending",
+    "status": "in_progress",
     "priority": "high",
     "dependencies": [
       "46649d31-fac9-4593-bce5-4b8d3ba557d1"
@@ -298,7 +298,7 @@
       "depends_on": "Project setup completion by tech-lead"
     },
     "created_at": "2025-08-20 08:18:35.699665",
-    "updated_at": "2025-08-20 08:19:10.344239",
+    "updated_at": "2025-08-20 09:04:59.640830",
     "completed_at": null,
     "deadline": "2025-08-24T17:00:00Z",
     "parent_workflow": null,
@@ -312,7 +312,7 @@
     "description": "Create the main dashboard where users can view all their todo lists. Implement responsive design, list cards with basic information, and navigation to individual lists.",
     "created_by": "scrum-master",
     "assigned_to": "senior-frontend-engineer",
-    "status": "pending",
+    "status": "in_progress",
     "priority": "high",
     "dependencies": [
       "46649d31-fac9-4593-bce5-4b8d3ba557d1"
@@ -337,7 +337,7 @@
       "depends_on": "Project setup completion by tech-lead"
     },
     "created_at": "2025-08-20 08:18:43.050793",
-    "updated_at": "2025-08-20 08:19:15.805355",
+    "updated_at": "2025-08-20 09:04:59.642156",
     "completed_at": null,
     "deadline": "2025-08-26T17:00:00Z",
     "parent_workflow": null,
@@ -351,7 +351,7 @@
     "description": "Allow users to edit the names of existing todo lists. Implement inline editing with validation and persistence to local storage.",
     "created_by": "scrum-master",
     "assigned_to": "senior-frontend-engineer",
-    "status": "pending",
+    "status": "in_progress",
     "priority": "medium",
     "dependencies": [
       "b564ef61-e91e-40a1-8382-e1c3df547d70",
@@ -377,7 +377,7 @@
       "depends_on": "Create and View functionality completion"
     },
     "created_at": "2025-08-20 08:18:50.503232",
-    "updated_at": "2025-08-20 08:19:21.658198",
+    "updated_at": "2025-08-20 09:04:59.642685",
     "completed_at": null,
     "deadline": "2025-08-28T17:00:00Z",
     "parent_workflow": null,
@@ -391,7 +391,7 @@
     "description": "Implement the ability to delete todo lists with confirmation dialog. Remove from local storage and update the dashboard view.",
     "created_by": "scrum-master",
     "assigned_to": "senior-frontend-engineer",
-    "status": "pending",
+    "status": "in_progress",
     "priority": "medium",
     "dependencies": [
       "b564ef61-e91e-40a1-8382-e1c3df547d70",
@@ -417,7 +417,7 @@
       "depends_on": "Create and View functionality completion"
     },
     "created_at": "2025-08-20 08:18:57.470459",
-    "updated_at": "2025-08-20 08:19:27.544321",
+    "updated_at": "2025-08-20 09:04:59.643183",
     "completed_at": null,
     "deadline": "2025-08-30T17:00:00Z",
     "parent_workflow": null,
