@@ -1,16 +1,479 @@
 {
   "version": "2.0.0",
-  "last_updated": "2025-08-20T08:37:13.264518",
+  "last_updated": "2025-08-21T10:37:02.124328",
   "statistics": {
-    "total_documents": 0,
-    "total_categories": 0,
-    "documents_by_type": {},
-    "documents_by_owner": {},
+    "total_documents": 8,
+    "total_categories": 6,
+    "documents_by_type": {
+      "requirements": 1,
+      "flow": 1,
+      "wireframe": 1,
+      "architecture": 2,
+      "database": 1,
+      "document": 2
+    },
+    "documents_by_owner": {
+      "requirements-analyst": 3,
+      "system-architect": 5
+    },
     "recently_accessed": [],
-    "recently_created": []
+    "recently_created": [
+      "f1580ee0d482",
+      "7d15325fb16b",
+      "516579515d4a",
+      "ce591daddf80",
+      "03074f7d8ff2",
+      "13cd87473415",
+      "f8d6326d089b",
+      "35b4c1e6d7ce"
+    ]
   },
-  "documents": {},
-  "categories": {},
-  "tags": {},
-  "search_index": {}
+  "documents": {
+    "35b4c1e6d7ce": {
+      "id": "35b4c1e6d7ce",
+      "path": "docs/requirements/todo-app-requirements.md",
+      "title": "Todo Application - Complete Requirements Specification",
+      "owner": "requirements-analyst",
+      "description": "Comprehensive requirements specification for a single-user todo application with local storage, including functional requirements, user stories, business rules, and technical specifications",
+      "category": "requirements",
+      "type": "requirements",
+      "tags": [
+        "requirements",
+        "todo",
+        "local-storage",
+        "nextjs",
+        "pensionid",
+        "agent-army-trial",
+        "home",
+        "material-design",
+        "todo-app-requirements.md",
+        "dhara"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:03:48.501910",
+      "modified": "2025-08-21T10:03:48.501975",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "f8d6326d089b": {
+      "id": "f8d6326d089b",
+      "path": "docs/user-experience/todo-app-user-flows.md",
+      "title": "Todo Application - User Flow Diagrams",
+      "owner": "requirements-analyst",
+      "description": "Comprehensive user flow diagrams showing all user journeys, interactions, error handling, and state transitions for the todo application",
+      "category": "user-flows",
+      "type": "flow",
+      "tags": [
+        "todo-app-user-flows.md",
+        "flow",
+        "interactions",
+        "todo",
+        "user-flows",
+        "pensionid",
+        "agent-army-trial",
+        "home",
+        "ux",
+        "workflows",
+        "dhara"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:05:54.267977",
+      "modified": "2025-08-21T10:05:54.267993",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "13cd87473415": {
+      "id": "13cd87473415",
+      "path": "docs/user-experience/todo-app-wireframes.md",
+      "title": "Todo Application - Wireframes",
+      "owner": "requirements-analyst",
+      "description": "Detailed ASCII-art wireframes for all screens and components of the todo application, including desktop and mobile layouts, component states, and Material Design specifications",
+      "category": "wireframes",
+      "type": "wireframe",
+      "tags": [
+        "ui",
+        "todo",
+        "pensionid",
+        "mockups",
+        "agent-army-trial",
+        "home",
+        "wireframes",
+        "material-design",
+        "wireframe",
+        "todo-app-wireframes.md",
+        "dhara"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:09:12.602046",
+      "modified": "2025-08-21T10:09:12.602055",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "03074f7d8ff2": {
+      "id": "03074f7d8ff2",
+      "path": "docs/architecture/todo-frontend-architecture.md",
+      "title": "Todo App Frontend Architecture",
+      "owner": "system-architect",
+      "description": "Comprehensive frontend-only architecture for todo application using Next.js, Material-UI, and local storage",
+      "category": "architecture",
+      "type": "architecture",
+      "tags": [
+        "pwa",
+        "local-storage",
+        "nextjs",
+        "architecture",
+        "frontend",
+        "todo-frontend-architecture.md"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:36:29.800986",
+      "modified": "2025-08-21T10:36:29.801013",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "ce591daddf80": {
+      "id": "ce591daddf80",
+      "path": "docs/schemas/todo-data-schema.ts",
+      "title": "Todo App Data Schema",
+      "owner": "system-architect",
+      "description": "TypeScript interfaces, data models, and local storage schema for todo application",
+      "category": "database",
+      "type": "database",
+      "tags": [
+        "database",
+        "typescript",
+        "validation",
+        "data-model",
+        "todo-data-schema.ts",
+        "schema",
+        "interfaces"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:36:37.541110",
+      "modified": "2025-08-21T10:36:37.541117",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "516579515d4a": {
+      "id": "516579515d4a",
+      "path": "docs/schemas/todo-service-layer.ts",
+      "title": "Todo App Service Layer",
+      "owner": "system-architect",
+      "description": "JavaScript/TypeScript service classes for business logic, storage operations, search, filtering, and data export",
+      "category": "api",
+      "type": "document",
+      "tags": [
+        "business-logic",
+        "filtering",
+        "services",
+        "search",
+        "export",
+        "storage",
+        "todo-service-layer.ts",
+        "document"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:36:45.883364",
+      "modified": "2025-08-21T10:36:45.883373",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "7d15325fb16b": {
+      "id": "7d15325fb16b",
+      "path": "docs/architecture/todo-component-architecture.md",
+      "title": "Todo App Component Architecture",
+      "owner": "system-architect",
+      "description": "React component architecture with Material-UI, custom hooks, atomic design pattern, and accessibility features",
+      "category": "architecture",
+      "type": "architecture",
+      "tags": [
+        "react",
+        "components",
+        "hooks",
+        "architecture",
+        "atomic-design",
+        "todo-component-architecture.md",
+        "material-ui",
+        "accessibility"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:36:53.673362",
+      "modified": "2025-08-21T10:36:53.673369",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    },
+    "f1580ee0d482": {
+      "id": "f1580ee0d482",
+      "path": "docs/architecture/todo-technical-decisions.md",
+      "title": "Todo App Technical Decisions",
+      "owner": "system-architect",
+      "description": "Architecture Decision Records (ADRs) documenting key technical choices for frontend-only implementation",
+      "category": "architecture",
+      "type": "document",
+      "tags": [
+        "todo-technical-decisions.md",
+        "ADR",
+        "architecture",
+        "technical-choices",
+        "rationale",
+        "document",
+        "decisions"
+      ],
+      "version": "1.0.0",
+      "created": "2025-08-21T10:37:02.124305",
+      "modified": "2025-08-21T10:37:02.124313",
+      "access_count": 0,
+      "references": [],
+      "referenced_by": []
+    }
+  },
+  "categories": {
+    "requirements": {
+      "document_count": 1,
+      "owners": [
+        "requirements-analyst"
+      ],
+      "document_ids": [
+        "35b4c1e6d7ce"
+      ]
+    },
+    "user-flows": {
+      "document_count": 1,
+      "owners": [
+        "requirements-analyst"
+      ],
+      "document_ids": [
+        "f8d6326d089b"
+      ]
+    },
+    "wireframes": {
+      "document_count": 1,
+      "owners": [
+        "requirements-analyst"
+      ],
+      "document_ids": [
+        "13cd87473415"
+      ]
+    },
+    "architecture": {
+      "document_count": 3,
+      "owners": [
+        "system-architect"
+      ],
+      "document_ids": [
+        "03074f7d8ff2",
+        "7d15325fb16b",
+        "f1580ee0d482"
+      ]
+    },
+    "database": {
+      "document_count": 1,
+      "owners": [
+        "system-architect"
+      ],
+      "document_ids": [
+        "ce591daddf80"
+      ]
+    },
+    "api": {
+      "document_count": 1,
+      "owners": [
+        "system-architect"
+      ],
+      "document_ids": [
+        "516579515d4a"
+      ]
+    }
+  },
+  "tags": {
+    "requirements": [
+      "35b4c1e6d7ce"
+    ],
+    "todo": [
+      "35b4c1e6d7ce",
+      "f8d6326d089b",
+      "13cd87473415"
+    ],
+    "local-storage": [
+      "35b4c1e6d7ce",
+      "03074f7d8ff2"
+    ],
+    "nextjs": [
+      "35b4c1e6d7ce",
+      "03074f7d8ff2"
+    ],
+    "pensionid": [
+      "35b4c1e6d7ce",
+      "f8d6326d089b",
+      "13cd87473415"
+    ],
+    "agent-army-trial": [
+      "35b4c1e6d7ce",
+      "f8d6326d089b",
+      "13cd87473415"
+    ],
+    "home": [
+      "35b4c1e6d7ce",
+      "f8d6326d089b",
+      "13cd87473415"
+    ],
+    "material-design": [
+      "35b4c1e6d7ce",
+      "13cd87473415"
+    ],
+    "todo-app-requirements.md": [
+      "35b4c1e6d7ce"
+    ],
+    "dhara": [
+      "35b4c1e6d7ce",
+      "f8d6326d089b",
+      "13cd87473415"
+    ],
+    "todo-app-user-flows.md": [
+      "f8d6326d089b"
+    ],
+    "flow": [
+      "f8d6326d089b"
+    ],
+    "interactions": [
+      "f8d6326d089b"
+    ],
+    "user-flows": [
+      "f8d6326d089b"
+    ],
+    "ux": [
+      "f8d6326d089b"
+    ],
+    "workflows": [
+      "f8d6326d089b"
+    ],
+    "ui": [
+      "13cd87473415"
+    ],
+    "mockups": [
+      "13cd87473415"
+    ],
+    "wireframes": [
+      "13cd87473415"
+    ],
+    "wireframe": [
+      "13cd87473415"
+    ],
+    "todo-app-wireframes.md": [
+      "13cd87473415"
+    ],
+    "pwa": [
+      "03074f7d8ff2"
+    ],
+    "architecture": [
+      "03074f7d8ff2",
+      "7d15325fb16b",
+      "f1580ee0d482"
+    ],
+    "frontend": [
+      "03074f7d8ff2"
+    ],
+    "todo-frontend-architecture.md": [
+      "03074f7d8ff2"
+    ],
+    "database": [
+      "ce591daddf80"
+    ],
+    "typescript": [
+      "ce591daddf80"
+    ],
+    "validation": [
+      "ce591daddf80"
+    ],
+    "data-model": [
+      "ce591daddf80"
+    ],
+    "todo-data-schema.ts": [
+      "ce591daddf80"
+    ],
+    "schema": [
+      "ce591daddf80"
+    ],
+    "interfaces": [
+      "ce591daddf80"
+    ],
+    "business-logic": [
+      "516579515d4a"
+    ],
+    "filtering": [
+      "516579515d4a"
+    ],
+    "services": [
+      "516579515d4a"
+    ],
+    "search": [
+      "516579515d4a"
+    ],
+    "export": [
+      "516579515d4a"
+    ],
+    "storage": [
+      "516579515d4a"
+    ],
+    "todo-service-layer.ts": [
+      "516579515d4a"
+    ],
+    "document": [
+      "516579515d4a",
+      "f1580ee0d482"
+    ],
+    "react": [
+      "7d15325fb16b"
+    ],
+    "components": [
+      "7d15325fb16b"
+    ],
+    "hooks": [
+      "7d15325fb16b"
+    ],
+    "atomic-design": [
+      "7d15325fb16b"
+    ],
+    "todo-component-architecture.md": [
+      "7d15325fb16b"
+    ],
+    "material-ui": [
+      "7d15325fb16b"
+    ],
+    "accessibility": [
+      "7d15325fb16b"
+    ],
+    "todo-technical-decisions.md": [
+      "f1580ee0d482"
+    ],
+    "ADR": [
+      "f1580ee0d482"
+    ],
+    "technical-choices": [
+      "f1580ee0d482"
+    ],
+    "rationale": [
+      "f1580ee0d482"
+    ],
+    "decisions": [
+      "f1580ee0d482"
+    ]
+  },
+  "search_index": {
+    "35b4c1e6d7ce": "todo application - complete requirements specification comprehensive requirements specification for a single-user todo application with local storage, including functional requirements, user stories, business rules, and technical specifications /home/dhara/pensionid/agent-army-trial/docs/todo-app-requirements.md requirements todo local-storage nextjs pensionid agent-army-trial home material-design todo-app-requirements.md dhara",
+    "f8d6326d089b": "todo application - user flow diagrams comprehensive user flow diagrams showing all user journeys, interactions, error handling, and state transitions for the todo application /home/dhara/pensionid/agent-army-trial/docs/todo-app-user-flows.md todo-app-user-flows.md flow interactions todo user-flows pensionid agent-army-trial home ux workflows dhara",
+    "13cd87473415": "todo application - wireframes detailed ascii-art wireframes for all screens and components of the todo application, including desktop and mobile layouts, component states, and material design specifications /home/dhara/pensionid/agent-army-trial/docs/todo-app-wireframes.md ui todo pensionid mockups agent-army-trial home wireframes material-design wireframe todo-app-wireframes.md dhara",
+    "03074f7d8ff2": "todo app frontend architecture comprehensive frontend-only architecture for todo application using next.js, material-ui, and local storage docs/todo-frontend-architecture.md pwa local-storage nextjs architecture frontend todo-frontend-architecture.md",
+    "ce591daddf80": "todo app data schema typescript interfaces, data models, and local storage schema for todo application docs/todo-data-schema.ts database typescript validation data-model todo-data-schema.ts schema interfaces",
+    "516579515d4a": "todo app service layer javascript/typescript service classes for business logic, storage operations, search, filtering, and data export docs/todo-service-layer.ts business-logic filtering services search export storage todo-service-layer.ts document",
+    "7d15325fb16b": "todo app component architecture react component architecture with material-ui, custom hooks, atomic design pattern, and accessibility features docs/todo-component-architecture.md react components hooks architecture atomic-design todo-component-architecture.md material-ui accessibility",
+    "f1580ee0d482": "todo app technical decisions architecture decision records (adrs) documenting key technical choices for frontend-only implementation docs/todo-technical-decisions.md todo-technical-decisions.md adr architecture technical-choices rationale document decisions"
+  }
 }

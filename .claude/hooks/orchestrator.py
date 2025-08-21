@@ -31,6 +31,13 @@ AGENT_EXPERTISE = {
     'project-initializer': ['setup', 'initialize', 'bootstrap', 'scaffold', 'structure']
 }
 
+# Project intent keywords for auto-triggering
+PROJECT_KEYWORDS = [
+    'build', 'create', 'develop', 'implement', 'make',
+    'application', 'app', 'system', 'feature', 'project',
+    'website', 'service', 'api', 'platform', 'tool'
+]
+
 class AgentArmyOrchestrator:
     """Simplified orchestrator that actually coordinates agents"""
     
@@ -38,6 +45,7 @@ class AgentArmyOrchestrator:
         self.project_root = Path(os.environ.get('CLAUDE_PROJECT_ROOT', '.'))
         self.logs_dir = self.project_root / 'logs'
         self.logs_dir.mkdir(parents=True, exist_ok=True)
+        self.auto_trigger_enabled = True
         
         # Comprehensive agent coordination rules
         self.coordination_rules = {
@@ -547,12 +555,87 @@ class AgentArmyOrchestrator:
             "message": f"✅ Handed off task {task_id} from {from_agent} to {to_agent}"
         }
     
+    def detect_project_intent(self, text: str) -> bool:
+        """Detect if user wants to start a project"""
+        if not text:
+            return False
+        text_lower = text.lower()
+        return any(keyword in text_lower for keyword in PROJECT_KEYWORDS)
+    
+    def auto_trigger_scrum_master(self, user_input: str) -> Dict:
+        """Automatically trigger scrum-master for project work"""
+        # Create inception task
+        task_data = {
+            "title": "Project Inception",
+            "description": f"User request: {user_input}",
+            "created_by": "orchestrator",
+            "priority": "critical"
+        }
+        
+        # Store task for scrum-master
+        tasks_file = self.project_root / 'mcp' / 'data' / 'communication' / 'tasks.json'
+        tasks_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        tasks = {}
+        if tasks_file.exists():
+            with open(tasks_file, 'r') as f:
+                tasks = json.load(f)
+        
+        task_id = f"task_inception_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        tasks[task_id] = {
+            **task_data,
+            "id": task_id,
+            "status": "pending",
+            "assigned_to": "scrum-master",
+            "created_at": datetime.now().isoformat()
+        }
+        
+        with open(tasks_file, 'w') as f:
+            json.dump(tasks, f, indent=2)
+        
+        # Trigger scrum-master
+        self._trigger_agent_work("scrum-master", task_id, {"phase": "auto_detect"})
+        
+        self._log_event("auto_trigger_scrum_master", {
+            "user_input": user_input,
+            "task_id": task_id,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+        return {
+            "action": "inject",
+            "message": "🚀 Initiating project with Scrum Master for Sprint 0...",
+            "trigger_agent": "scrum-master",
+            "context": {"phase": "inception", "task_id": task_id}
+        }
+    
     def process_hook(self, hook_type: str, input_data: Dict) -> Dict:
         """Main hook processing logic - SIMPLIFIED"""
         response = {"action": "allow"}
         
         try:
-            if hook_type == "pre-tool-use":
+            # Handle user prompt submission for auto-triggering
+            if hook_type == "user-prompt-submit":
+                user_input = input_data.get('prompt', '')
+                if self.auto_trigger_enabled and self.detect_project_intent(user_input):
+                    # Check if scrum-master should be auto-triggered
+                    tasks_file = self.project_root / 'mcp' / 'data' / 'communication' / 'tasks.json'
+                    has_active_project = False
+                    
+                    if tasks_file.exists():
+                        with open(tasks_file, 'r') as f:
+                            tasks = json.load(f)
+                            # Check if there's already an active project
+                            has_active_project = any(
+                                t.get('status') in ['pending', 'in_progress'] and 
+                                t.get('assigned_to') == 'scrum-master'
+                                for t in tasks.values()
+                            )
+                    
+                    if not has_active_project:
+                        return self.auto_trigger_scrum_master(user_input)
+            
+            elif hook_type == "pre-tool-use":
                 # Process coordination tools before they execute
                 tool = input_data.get('tool', {})
                 tool_name = tool.get('name', '')

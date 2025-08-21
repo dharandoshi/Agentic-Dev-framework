@@ -2,9 +2,26 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "model": "sonnet",
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/dhara/PensionID/agent-army-trial/.claude && python3 hooks/orchestrator.py",
+            "timeout": 5000,
+            "env": {
+              "CLAUDE_HOOK_TYPE": "user-prompt-submit",
+              "CLAUDE_PROJECT_ROOT": "/home/dhara/PensionID/agent-army-trial/.claude",
+              "CLAUDE_HOOK_INPUT": "${input}"
+            }
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
-        "matcher": "mcp__coord__(task_assign|task_status)",
+        "matcher": "mcp__coord__.*|mcp__pm__.*",
         "hooks": [
           {
             "type": "command",
@@ -21,11 +38,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "mcp__coord__.*",
+        "matcher": "mcp__coord__.*|mcp__pm__.*",
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/dhara/PensionID/agent-army-trial/.claude && python3 hooks/communication-tracker.py", 
+            "command": "cd /home/dhara/PensionID/agent-army-trial/.claude && python3 hooks/orchestrator.py", 
             "timeout": 3000,
             "env": {
               "CLAUDE_HOOK_TYPE": "post-tool-use",

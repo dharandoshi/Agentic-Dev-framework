@@ -1,0 +1,292 @@
+{
+  "templates": {
+    "web-application": {
+      "name": "Web Application",
+      "description": "Full-stack web application with frontend and backend",
+      "phases": [
+        {
+          "phase": "inception",
+          "tasks": [
+            "Define user personas and journeys",
+            "Gather functional requirements",
+            "Create wireframes and mockups",
+            "Define acceptance criteria"
+          ],
+          "duration_days": 5,
+          "assigned_to": "requirements-analyst"
+        },
+        {
+          "phase": "architecture",
+          "tasks": [
+            "Design system architecture",
+            "Define API contracts",
+            "Create database schema",
+            "Select technology stack"
+          ],
+          "duration_days": 3,
+          "assigned_to": "system-architect"
+        },
+        {
+          "phase": "sprint-1",
+          "tasks": [
+            "Setup project infrastructure",
+            "Implement authentication",
+            "Create basic CRUD operations",
+            "Setup CI/CD pipeline"
+          ],
+          "duration_days": 14,
+          "assigned_to": "tech-lead"
+        }
+      ],
+      "default_team": [
+        "scrum-master",
+        "requirements-analyst",
+        "system-architect",
+        "tech-lead",
+        "senior-frontend-engineer",
+        "senior-backend-engineer",
+        "qa-engineer",
+        "devops-engineer"
+      ],
+      "tech_stack_suggestions": [
+        "React/Next.js + Node.js/Express",
+        "Vue.js + Django",
+        "Angular + .NET Core"
+      ]
+    },
+    "api-service": {
+      "name": "API Service",
+      "description": "RESTful or GraphQL API service",
+      "phases": [
+        {
+          "phase": "inception",
+          "tasks": [
+            "Define API requirements",
+            "Identify consumers",
+            "Define data models",
+            "Create API documentation"
+          ],
+          "duration_days": 3,
+          "assigned_to": "requirements-analyst"
+        },
+        {
+          "phase": "architecture",
+          "tasks": [
+            "Design API architecture",
+            "Define endpoint structure",
+            "Plan authentication/authorization",
+            "Design rate limiting and caching"
+          ],
+          "duration_days": 2,
+          "assigned_to": "system-architect"
+        },
+        {
+          "phase": "sprint-1",
+          "tasks": [
+            "Setup API framework",
+            "Implement core endpoints",
+            "Add authentication",
+            "Setup monitoring"
+          ],
+          "duration_days": 10,
+          "assigned_to": "tech-lead"
+        }
+      ],
+      "default_team": [
+        "scrum-master",
+        "requirements-analyst",
+        "system-architect",
+        "tech-lead",
+        "senior-backend-engineer",
+        "integration-engineer",
+        "qa-engineer",
+        "devops-engineer"
+      ],
+      "tech_stack_suggestions": [
+        "Node.js + Express + PostgreSQL",
+        "Python + FastAPI + MongoDB",
+        "Go + Gin + MySQL"
+      ]
+    },
+    "mobile-app": {
+      "name": "Mobile Application",
+      "description": "Native or cross-platform mobile application",
+      "phases": [
+        {
+          "phase": "inception",
+          "tasks": [
+            "Define mobile user experience",
+            "Create mobile wireframes",
+            "Define offline capabilities",
+            "Plan platform support (iOS/Android)"
+          ],
+          "duration_days": 5,
+          "assigned_to": "requirements-analyst"
+        },
+        {
+          "phase": "architecture",
+          "tasks": [
+            "Choose native vs cross-platform",
+            "Design mobile architecture",
+            "Plan data synchronization",
+            "Define push notification strategy"
+          ],
+          "duration_days": 3,
+          "assigned_to": "system-architect"
+        },
+        {
+          "phase": "sprint-1",
+          "tasks": [
+            "Setup mobile development environment",
+            "Implement navigation",
+            "Create core screens",
+            "Setup app store deployment"
+          ],
+          "duration_days": 14,
+          "assigned_to": "tech-lead"
+        }
+      ],
+      "default_team": [
+        "scrum-master",
+        "requirements-analyst",
+        "system-architect",
+        "tech-lead",
+        "senior-frontend-engineer",
+        "senior-backend-engineer",
+        "qa-engineer",
+        "devops-engineer"
+      ],
+      "tech_stack_suggestions": [
+        "React Native + Expo",
+        "Flutter + Firebase",
+        "Swift (iOS) + Kotlin (Android)"
+      ]
+    },
+    "data-pipeline": {
+      "name": "Data Pipeline",
+      "description": "ETL/ELT data processing pipeline",
+      "phases": [
+        {
+          "phase": "inception",
+          "tasks": [
+            "Define data sources",
+            "Identify transformation requirements",
+            "Define data quality rules",
+            "Plan data destinations"
+          ],
+          "duration_days": 4,
+          "assigned_to": "requirements-analyst"
+        },
+        {
+          "phase": "architecture",
+          "tasks": [
+            "Design pipeline architecture",
+            "Choose batch vs streaming",
+            "Plan error handling",
+            "Design monitoring strategy"
+          ],
+          "duration_days": 3,
+          "assigned_to": "system-architect"
+        },
+        {
+          "phase": "sprint-1",
+          "tasks": [
+            "Setup pipeline infrastructure",
+            "Implement data ingestion",
+            "Create transformation logic",
+            "Setup data quality checks"
+          ],
+          "duration_days": 14,
+          "assigned_to": "tech-lead"
+        }
+      ],
+      "default_team": [
+        "scrum-master",
+        "requirements-analyst",
+        "system-architect",
+        "tech-lead",
+        "data-engineer",
+        "integration-engineer",
+        "qa-engineer",
+        "sre-engineer"
+      ],
+      "tech_stack_suggestions": [
+        "Apache Airflow + Python",
+        "Apache Spark + Scala",
+        "AWS Glue + Lambda"
+      ]
+    },
+    "microservices": {
+      "name": "Microservices Architecture",
+      "description": "Distributed microservices system",
+      "phases": [
+        {
+          "phase": "inception",
+          "tasks": [
+            "Define service boundaries",
+            "Identify service dependencies",
+            "Define communication patterns",
+            "Plan service discovery"
+          ],
+          "duration_days": 5,
+          "assigned_to": "requirements-analyst"
+        },
+        {
+          "phase": "architecture",
+          "tasks": [
+            "Design microservices architecture",
+            "Define service contracts",
+            "Plan orchestration/choreography",
+            "Design resilience patterns"
+          ],
+          "duration_days": 5,
+          "assigned_to": "system-architect"
+        },
+        {
+          "phase": "sprint-1",
+          "tasks": [
+            "Setup service mesh",
+            "Implement first microservice",
+            "Setup service discovery",
+            "Implement API gateway"
+          ],
+          "duration_days": 14,
+          "assigned_to": "tech-lead"
+        }
+      ],
+      "default_team": [
+        "scrum-master",
+        "requirements-analyst",
+        "system-architect",
+        "tech-lead",
+        "senior-backend-engineer",
+        "cloud-architect",
+        "devops-engineer",
+        "sre-engineer"
+      ],
+      "tech_stack_suggestions": [
+        "Kubernetes + Istio + gRPC",
+        "Docker Swarm + Consul",
+        "AWS ECS + App Mesh"
+      ]
+    }
+  },
+  "template_selection_rules": {
+    "keywords_to_template": {
+      "website": "web-application",
+      "web app": "web-application",
+      "dashboard": "web-application",
+      "api": "api-service",
+      "rest api": "api-service",
+      "graphql": "api-service",
+      "mobile": "mobile-app",
+      "ios app": "mobile-app",
+      "android app": "mobile-app",
+      "etl": "data-pipeline",
+      "data processing": "data-pipeline",
+      "microservices": "microservices",
+      "distributed": "microservices"
+    },
+    "default_template": "web-application"
+  }
+}
