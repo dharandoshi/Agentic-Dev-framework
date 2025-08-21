@@ -12,85 +12,186 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
+# Agent expertise mapping for intelligent task routing
+AGENT_EXPERTISE = {
+    'senior-frontend-engineer': ['ui', 'component', 'frontend', 'react', 'vue', 'angular', 'css', 'html'],
+    'senior-backend-engineer': ['api', 'backend', 'database', 'server', 'endpoint', 'migration', 'model'],
+    'qa-engineer': ['test', 'quality', 'bug', 'validation', 'e2e', 'integration', 'unit'],
+    'devops-engineer': ['deploy', 'ci/cd', 'pipeline', 'docker', 'kubernetes', 'infrastructure'],
+    'security-engineer': ['security', 'vulnerability', 'authentication', 'authorization', 'encryption'],
+    'data-engineer': ['etl', 'pipeline', 'data', 'warehouse', 'analytics', 'stream'],
+    'integration-engineer': ['webhook', 'integration', 'third-party', 'api', 'sync'],
+    'sre-engineer': ['monitoring', 'reliability', 'incident', 'metrics', 'observability'],
+    'cloud-architect': ['aws', 'azure', 'gcp', 'cloud', 'serverless', 'scaling'],
+    'system-architect': ['architecture', 'design', 'system', 'schema', 'structure'],
+    'requirements-analyst': ['requirements', 'user story', 'acceptance', 'criteria', 'specification'],
+    'technical-writer': ['documentation', 'readme', 'guide', 'tutorial', 'api docs'],
+    'tech-lead': ['technical', 'coordinate', 'review', 'architecture', 'planning'],
+    'scrum-master': ['sprint', 'backlog', 'agile', 'planning', 'retrospective'],
+    'project-initializer': ['setup', 'initialize', 'bootstrap', 'scaffold', 'structure']
+}
+
 class AgentArmyOrchestrator:
     """Simplified orchestrator that actually coordinates agents"""
     
     def __init__(self):
         self.project_root = Path(os.environ.get('CLAUDE_PROJECT_ROOT', '.'))
-        self.logs_dir = self.project_root / '.claude' / 'logs'
+        self.logs_dir = self.project_root / 'logs'
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         
-        # Core agent coordination rules
+        # Comprehensive agent coordination rules
         self.coordination_rules = {
-            'task_handoff_chains': [
-                ('scrum-master', 'tech-lead'),
-                ('tech-lead', 'senior-backend-engineer'),
-                ('tech-lead', 'senior-frontend-engineer'),
-                ('senior-backend-engineer', 'qa-engineer'),
-                ('senior-frontend-engineer', 'qa-engineer'),
-                ('qa-engineer', 'devops-engineer')
-            ],
-            'auto_start_agents': {
-                'tech-lead': ['senior-backend-engineer', 'senior-frontend-engineer'],
-                'scrum-master': ['tech-lead']
+            # Who can hand off to whom
+            'handoff_patterns': {
+                'scrum-master': ['tech-lead', 'requirements-analyst', 'project-initializer'],
+                'tech-lead': ['senior-backend-engineer', 'senior-frontend-engineer', 'system-architect', 
+                             'security-engineer', 'data-engineer', 'integration-engineer'],
+                'requirements-analyst': ['system-architect', 'technical-writer', 'tech-lead'],
+                'system-architect': ['tech-lead', 'senior-backend-engineer', 'senior-frontend-engineer'],
+                'senior-backend-engineer': ['qa-engineer', 'security-engineer', 'data-engineer', 'integration-engineer'],
+                'senior-frontend-engineer': ['qa-engineer', 'technical-writer'],
+                'data-engineer': ['qa-engineer', 'integration-engineer'],
+                'integration-engineer': ['qa-engineer', 'security-engineer'],
+                'qa-engineer': ['devops-engineer', 'sre-engineer', 'tech-lead'],
+                'devops-engineer': ['sre-engineer', 'cloud-architect'],
+                'security-engineer': ['devops-engineer', 'tech-lead'],
+                'sre-engineer': ['tech-lead', 'devops-engineer'],
+                'cloud-architect': ['devops-engineer', 'tech-lead'],
+                'technical-writer': ['tech-lead'],
+                'project-initializer': ['tech-lead', 'system-architect']
+            },
+            
+            # Automatic coordination triggers
+            'auto_coordinate': {
+                'requirements_complete': ['system-architect', 'tech-lead'],
+                'architecture_complete': ['tech-lead'],
+                'backend_complete': ['qa-engineer'],
+                'frontend_complete': ['qa-engineer'],
+                'testing_complete': ['devops-engineer'],
+                'deployment_ready': ['sre-engineer']
+            },
+            
+            # Reporting hierarchy
+            'reporting_chain': {
+                'senior-backend-engineer': 'tech-lead',
+                'senior-frontend-engineer': 'tech-lead',
+                'qa-engineer': 'tech-lead',
+                'devops-engineer': 'tech-lead',
+                'security-engineer': 'tech-lead',
+                'data-engineer': 'tech-lead',
+                'integration-engineer': 'tech-lead',
+                'sre-engineer': 'tech-lead',
+                'cloud-architect': 'tech-lead',
+                'system-architect': 'tech-lead',
+                'technical-writer': 'tech-lead',
+                'tech-lead': 'scrum-master',
+                'requirements-analyst': 'scrum-master',
+                'project-initializer': 'scrum-master'
+            },
+            
+            # Collaboration patterns
+            'collaboration_required': {
+                'api_design': ['senior-backend-engineer', 'senior-frontend-engineer'],
+                'security_review': ['security-engineer', 'senior-backend-engineer'],
+                'deployment': ['devops-engineer', 'sre-engineer'],
+                'data_pipeline': ['data-engineer', 'integration-engineer'],
+                'performance': ['senior-backend-engineer', 'sre-engineer']
             }
         }
         
     def _trigger_agent_work(self, agent_name: str, task_id: str, context: Dict = None) -> bool:
         """Actually trigger an agent to start working on a task"""
         try:
-            # Use the workflow engine to trigger agent
-            scripts_dir = self.project_root / '.claude' / 'scripts'
-            workflow_engine = scripts_dir / 'agent_workflow_engine.py'
+            # Create a delegation message
+            message_data = {
+                "from_agent": context.get('coordinator', 'tech-lead') if context else 'tech-lead',
+                "to_agent": agent_name,
+                "subject": f"Task Assignment: {task_id}",
+                "content": f"Please begin work on task {task_id}. Report progress back when complete.",
+                "type": "task",
+                "priority": "high",
+                "requires_response": True,
+                "task_id": task_id
+            }
             
-            if workflow_engine.exists():
-                # Call the workflow engine
-                context_json = json.dumps(context or {})
-                cmd = [
-                    'python3', 
-                    str(workflow_engine), 
-                    agent_name, 
-                    task_id, 
-                    context_json
-                ]
-                
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-                
-                if result.returncode == 0:
-                    self._log_event("agent_triggered", {
-                        "agent": agent_name,
-                        "task_id": task_id,
-                        "timestamp": datetime.now().isoformat()
-                    })
-                    return True
-                else:
-                    self._log_event("agent_trigger_failed", {
-                        "agent": agent_name,
-                        "task_id": task_id,
-                        "error": result.stderr
-                    })
-                    return False
-            else:
-                # Fallback: just log the trigger
-                self._log_event("agent_triggered_fallback", {
-                    "agent": agent_name,
-                    "task_id": task_id,
-                    "timestamp": datetime.now().isoformat()
-                })
-                return True
+            # Store delegation message for agent to pick up
+            self._store_delegation_message(message_data)
+            
+            # Log the delegation
+            self._log_event("delegation_initiated", {
+                "from": message_data['from_agent'],
+                "to": agent_name,
+                "task_id": task_id,
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            # Create automatic status update reminder
+            self._schedule_status_check(agent_name, task_id)
+            
+            return True
                 
         except Exception as e:
-            self._log_event("agent_trigger_failed", {
+            self._log_event("delegation_failed", {
                 "agent": agent_name,
                 "task_id": task_id,
                 "error": str(e)
             })
             return False
     
+    def _store_delegation_message(self, message_data: Dict):
+        """Store delegation message for agent coordination"""
+        try:
+            messages_file = self.project_root / 'mcp' / 'data' / 'communication' / 'messages.json'
+            messages_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            messages = {}
+            if messages_file.exists():
+                with open(messages_file, 'r') as f:
+                    messages = json.load(f)
+            
+            message_id = f"msg_{datetime.now().strftime('%Y%m%d%H%M%S')}_{message_data['to_agent']}"
+            messages[message_id] = {
+                **message_data,
+                "id": message_id,
+                "timestamp": datetime.now().isoformat(),
+                "status": "unread"
+            }
+            
+            with open(messages_file, 'w') as f:
+                json.dump(messages, f, indent=2)
+                
+        except Exception as e:
+            self._log_event("message_store_failed", {"error": str(e)})
+    
+    def _schedule_status_check(self, agent_name: str, task_id: str):
+        """Schedule a status check for delegated task"""
+        try:
+            reminders_file = self.project_root / 'mcp' / 'data' / 'communication' / 'reminders.json'
+            reminders_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            reminders = {}
+            if reminders_file.exists():
+                with open(reminders_file, 'r') as f:
+                    reminders = json.load(f)
+            
+            reminder_id = f"reminder_{task_id}_{agent_name}"
+            reminders[reminder_id] = {
+                "agent": agent_name,
+                "task_id": task_id,
+                "check_after": datetime.now().isoformat(),
+                "status": "pending"
+            }
+            
+            with open(reminders_file, 'w') as f:
+                json.dump(reminders, f, indent=2)
+                
+        except Exception as e:
+            self._log_event("reminder_schedule_failed", {"error": str(e)})
+    
     def _check_task_dependencies(self, task_id: str) -> bool:
         """Check if task dependencies are met"""
         try:
-            tasks_file = self.project_root / '.claude' / 'mcp' / 'data' / 'communication' / 'tasks.json'
+            tasks_file = self.project_root / 'mcp' / 'data' / 'communication' / 'tasks.json'
             if not tasks_file.exists():
                 return True
             
@@ -121,6 +222,24 @@ class AgentArmyOrchestrator:
         if not task_id or not assigned_to:
             return {"action": "allow"}
         
+        # Simple validation: check if right agent for the task
+        task_details = self._load_task_details(task_id)
+        if task_details:
+            task_title = task_details.get('title', '').lower()
+            task_desc = task_details.get('description', '').lower()
+            
+            # Find best agent based on expertise matching
+            suggested_agents = self._find_best_agents_for_task(task_title + ' ' + task_desc)
+            suggested_agent = suggested_agents[0] if suggested_agents else None
+            
+            # Warn if potentially wrong assignment
+            if suggested_agent and suggested_agent != assigned_to:
+                self._log_event("assignment_mismatch_warning", {
+                    "task_id": task_id,
+                    "assigned_to": assigned_to,
+                    "suggested": suggested_agent
+                })
+        
         # Check if dependencies are met
         if not self._check_task_dependencies(task_id):
             return {
@@ -132,18 +251,19 @@ class AgentArmyOrchestrator:
         success = self._trigger_agent_work(assigned_to, task_id, task_data)
         
         if success:
-            # Also trigger any downstream agents if this is a coordinating agent
-            if assigned_to in self.coordination_rules['auto_start_agents']:
-                downstream_agents = self.coordination_rules['auto_start_agents'][assigned_to]
-                for agent in downstream_agents:
-                    self._trigger_agent_work(agent, task_id, {
-                        'role': 'supporting',
-                        'coordinator': assigned_to
+            # Check if collaboration is needed
+            collaborators = self._find_collaborators(task_details) if task_details else []
+            for collaborator in collaborators:
+                if collaborator != assigned_to:
+                    self._trigger_agent_work(collaborator, task_id, {
+                        'role': 'collaborator',
+                        'lead': assigned_to
                     })
             
             return {
                 "action": "allow",
-                "message": f"✅ Triggered {assigned_to} to start working on task {task_id}"
+                "message": f"✅ Triggered {assigned_to} to work on task {task_id}" + 
+                          (f" with {', '.join(collaborators)}" if collaborators else "")
             }
         else:
             return {
@@ -187,15 +307,139 @@ class AgentArmyOrchestrator:
             task_id = parameters.get('task_id')
             
             if status == 'completed' and task_id:
+                # Report completion back up the chain
+                self._report_task_completion(task_id, parameters)
                 # Trigger dependent tasks when this one completes
                 self._trigger_dependent_tasks(task_id)
+        
+        # Handle message sends for reporting
+        elif action == "message_send":
+            return self._handle_message_send(parameters)
+        
+        # Handle task handoffs
+        elif action == "task_handoff":
+            return self._handle_task_handoff(parameters)
+        
+        return {"action": "allow"}
+    
+    def _load_task_details(self, task_id: str) -> Optional[Dict]:
+        """Load full task details from JSON"""
+        try:
+            tasks_file = self.project_root / 'mcp' / 'data' / 'communication' / 'tasks.json'
+            if not tasks_file.exists():
+                return None
+            
+            with open(tasks_file, 'r') as f:
+                tasks = json.load(f)
+            
+            return tasks.get(task_id)
+        except Exception:
+            return None
+    
+    def _report_task_completion(self, task_id: str, parameters: Dict):
+        """Report task completion up the reporting chain"""
+        try:
+            # Get the agent who completed the task
+            task_details = self._load_task_details(task_id)
+            if not task_details:
+                return
+            
+            assigned_to = task_details.get('assigned_to')
+            if not assigned_to:
+                return
+            
+            # Find who to report to
+            report_to = self.coordination_rules['reporting_chain'].get(assigned_to)
+            if not report_to:
+                return
+            
+            # Create completion report
+            report_message = {
+                "from_agent": assigned_to,
+                "to_agent": report_to,
+                "subject": f"Task {task_id} Completed",
+                "content": f"Task {task_id} has been completed successfully. Status: {parameters.get('status')}\nProgress: {parameters.get('progress', 100)}%",
+                "type": "status",
+                "priority": "medium",
+                "task_id": task_id
+            }
+            
+            self._store_delegation_message(report_message)
+            
+            self._log_event("completion_reported", {
+                "task_id": task_id,
+                "from": assigned_to,
+                "to": report_to,
+                "timestamp": datetime.now().isoformat()
+            })
+            
+            # If reporting to scrum-master, create a summary
+            if report_to == 'scrum-master':
+                self._create_sprint_summary(task_id, assigned_to)
+                
+        except Exception as e:
+            self._log_event("report_failed", {
+                "task_id": task_id,
+                "error": str(e)
+            })
+    
+    def _create_sprint_summary(self, task_id: str, completed_by: str):
+        """Create sprint summary for scrum master"""
+        try:
+            summary_file = self.project_root / 'mcp' / 'data' / 'communication' / 'sprint_summary.json'
+            summary_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            summary = {}
+            if summary_file.exists():
+                with open(summary_file, 'r') as f:
+                    summary = json.load(f)
+            
+            if 'completed_tasks' not in summary:
+                summary['completed_tasks'] = []
+            
+            summary['completed_tasks'].append({
+                "task_id": task_id,
+                "completed_by": completed_by,
+                "completed_at": datetime.now().isoformat()
+            })
+            
+            summary['last_updated'] = datetime.now().isoformat()
+            
+            with open(summary_file, 'w') as f:
+                json.dump(summary, f, indent=2)
+                
+        except Exception as e:
+            self._log_event("summary_failed", {"error": str(e)})
+    
+    def _handle_message_send(self, parameters: Dict) -> Dict:
+        """Handle message sends between agents"""
+        from_agent = parameters.get('from_agent', '')
+        to_agent = parameters.get('to_agent', '')
+        message_type = parameters.get('type', '')
+        
+        # Validate reporting chain
+        if message_type in ['status', 'response']:
+            expected_recipient = self.coordination_rules['reporting_chain'].get(from_agent)
+            if expected_recipient and to_agent != expected_recipient:
+                self._log_event("reporting_chain_violation", {
+                    "from": from_agent,
+                    "to": to_agent,
+                    "expected": expected_recipient
+                })
+                return {
+                    "action": "warn",
+                    "message": f"⚠️ {from_agent} should report to {expected_recipient}, not {to_agent}"
+                }
+        
+        # Store the message for coordination
+        self._store_delegation_message(parameters)
         
         return {"action": "allow"}
     
     def _trigger_dependent_tasks(self, completed_task_id: str):
         """Trigger tasks that depend on the completed task"""
         try:
-            tasks_file = self.project_root / '.claude' / 'mcp' / 'data' / 'communication' / 'tasks.json'
+            tasks_file = self.project_root / 'mcp' / 'data' / 'communication' / 'tasks.json'
             if not tasks_file.exists():
                 return
             
@@ -221,6 +465,87 @@ class AgentArmyOrchestrator:
                 "completed_task_id": completed_task_id,
                 "error": str(e)
             })
+    
+    def _find_best_agents_for_task(self, task_text: str) -> List[str]:
+        """Find best agents based on task keywords and expertise"""
+        task_lower = task_text.lower()
+        scores = {}
+        
+        for agent, keywords in AGENT_EXPERTISE.items():
+            score = sum(1 for keyword in keywords if keyword in task_lower)
+            if score > 0:
+                scores[agent] = score
+        
+        # Sort by score and return top matches
+        sorted_agents = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        return [agent for agent, _ in sorted_agents[:3]]
+    
+    def _find_collaborators(self, task_details: Dict) -> List[str]:
+        """Find agents that should collaborate on this task"""
+        task_text = (task_details.get('title', '') + ' ' + task_details.get('description', '')).lower()
+        collaborators = []
+        
+        for pattern, agents in self.coordination_rules['collaboration_required'].items():
+            if pattern.replace('_', ' ') in task_text:
+                collaborators.extend(agents)
+        
+        return list(set(collaborators))  # Remove duplicates
+    
+    def _handle_task_handoff(self, parameters: Dict) -> Dict:
+        """Handle task handoffs between agents"""
+        from_agent = parameters.get('from_agent', '')
+        to_agent = parameters.get('to_agent', '')
+        task_id = parameters.get('task_id', '')
+        
+        # Check if handoff is allowed
+        allowed_handoffs = self.coordination_rules['handoff_patterns'].get(from_agent, [])
+        
+        if to_agent not in allowed_handoffs:
+            # Check if it's a valid reverse handoff (reporting back)
+            if self.coordination_rules['reporting_chain'].get(from_agent) == to_agent:
+                # This is a report back, allow it
+                pass
+            else:
+                self._log_event("invalid_handoff", {
+                    "from": from_agent,
+                    "to": to_agent,
+                    "allowed": allowed_handoffs
+                })
+                return {
+                    "action": "warn",
+                    "message": f"⚠️ {from_agent} cannot hand off to {to_agent}. Allowed: {', '.join(allowed_handoffs)}"
+                }
+        
+        # Create handoff message
+        handoff_message = {
+            "from_agent": from_agent,
+            "to_agent": to_agent,
+            "subject": f"Task Handoff: {task_id}",
+            "content": parameters.get('context', {}).get('message', f"Taking over task {task_id} from {from_agent}"),
+            "type": "handoff",
+            "priority": "high",
+            "task_id": task_id,
+            "artifacts": parameters.get('artifacts', [])
+        }
+        
+        self._store_delegation_message(handoff_message)
+        
+        # Trigger the receiving agent
+        self._trigger_agent_work(to_agent, task_id, {
+            'handoff_from': from_agent,
+            'context': parameters.get('context', {})
+        })
+        
+        self._log_event("handoff_executed", {
+            "from": from_agent,
+            "to": to_agent,
+            "task_id": task_id
+        })
+        
+        return {
+            "action": "allow",
+            "message": f"✅ Handed off task {task_id} from {from_agent} to {to_agent}"
+        }
     
     def process_hook(self, hook_type: str, input_data: Dict) -> Dict:
         """Main hook processing logic - SIMPLIFIED"""

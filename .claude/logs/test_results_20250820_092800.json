@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-08-20T09:28:00.360345",
+  "tests": [
+    {
+      "test": "Hook Configuration",
+      "passed": true,
+      "details": "Hooks configured"
+    },
+    {
+      "test": "Orchestrator Hook",
+      "passed": true,
+      "details": "Hook responded with: allow"
+    },
+    {
+      "test": "Workflow Engine",
+      "passed": true,
+      "details": "Engine response: {'success': False}"
+    },
+    {
+      "test": "Task Data Structure",
+      "passed": true,
+      "details": "Found 14 tasks, 6 in progress"
+    },
+    {
+      "test": "Agent Registry",
+      "passed": true,
+      "details": "Registry contains 16 agents"
+    },
+    {
+      "test": "Response Templates",
+      "passed": true,
+      "details": "Found 7 response templates"
+    }
+  ]
+}

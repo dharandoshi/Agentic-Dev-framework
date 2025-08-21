@@ -10,6 +10,7 @@ import asyncio
 import json
 import os
 import uuid
+import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Literal
@@ -71,6 +72,12 @@ message_threads: Dict[str, List[str]] = {}
 # Use absolute path relative to this script file
 data_dir = Path(__file__).parent.parent.parent / "data" / "communication"
 data_dir.mkdir(parents=True, exist_ok=True)
+
+# File paths
+TASKS_FILE = data_dir / "tasks.json"
+MESSAGES_FILE = data_dir / "messages.json"
+AGENTS_FILE = data_dir / "agents.json"
+WORKFLOWS_FILE = data_dir / "workflows.json"
 
 
 def load_data():
@@ -375,6 +382,42 @@ async def handle_list_tools() -> list[types.Tool]:
                     "task_id": {"type": "string", "description": "Task containing checkpoint"}
                 },
                 "required": ["checkpoint_id", "task_id"]
+            }
+        ),
+        
+        # System Management Tools
+        types.Tool(
+            name="system_reset",
+            description="Reset coordination system components (tasks, messages, agents). Creates automatic backup.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "component": {"type": "string", "enum": ["all", "tasks", "messages", "agents", "workflows", "escalations"], "description": "Component to reset"},
+                    "confirm": {"type": "string", "description": "Must be 'RESET_CONFIRMED' to proceed"},
+                    "keep_templates": {"type": "boolean", "default": False, "description": "Keep template tasks when resetting"}
+                },
+                "required": ["component", "confirm"]
+            }
+        ),
+        types.Tool(
+            name="system_archive",
+            description="Archive completed tasks older than specified days to reduce clutter",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "days_old": {"type": "integer", "default": 7, "description": "Archive tasks completed more than this many days ago"},
+                    "dry_run": {"type": "boolean", "default": False, "description": "Preview what would be archived without doing it"}
+                }
+            }
+        ),
+        types.Tool(
+            name="system_stats",
+            description="Get coordination system statistics and status",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "detailed": {"type": "boolean", "default": False, "description": "Include detailed breakdown"}
+                }
             }
         )
     ]
@@ -1147,6 +1190,218 @@ async def handle_call_tool(
                     "valid": False,
                     "error": "Checkpoint not found"
                 }, indent=2)
+            )]
+        
+        # System Management Tools
+        elif name == "system_reset":
+            component = arguments["component"]
+            confirm = arguments.get("confirm", "")
+            
+            if confirm != "RESET_CONFIRMED":
+                # Show current statistics
+                stats = {
+                    "tasks": len(tasks),
+                    "messages": len(messages),
+                    "agents": len(agents),
+                    "workflows": len(workflows),
+                    "escalations": len(escalations) if 'escalations' in globals() else 0
+                }
+                return [types.TextContent(
+                    type="text",
+                    text=json.dumps({
+                        "error": "Reset not confirmed",
+                        "current_stats": stats,
+                        "warning": f"This will reset {component}. Use confirm='RESET_CONFIRMED' to proceed."
+                    }, indent=2)
+                )]
+            
+            # Create backup
+            backup_dir = data_dir / "backups" / datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup_dir.mkdir(parents=True, exist_ok=True)
+            
+            results = {"backed_up": [], "reset": [], "kept": []}
+            
+            if component == "all" or component == "tasks":
+                if tasks:
+                    shutil.copy2(TASKS_FILE, backup_dir / "tasks.json")
+                    results["backed_up"].append("tasks")
+                if arguments.get("keep_templates", False):
+                    # Keep any template tasks if needed
+                    tasks = {}
+                else:
+                    tasks = {}
+                results["reset"].append(f"tasks ({len(tasks)} remaining)")
+            
+            if component == "all" or component == "messages":
+                if messages:
+                    shutil.copy2(MESSAGES_FILE, backup_dir / "messages.json")
+                    results["backed_up"].append("messages")
+                messages = {}
+                message_threads = {}
+                results["reset"].append("messages")
+            
+            if component == "all" or component == "agents":
+                if agents:
+                    shutil.copy2(AGENTS_FILE, backup_dir / "agents.json")
+                    results["backed_up"].append("agents")
+                # Clear agents completely
+                agents = {}
+                results["reset"].append("agents")
+            
+            if component == "all" or component == "workflows":
+                if workflows:
+                    shutil.copy2(WORKFLOWS_FILE, backup_dir / "workflows.json")
+                    results["backed_up"].append("workflows")
+                workflows = {}
+                results["reset"].append("workflows")
+            
+            if component == "all" or component == "escalations":
+                escalations_file = data_dir / "escalations.json"
+                if escalations_file.exists():
+                    shutil.copy2(escalations_file, backup_dir / "escalations.json")
+                    results["backed_up"].append("escalations")
+                    with open(escalations_file, 'w') as f:
+                        json.dump({}, f, indent=2)
+                results["reset"].append("escalations")
+            
+            save_data()
+            
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "status": "success",
+                    "component": component,
+                    "backup_location": str(backup_dir.relative_to(data_dir.parent.parent)),
+                    "results": results
+                }, indent=2)
+            )]
+        
+        elif name == "system_archive":
+            days_old = arguments.get("days_old", 7)
+            dry_run = arguments.get("dry_run", False)
+            
+            from datetime import timedelta
+            archive_date = datetime.now() - timedelta(days=days_old)
+            
+            tasks_to_archive = []
+            for task_id, task in tasks.items():
+                if task.get("status") == "completed" and task.get("completed_at"):
+                    try:
+                        completed_date = datetime.fromisoformat(task["completed_at"].replace("Z", "+00:00"))
+                        if completed_date < archive_date:
+                            tasks_to_archive.append((task_id, task))
+                    except:
+                        pass
+            
+            if dry_run:
+                return [types.TextContent(
+                    type="text",
+                    text=json.dumps({
+                        "dry_run": True,
+                        "would_archive": len(tasks_to_archive),
+                        "tasks": [{"id": tid, "title": t["title"], "completed": t["completed_at"]} 
+                                 for tid, t in tasks_to_archive[:10]],  # Show first 10
+                        "note": f"Would archive {len(tasks_to_archive)} tasks older than {days_old} days"
+                    }, indent=2)
+                )]
+            
+            if tasks_to_archive:
+                # Create archive
+                archive_dir = data_dir / "archives"
+                archive_dir.mkdir(exist_ok=True)
+                archive_file = archive_dir / f"tasks_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                
+                archived_tasks = {tid: task for tid, task in tasks_to_archive}
+                with open(archive_file, 'w') as f:
+                    json.dump(archived_tasks, f, indent=2)
+                
+                # Remove from active tasks
+                for task_id, _ in tasks_to_archive:
+                    del tasks[task_id]
+                
+                save_data()
+                
+                return [types.TextContent(
+                    type="text",
+                    text=json.dumps({
+                        "archived": len(tasks_to_archive),
+                        "archive_file": str(archive_file.relative_to(data_dir.parent.parent)),
+                        "remaining_tasks": len(tasks),
+                        "message": f"Archived {len(tasks_to_archive)} completed tasks older than {days_old} days"
+                    }, indent=2)
+                )]
+            else:
+                return [types.TextContent(
+                    type="text",
+                    text=json.dumps({
+                        "archived": 0,
+                        "message": f"No completed tasks older than {days_old} days to archive"
+                    }, indent=2)
+                )]
+        
+        elif name == "system_stats":
+            detailed = arguments.get("detailed", False)
+            
+            stats = {
+                "tasks": {
+                    "total": len(tasks),
+                    "by_status": {},
+                    "by_priority": {},
+                    "by_agent": {}
+                },
+                "messages": {
+                    "total": len(messages),
+                    "unread": sum(1 for m in messages.values() if not m.get("read", True)),
+                    "by_type": {}
+                },
+                "agents": {
+                    "total": len(agents),
+                    "available": sum(1 for a in agents.values() if a.get("status") == "available"),
+                    "busy": sum(1 for a in agents.values() if a.get("status") == "busy"),
+                    "workload": {}
+                },
+                "workflows": len(workflows),
+                "system": {
+                    "data_directory": str(data_dir.relative_to(data_dir.parent.parent)),
+                    "last_update": max([
+                        TASKS_FILE.stat().st_mtime if TASKS_FILE.exists() else 0,
+                        MESSAGES_FILE.stat().st_mtime if MESSAGES_FILE.exists() else 0,
+                        AGENTS_FILE.stat().st_mtime if AGENTS_FILE.exists() else 0
+                    ])
+                }
+            }
+            
+            if detailed:
+                # Task details
+                for task in tasks.values():
+                    status = task.get("status", "unknown")
+                    stats["tasks"]["by_status"][status] = stats["tasks"]["by_status"].get(status, 0) + 1
+                    
+                    priority = task.get("priority", "medium")
+                    stats["tasks"]["by_priority"][priority] = stats["tasks"]["by_priority"].get(priority, 0) + 1
+                    
+                    agent = task.get("assigned_to", "unassigned")
+                    if agent:
+                        stats["tasks"]["by_agent"][agent] = stats["tasks"]["by_agent"].get(agent, 0) + 1
+                
+                # Message details
+                for msg in messages.values():
+                    msg_type = msg.get("type", "unknown")
+                    stats["messages"]["by_type"][msg_type] = stats["messages"]["by_type"].get(msg_type, 0) + 1
+                
+                # Agent workload
+                for agent_name, agent in agents.items():
+                    stats["agents"]["workload"][agent_name] = {
+                        "current_tasks": len(agent.get("current_tasks", [])),
+                        "completed_tasks": len(agent.get("completed_tasks", [])),
+                        "workload_percent": agent.get("workload", 0)
+                    }
+            
+            stats["system"]["last_update_time"] = datetime.fromtimestamp(stats["system"]["last_update"]).isoformat()
+            
+            return [types.TextContent(
+                type="text",
+                text=json.dumps(stats, indent=2)
             )]
         
         else:

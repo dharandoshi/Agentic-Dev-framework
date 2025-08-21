@@ -25,8 +25,8 @@ class AgentWorkflowEngine:
         # Agent responsibility mapping
         self.agent_workflows = {
             'tech-lead': self._tech_lead_workflow,
-            'senior-backend-engineer': self._backend_engineer_workflow,
-            'senior-frontend-engineer': self._frontend_engineer_workflow,
+            'senior-backend-engineer': self._senior_backend_engineer_workflow,
+            'senior-frontend-engineer': self._senior_frontend_engineer_workflow,
             'qa-engineer': self._qa_engineer_workflow,
             'devops-engineer': self._devops_engineer_workflow,
             'scrum-master': self._scrum_master_workflow
