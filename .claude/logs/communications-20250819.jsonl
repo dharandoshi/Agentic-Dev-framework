@@ -1,3 +1,0 @@
-{"timestamp": "2025-08-19T04:17:16.489989", "tool": "task_handoff", "parameters": {"from_agent": "senior-backend-engineer", "to_agent": "qa-engineer", "task_id": "TEST-001"}, "session": "test-session"}
-{"timestamp": "2025-08-19T04:17:59.407016", "tool": "task_handoff", "parameters": {"from_agent": "senior-backend-engineer", "to_agent": "qa-engineer", "task_id": "TEST-001"}, "session": "test-session"}
-{"timestamp": "2025-08-19T04:33:41.565480", "tool": "task_handoff", "parameters": {"from_agent": "senior-backend-engineer", "to_agent": "qa-engineer", "task_id": "REAL-TEST-001", "context": {"test": "This is a real test"}}, "session": "unknown"}
