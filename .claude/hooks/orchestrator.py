@@ -636,13 +636,17 @@ This request requires the Agent Army multi-agent framework.
 ```
 The user wants to: {user_input}
 
-As the scrum-master, please:
-1. Analyze these requirements thoroughly
-2. Create a comprehensive project plan
-3. Break down the work into specific tasks
-4. Assign tasks to the appropriate specialized agents (tech-lead, senior-frontend-engineer, senior-backend-engineer, etc.)
-5. Coordinate the entire development lifecycle
-6. Ensure all agents work in the current directory without creating subfolders
+As the scrum-master, you MUST:
+1. FIRST check project phase using mcp__docs__find for requirements and architecture
+2. If INCEPTION phase (no requirements exist):
+   - Delegate to requirements-analyst for discovery
+   - DO NOT create implementation tasks yet!
+3. If DISCOVERY phase (requirements exist, no architecture):
+   - Delegate to system-architect for technical design
+4. If PLANNING phase (both exist):
+   - Create Sprint 1 and delegate to tech-lead
+5. Ensure all agents work in the current directory without creating subfolders
+6. Follow the proper coordination chain: requirements-analyst → system-architect → tech-lead
 ```
 
 **DO NOT attempt to implement this yourself. The Agent Army system will handle everything.**

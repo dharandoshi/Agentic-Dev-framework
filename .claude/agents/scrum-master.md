@@ -118,7 +118,18 @@ If you attempt any technical work, the system will:
 
 1. **Phase Detection** (ALWAYS DO FIRST):
    ```python
-   phase = mcp__pm__detect_phase()
+   # Check for existing requirements
+   requirements = mcp__docs__find(query="requirements", category="requirements")
+   # Check for existing architecture
+   architecture = mcp__docs__find(query="architecture", category="architecture")
+   
+   # Determine phase
+   if not requirements:
+       phase = "INCEPTION"
+   elif not architecture:
+       phase = "DISCOVERY"
+   else:
+       phase = "PLANNING"
    ```
    
 2. **Phase-Based Actions**:
@@ -126,7 +137,9 @@ If you attempt any technical work, the system will:
 #### Phase: INCEPTION (Nothing exists)
    - Create Sprint 0
    - Start project inception workflow
-   - Delegate to requirements-analyst for requirements gathering
+   - **CRITICAL: Delegate to requirements-analyst FIRST**
+   - **DO NOT create implementation tasks without requirements!**
+   - Wait for requirements-analyst to complete discovery
    - Status: "Sprint 0 - Discovery"
 
 #### Phase: DISCOVERY (Requirements being gathered)
@@ -209,10 +222,14 @@ When user requests a new project:
 
 When invoked, you must follow these steps:
 
-0. **Phase Detection** (FIRST ACTION - NEW):
-   - Detect current project phase using PM tools
-   - If INCEPTION phase, start Sprint 0 workflow
-   - If other phase, continue with appropriate actions
+0. **Phase Detection** (FIRST ACTION - CRITICAL):
+   - Use mcp__docs__find to search for existing requirements documents
+   - Use mcp__docs__find to search for existing architecture documents  
+   - Determine phase based on what exists:
+     * No requirements found → INCEPTION phase → Delegate to requirements-analyst
+     * Requirements exist but no architecture → DISCOVERY phase → Delegate to system-architect
+     * Both exist → PLANNING phase → Create Sprint 1 and delegate to tech-lead
+   - NEVER create tasks without requirements!
 
 1. **Document Discovery**:
    - Find project documentation:
