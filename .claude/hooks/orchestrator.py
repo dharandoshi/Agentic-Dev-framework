@@ -663,7 +663,7 @@ Working Directory: {os.getcwd()}"""
         
         try:
             # Handle user prompt submission for auto-triggering
-            if hook_type == "user-prompt-submit":
+            if hook_type == "UserPromptSubmit" or hook_type == "user-prompt-submit":
                 user_input = input_data.get('prompt', '')
                 if self.auto_trigger_enabled and self.detect_project_intent(user_input):
                     # Check if scrum-master should be auto-triggered
@@ -717,15 +717,26 @@ Working Directory: {os.getcwd()}"""
 def main():
     """Main entry point for the hook"""
     try:
-        # Get hook input
-        hook_input = json.loads(os.environ.get('CLAUDE_HOOK_INPUT', '{}'))
-        hook_type = os.environ.get('CLAUDE_HOOK_TYPE', 'unknown')
+        # Read hook input from stdin (Claude Code passes input via stdin)
+        import sys
+        stdin_input = sys.stdin.read()
+        
+        # Parse the input
+        if stdin_input:
+            hook_input = json.loads(stdin_input)
+        else:
+            # Fallback to environment variable for testing
+            hook_input = json.loads(os.environ.get('CLAUDE_HOOK_INPUT', '{}'))
+        
+        # Determine hook type from input
+        hook_type = hook_input.get('hook_event_name', 'UserPromptSubmit')
         
         # Debug logging
         with open('/tmp/orchestrator_debug.log', 'a') as f:
             f.write(f"\n--- {datetime.now().isoformat()} ---\n")
             f.write(f"Hook Type: {hook_type}\n")
             f.write(f"Hook Input: {json.dumps(hook_input)}\n")
+            f.write(f"Stdin received: {len(stdin_input)} bytes\n")
         
         # Initialize orchestrator
         orchestrator = AgentArmyOrchestrator()
