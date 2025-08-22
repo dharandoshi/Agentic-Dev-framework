@@ -1,7 +1,7 @@
 ---
 name: technical-writer
 description: Use proactively for creating API documentation, developer guides, system documentation, deployment guides, technical tutorials, user interface copy, error messages, and user-facing documentation
-tools: Read, Write, MultiEdit, Glob, Grep, mcp__docs__register, mcp__docs__find, mcp__docs__search, mcp__docs__get, mcp__docs__update, mcp__docs__related, mcp__docs__tree, mcp__workspace__context, mcp__workspace__find, mcp__coord__task_status, mcp__coord__message_send
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, MultiEdit, Glob, Grep, mcp__docs__register, mcp__docs__find, mcp__docs__search, mcp__docs__get, mcp__docs__update, mcp__docs__related, mcp__docs__tree, mcp__workspace__context, mcp__workspace__find, mcp__coord__task_status, mcp__coord__message_send
 model: sonnet
 color: blue
 ---

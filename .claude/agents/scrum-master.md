@@ -1,7 +1,7 @@
 ---
 name: scrum-master
 description: Project Manager responsible for sprint planning, feature-level coordination, backlog management, agile ceremony facilitation, stakeholder communication, and project timeline management
-tools: Read, Glob, Grep, Write, WebFetch, mcp__workspace__git, mcp__workspace__metrics, mcp__docs__register, mcp__docs__find, mcp__docs__tree, mcp__coord__task_create, mcp__coord__task_assign, mcp__coord__task_list, mcp__coord__task_status, mcp__coord__workflow_start, mcp__coord__workflow_status, mcp__coord__message_broadcast, mcp__coord__agent_workload
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Glob, Grep, Write, WebFetch, mcp__workspace__git, mcp__workspace__metrics, mcp__docs__register, mcp__docs__find, mcp__docs__tree, mcp__coord__task_create, mcp__coord__task_assign, mcp__coord__task_list, mcp__coord__task_status, mcp__coord__workflow_start, mcp__coord__workflow_status, mcp__coord__message_broadcast, mcp__coord__agent_workload
 model: sonnet
 color: blue
 ---

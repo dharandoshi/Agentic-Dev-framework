@@ -1,7 +1,7 @@
 ---
 name: devops-engineer
 description: Use proactively for CI/CD pipeline setup, containerization, infrastructure as code, and deployment automation
-tools: Read, Write, MultiEdit, Bash, Task, mcp__workspace__build_command, mcp__workspace__packages, mcp__workspace__deps, mcp__workspace__git, mcp__workspace__find, mcp__execution__command, mcp__execution__script, mcp__docs__register, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__checkpoint_create
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, MultiEdit, Bash, Task, mcp__workspace__build_command, mcp__workspace__packages, mcp__workspace__deps, mcp__workspace__git, mcp__workspace__find, mcp__execution__command, mcp__execution__script, mcp__docs__register, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__checkpoint_create
 model: sonnet
 color: cyan
 ---

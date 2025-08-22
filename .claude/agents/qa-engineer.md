@@ -1,7 +1,7 @@
 ---
 name: qa-engineer
 description: Use proactively for test planning, test case creation, quality assurance, bug tracking, acceptance testing, automated tests, E2E scenarios, integration tests, performance testing, and load testing
-tools: Read, Write, MultiEdit, Bash, Grep, TodoWrite, mcp__workspace__test_command, mcp__workspace__find, mcp__workspace__context, mcp__validation__syntax, mcp__validation__validate, mcp__execution__test, mcp__execution__api, mcp__execution__debug, mcp__execution__run, mcp__docs__register, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__escalation_create
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, MultiEdit, Bash, Grep, TodoWrite, mcp__workspace__test_command, mcp__workspace__find, mcp__workspace__context, mcp__validation__syntax, mcp__validation__validate, mcp__execution__test, mcp__execution__api, mcp__execution__debug, mcp__execution__run, mcp__docs__register, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__escalation_create
 model: sonnet
 color: red
 ---

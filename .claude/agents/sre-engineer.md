@@ -1,7 +1,7 @@
 ---
 name: sre-engineer
 description: Use proactively for site reliability, monitoring setup, incident response, and system resilience
-tools: Read, Write, MultiEdit, Bash, Task, mcp__workspace__metrics, mcp__execution__profile, mcp__execution__run, mcp__execution__command, mcp__docs__register, mcp__coord__task_status, mcp__coord__message_send, mcp__coord__escalation_create
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, MultiEdit, Bash, Task, mcp__workspace__metrics, mcp__execution__profile, mcp__execution__run, mcp__execution__command, mcp__docs__register, mcp__coord__task_status, mcp__coord__message_send, mcp__coord__escalation_create
 model: sonnet
 color: red
 ---

@@ -143,28 +143,119 @@ class ProjectAnalyzer:
                     if "@nestjs/core" in deps:
                         self.context["frameworks"].append("nestjs")
                     
+                    # Store ALL dependencies with versions
                     self.context["dependencies"]["npm"] = deps
+                    
+                    # Extract versions for all packages
+                    self.context["package_versions"] = {}
+                    for package, version in deps.items():
+                        self.context["package_versions"][package] = version
+                        
+                        # Detect CSS frameworks
+                        if package in ["tailwindcss", "bootstrap", "bulma", "@mui/material", "antd", "chakra-ui"]:
+                            if "styling_frameworks" not in self.context:
+                                self.context["styling_frameworks"] = []
+                            self.context["styling_frameworks"].append({
+                                "name": package,
+                                "version": version
+                            })
+                        
+                        # Detect testing frameworks
+                        if package in ["jest", "mocha", "vitest", "@testing-library/react", "cypress", "playwright"]:
+                            if "testing_frameworks" not in self.context:
+                                self.context["testing_frameworks"] = []
+                            self.context["testing_frameworks"].append({
+                                "name": package,
+                                "version": version
+                            })
+                        
+                        # Detect build tools
+                        if package in ["webpack", "vite", "rollup", "parcel", "esbuild", "turbopack"]:
+                            if "build_tools" not in self.context:
+                                self.context["build_tools"] = []
+                            self.context["build_tools"].append({
+                                "name": package,
+                                "version": version
+                            })
+                        
+                        # Detect state management
+                        if package in ["redux", "@reduxjs/toolkit", "mobx", "zustand", "valtio", "jotai", "recoil"]:
+                            if "state_management" not in self.context:
+                                self.context["state_management"] = []
+                            self.context["state_management"].append({
+                                "name": package,
+                                "version": version
+                            })
+                        
+                        # Detect ORM/Database
+                        if package in ["prisma", "@prisma/client", "typeorm", "sequelize", "mongoose", "knex"]:
+                            if "database_tools" not in self.context:
+                                self.context["database_tools"] = []
+                            self.context["database_tools"].append({
+                                "name": package,
+                                "version": version
+                            })
+                    
+                    # Store framework versions
+                    if "next" in deps:
+                        self.context["frameworks"].append(f"nextjs@{deps['next']}")
+                    if "react" in deps:
+                        self.context["frameworks"].append(f"react@{deps['react']}")
+                    if "vue" in deps:
+                        self.context["frameworks"].append(f"vue@{deps['vue']}")
+                    if "@angular/core" in deps:
+                        self.context["frameworks"].append(f"angular@{deps['@angular/core']}")
             except:
                 pass
         
-        # Python frameworks
-        req_files = ["requirements.txt", "Pipfile", "pyproject.toml"]
-        for req_file in req_files:
-            if (self.root / req_file).exists():
-                try:
-                    content = (self.root / req_file).read_text().lower()
-                    if "django" in content:
-                        self.context["frameworks"].append("django")
-                    if "flask" in content:
-                        self.context["frameworks"].append("flask")
-                    if "fastapi" in content:
-                        self.context["frameworks"].append("fastapi")
-                    if "pyramid" in content:
-                        self.context["frameworks"].append("pyramid")
-                    if "tornado" in content:
-                        self.context["frameworks"].append("tornado")
-                except:
-                    pass
+        # Python frameworks with versions
+        if (self.root / "requirements.txt").exists():
+            try:
+                content = (self.root / "requirements.txt").read_text()
+                self.context["dependencies"]["pip"] = {}
+                for line in content.splitlines():
+                    if "==" in line:
+                        pkg, ver = line.split("==")
+                        self.context["dependencies"]["pip"][pkg.strip()] = ver.strip()
+                        
+                        # Framework detection with versions
+                        if pkg.strip().lower() in ["django", "flask", "fastapi", "pyramid", "tornado"]:
+                            self.context["frameworks"].append(f"{pkg.strip()}@{ver.strip()}")
+                        
+                        # Python testing frameworks
+                        if pkg.strip() in ["pytest", "unittest2", "nose2", "behave"]:
+                            if "testing_frameworks" not in self.context:
+                                self.context["testing_frameworks"] = []
+                            self.context["testing_frameworks"].append({
+                                "name": pkg.strip(),
+                                "version": ver.strip()
+                            })
+                        
+                        # Python ORMs
+                        if pkg.strip() in ["sqlalchemy", "django-orm", "peewee", "tortoise-orm"]:
+                            if "database_tools" not in self.context:
+                                self.context["database_tools"] = []
+                            self.context["database_tools"].append({
+                                "name": pkg.strip(),
+                                "version": ver.strip()
+                            })
+            except:
+                pass
+        
+        # Parse pyproject.toml for Python dependencies
+        if (self.root / "pyproject.toml").exists():
+            try:
+                import toml
+                with open(self.root / "pyproject.toml", 'r') as f:
+                    data = toml.load(f)
+                    if "tool" in data and "poetry" in data["tool"] and "dependencies" in data["tool"]["poetry"]:
+                        deps = data["tool"]["poetry"]["dependencies"]
+                        self.context["dependencies"]["poetry"] = deps
+                        for pkg, ver in deps.items():
+                            if isinstance(ver, str) and pkg != "python":
+                                self.context["package_versions"][pkg] = ver
+            except:
+                pass
         
         # Java frameworks
         if (self.root / "pom.xml").exists():
@@ -177,14 +268,65 @@ class ProjectAnalyzer:
             except:
                 pass
         
-        # Ruby frameworks
-        if (self.root / "Gemfile").exists():
+        # Go modules with versions
+        if (self.root / "go.mod").exists():
             try:
-                content = (self.root / "Gemfile").read_text().lower()
-                if "rails" in content:
-                    self.context["frameworks"].append("rails")
-                if "sinatra" in content:
-                    self.context["frameworks"].append("sinatra")
+                content = (self.root / "go.mod").read_text()
+                self.context["dependencies"]["go"] = {}
+                for line in content.splitlines():
+                    if line.strip().startswith("require "):
+                        parts = line.strip().split()
+                        if len(parts) >= 3:
+                            module = parts[1]
+                            version = parts[2]
+                            self.context["dependencies"]["go"][module] = version
+                            
+                            # Detect Go frameworks
+                            if "gin-gonic/gin" in module:
+                                self.context["frameworks"].append(f"gin@{version}")
+                            elif "labstack/echo" in module:
+                                self.context["frameworks"].append(f"echo@{version}")
+                            elif "gofiber/fiber" in module:
+                                self.context["frameworks"].append(f"fiber@{version}")
+            except:
+                pass
+        
+        # Rust/Cargo with versions
+        if (self.root / "Cargo.toml").exists():
+            try:
+                import toml
+                with open(self.root / "Cargo.toml", 'r') as f:
+                    data = toml.load(f)
+                    if "dependencies" in data:
+                        self.context["dependencies"]["cargo"] = data["dependencies"]
+                        for pkg, ver in data["dependencies"].items():
+                            if isinstance(ver, str):
+                                self.context["package_versions"][pkg] = ver
+                            elif isinstance(ver, dict) and "version" in ver:
+                                self.context["package_versions"][pkg] = ver["version"]
+                            
+                            # Detect Rust frameworks
+                            if pkg in ["actix-web", "rocket", "warp", "axum"]:
+                                version = ver if isinstance(ver, str) else ver.get("version", "unknown")
+                                self.context["frameworks"].append(f"{pkg}@{version}")
+            except:
+                pass
+        
+        # Ruby frameworks with versions
+        if (self.root / "Gemfile.lock").exists():
+            try:
+                content = (self.root / "Gemfile.lock").read_text()
+                self.context["dependencies"]["gem"] = {}
+                current_gem = None
+                for line in content.splitlines():
+                    if line.strip() and not line.startswith(" "):
+                        if " (" in line:
+                            gem_name = line.split(" (")[0].strip()
+                            gem_version = line.split(" (")[1].rstrip(")")
+                            self.context["dependencies"]["gem"][gem_name] = gem_version
+                            
+                            if gem_name in ["rails", "sinatra", "hanami", "padrino"]:
+                                self.context["frameworks"].append(f"{gem_name}@{gem_version}")
             except:
                 pass
         

@@ -1,7 +1,7 @@
 ---
 name: security-engineer
 description: Use proactively for security audits, vulnerability assessments, penetration testing, security implementation, compliance with security standards, regulatory compliance, audit trails, data privacy implementation, and GDPR/HIPAA/SOC2 compliance
-tools: Read, Write, Grep, Bash, Task, MultiEdit, mcp__workspace__deps, mcp__workspace__find, mcp__validation__imports, mcp__execution__debug, mcp__execution__command, mcp__docs__register, mcp__coord__task_status, mcp__coord__message_send, mcp__coord__escalation_create
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, Grep, Bash, Task, MultiEdit, mcp__workspace__deps, mcp__workspace__find, mcp__validation__imports, mcp__execution__debug, mcp__execution__command, mcp__docs__register, mcp__coord__task_status, mcp__coord__message_send, mcp__coord__escalation_create
 model: sonnet
 color: red
 ---

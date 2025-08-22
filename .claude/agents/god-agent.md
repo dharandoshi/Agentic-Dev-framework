@@ -1,7 +1,7 @@
 ---
 name: god
 description: Use proactively for any agent-related tasks including creating new agents, modifying existing agents, updating agent configurations, fixing agent issues, enhancing agent capabilities, or any task mentioning 'agent'. This agent specializes in architecting and managing all sub-agent configurations.
-tools: Write, WebFetch, Read, Edit, MultiEdit, Glob, mcp__workspace__find, mcp__docs__register, mcp__docs__find, mcp__coord__workflow_start, mcp__coord__agent_workload, mcp__coord__message_broadcast
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Write, WebFetch, Read, Edit, MultiEdit, Glob, mcp__workspace__find, mcp__docs__register, mcp__docs__find, mcp__coord__workflow_start, mcp__coord__agent_workload, mcp__coord__message_broadcast
 model: opus
 color: purple
 ---
@@ -130,7 +130,7 @@ You must generate a single Markdown code block containing the complete agent def
 ---
 name: <generated-agent-name>
 description: <generated-action-oriented-description>
-tools: <inferred-tool-1>, <inferred-tool-2>
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, <inferred-tool-1>, <inferred-tool-2>
 model: haiku | sonnet | opus <default to sonnet unless otherwise specified>
 color: <selected-color>
 ---
