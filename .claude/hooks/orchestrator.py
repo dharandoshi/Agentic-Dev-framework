@@ -621,16 +621,34 @@ class AgentArmyOrchestrator:
             "timestamp": datetime.now().isoformat()
         })
         
+        # Create a clear instruction to trigger the scrum-master
+        additional_context = f"""
+
+🚀 AGENT ARMY ACTIVATED: Project intent detected!
+
+IMPORTANT: This is a complex project that requires multi-agent coordination.
+
+IMMEDIATE ACTION REQUIRED:
+1. Use the Task tool with subagent_type='scrum-master'
+2. The scrum-master will coordinate the entire project
+3. Task ID created: {task_id}
+
+PROMPT FOR SCRUM-MASTER:
+"User wants to: {user_input}
+Please analyze requirements, create a project plan, and coordinate with the appropriate agents to implement this."
+
+The Agent Army system will handle the complete development lifecycle."""
+        
         return {
-            "action": "inject",
-            "message": "🚀 Initiating project with Scrum Master for Sprint 0...",
-            "trigger_agent": "scrum-master",
-            "context": {"phase": "inception", "task_id": task_id}
+            "hookSpecificOutput": {
+                "hookEventName": "UserPromptSubmit", 
+                "additionalContext": additional_context
+            }
         }
     
     def process_hook(self, hook_type: str, input_data: Dict) -> Dict:
         """Main hook processing logic - SIMPLIFIED"""
-        response = {"action": "allow"}
+        response = {}
         
         try:
             # Handle user prompt submission for auto-triggering
