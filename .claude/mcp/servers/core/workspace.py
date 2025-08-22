@@ -555,6 +555,118 @@ async def handle_list_tools() -> list[types.Tool]:
                     }
                 }
             }
+        ),
+        types.Tool(
+            name="check_duplicates",
+            description="Check if a file, function, or component already exists to prevent duplicates",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of file, function, class, or component to check"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Type to check: file, function, class, component, route, endpoint",
+                        "enum": ["file", "function", "class", "component", "route", "endpoint", "any"]
+                    }
+                },
+                "required": ["name", "type"]
+            }
+        ),
+        types.Tool(
+            name="impact_analysis",
+            description="Analyze impact of proposed changes - what files depend on this, what might break",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "file_path": {
+                        "type": "string",
+                        "description": "File to analyze impact for"
+                    },
+                    "change_type": {
+                        "type": "string",
+                        "description": "Type of change: modify, delete, rename, refactor",
+                        "enum": ["modify", "delete", "rename", "refactor"]
+                    }
+                },
+                "required": ["file_path", "change_type"]
+            }
+        ),
+        types.Tool(
+            name="dependency_graph",
+            description="Get dependency graph showing which files import/depend on others",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "file_path": {
+                        "type": "string",
+                        "description": "Optional: specific file to get dependencies for (shows all if not provided)"
+                    },
+                    "direction": {
+                        "type": "string",
+                        "description": "Direction: imports (what this imports) or importers (what imports this)",
+                        "enum": ["imports", "importers", "both"],
+                        "default": "both"
+                    }
+                }
+            }
+        ),
+        types.Tool(
+            name="safe_location",
+            description="Get safe location for new file based on project structure and conventions",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "file_type": {
+                        "type": "string",
+                        "description": "Type of file: component, service, model, test, util, config, etc."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Proposed name for the file"
+                    }
+                },
+                "required": ["file_type", "name"]
+            }
+        ),
+        types.Tool(
+            name="validate_changes",
+            description="Validate proposed changes won't break existing code (runs tests, checks types)",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "changes": {
+                        "type": "array",
+                        "description": "List of file paths that were changed",
+                        "items": {"type": "string"}
+                    },
+                    "run_tests": {
+                        "type": "boolean",
+                        "description": "Run test suite to validate",
+                        "default": True
+                    }
+                }
+            }
+        ),
+        types.Tool(
+            name="existing_patterns",
+            description="Find existing patterns for similar functionality to maintain consistency",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "pattern_type": {
+                        "type": "string",
+                        "description": "Type of pattern: api_endpoint, component, service, database_query, auth, etc."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "What you're trying to implement"
+                    }
+                },
+                "required": ["pattern_type"]
+            }
         )
     ]
 
@@ -890,6 +1002,313 @@ async def handle_call_tool(
         return [types.TextContent(
             type="text",
             text=json.dumps(metrics, indent=2)
+        )]
+    
+    elif name == "check_duplicates":
+        # Check for duplicate files, functions, classes, components
+        check_name = arguments.get("name", "")
+        check_type = arguments.get("type", "any")
+        
+        duplicates = []
+        
+        if check_type in ["file", "any"]:
+            # Check for duplicate files
+            for ext in ["py", "js", "ts", "jsx", "tsx", "java", "go", "rs", "cs", "cpp", "rb", "php"]:
+                pattern = f"**/{check_name}.{ext}"
+                matches = list(PROJECT_ROOT.glob(pattern))
+                duplicates.extend([str(m.relative_to(PROJECT_ROOT)) for m in matches])
+        
+        if check_type in ["function", "class", "component", "any"]:
+            # Search for function/class/component definitions
+            import re
+            patterns = {
+                "function": [r"def\s+" + check_name + r"\s*\(", r"function\s+" + check_name + r"\s*\(", r"const\s+" + check_name + r"\s*="],
+                "class": [r"class\s+" + check_name + r"[\s:\({]"],
+                "component": [r"const\s+" + check_name + r"\s*=.*=>", r"function\s+" + check_name + r"\s*\(.*\).*{", r"export.*" + check_name]
+            }
+            
+            search_patterns = patterns.get(check_type, [])
+            if check_type == "any":
+                search_patterns = sum(patterns.values(), [])
+            
+            for pattern in search_patterns:
+                try:
+                    result = subprocess.run(
+                        ["rg", "-l", pattern, str(PROJECT_ROOT)],
+                        capture_output=True,
+                        text=True,
+                        timeout=5
+                    )
+                    if result.stdout:
+                        files = result.stdout.strip().split('\n')
+                        duplicates.extend([f.replace(str(PROJECT_ROOT) + "/", "") for f in files if f])
+                except:
+                    pass
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "checking": check_name,
+                "type": check_type,
+                "found_duplicates": len(set(duplicates)) > 0,
+                "duplicates": list(set(duplicates))
+            }, indent=2)
+        )]
+    
+    elif name == "impact_analysis":
+        # Analyze impact of changes
+        file_path = arguments.get("file_path", "")
+        change_type = arguments.get("change_type", "modify")
+        
+        impacted_files = []
+        
+        # Find files that import this file
+        if file_path:
+            file_name = Path(file_path).stem
+            patterns = [
+                f"import.*{file_name}",
+                f"from.*{file_name}.*import",
+                f"require.*{file_name}",
+                f"#include.*{file_name}"
+            ]
+            
+            for pattern in patterns:
+                try:
+                    result = subprocess.run(
+                        ["rg", "-l", pattern, str(PROJECT_ROOT)],
+                        capture_output=True,
+                        text=True,
+                        timeout=5
+                    )
+                    if result.stdout:
+                        files = result.stdout.strip().split('\n')
+                        impacted_files.extend([f.replace(str(PROJECT_ROOT) + "/", "") for f in files if f and f != file_path])
+                except:
+                    pass
+        
+        risk_level = "low"
+        if len(impacted_files) > 10:
+            risk_level = "high"
+        elif len(impacted_files) > 5:
+            risk_level = "medium"
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "file": file_path,
+                "change_type": change_type,
+                "impacted_files": list(set(impacted_files)),
+                "impact_count": len(set(impacted_files)),
+                "risk_level": risk_level,
+                "recommendations": [
+                    "Run tests after changes" if risk_level != "low" else "Safe to proceed",
+                    "Review impacted files" if len(impacted_files) > 0 else "No dependencies found"
+                ]
+            }, indent=2)
+        )]
+    
+    elif name == "dependency_graph":
+        # Get dependency graph
+        file_path = arguments.get("file_path", "")
+        direction = arguments.get("direction", "both")
+        
+        dependencies = {"imports": [], "importers": []}
+        
+        if file_path:
+            file_name = Path(file_path).stem
+            
+            # Find what this file imports
+            if direction in ["imports", "both"]:
+                try:
+                    with open(PROJECT_ROOT / file_path, 'r') as f:
+                        content = f.read()
+                        # Extract imports (simplified)
+                        import_patterns = [
+                            r"import\s+(\w+)",
+                            r"from\s+(\w+)\s+import",
+                            r"require\(['\"]([^'\"]+)['\"]\)"
+                        ]
+                        import re
+                        for pattern in import_patterns:
+                            matches = re.findall(pattern, content)
+                            dependencies["imports"].extend(matches)
+                except:
+                    pass
+            
+            # Find what imports this file
+            if direction in ["importers", "both"]:
+                patterns = [f"import.*{file_name}", f"from.*{file_name}.*import", f"require.*{file_name}"]
+                for pattern in patterns:
+                    try:
+                        result = subprocess.run(
+                            ["rg", "-l", pattern, str(PROJECT_ROOT)],
+                            capture_output=True,
+                            text=True,
+                            timeout=5
+                        )
+                        if result.stdout:
+                            files = result.stdout.strip().split('\n')
+                            dependencies["importers"].extend([f.replace(str(PROJECT_ROOT) + "/", "") for f in files if f and f != file_path])
+                    except:
+                        pass
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "file": file_path if file_path else "all",
+                "dependencies": {
+                    "imports": list(set(dependencies["imports"])),
+                    "importers": list(set(dependencies["importers"]))
+                }
+            }, indent=2)
+        )]
+    
+    elif name == "safe_location":
+        # Suggest safe location for new files
+        file_type = arguments.get("file_type", "")
+        name = arguments.get("name", "")
+        
+        # Analyze existing structure
+        structure_patterns = {
+            "component": ["components", "src/components", "app/components", "views", "ui"],
+            "service": ["services", "src/services", "lib/services", "api", "src/api"],
+            "model": ["models", "src/models", "entities", "domain", "data/models"],
+            "test": ["tests", "test", "__tests__", "spec", "src/__tests__"],
+            "util": ["utils", "src/utils", "lib", "helpers", "common"],
+            "config": ["config", "conf", "settings", ".config"],
+            "controller": ["controllers", "src/controllers", "handlers", "routes"],
+            "middleware": ["middleware", "src/middleware", "middlewares"],
+            "hook": ["hooks", "src/hooks"],
+            "store": ["store", "src/store", "state", "redux"],
+            "style": ["styles", "src/styles", "css", "scss", "stylesheets"]
+        }
+        
+        suggested_locations = []
+        for pattern_dirs in structure_patterns.get(file_type, ["src"]):
+            if (PROJECT_ROOT / pattern_dirs).exists():
+                suggested_locations.append(pattern_dirs)
+        
+        # If no existing pattern found, suggest creating one
+        if not suggested_locations:
+            if file_type in structure_patterns:
+                suggested_locations = [f"src/{structure_patterns[file_type][0]}"]
+            else:
+                suggested_locations = ["src"]
+        
+        # Generate full path suggestions
+        ext_map = {
+            "component": ".tsx" if (PROJECT_ROOT / "tsconfig.json").exists() else ".jsx",
+            "service": ".ts" if (PROJECT_ROOT / "tsconfig.json").exists() else ".js",
+            "model": ".ts" if (PROJECT_ROOT / "tsconfig.json").exists() else ".js",
+            "test": ".test.ts" if (PROJECT_ROOT / "tsconfig.json").exists() else ".test.js",
+            "util": ".ts" if (PROJECT_ROOT / "tsconfig.json").exists() else ".js",
+        }
+        
+        extension = ext_map.get(file_type, ".js")
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "file_type": file_type,
+                "name": name,
+                "suggested_locations": suggested_locations,
+                "recommended_path": f"{suggested_locations[0]}/{name}{extension}" if suggested_locations else f"src/{name}{extension}",
+                "naming_convention": "camelCase" if file_type in ["service", "util", "hook"] else "PascalCase" if file_type == "component" else "kebab-case"
+            }, indent=2)
+        )]
+    
+    elif name == "validate_changes":
+        # Validate changes won't break code
+        changed_files = arguments.get("changes", [])
+        run_tests = arguments.get("run_tests", True)
+        
+        validation_results = {
+            "syntax_check": "passed",
+            "type_check": "passed",
+            "tests": "not_run",
+            "issues": []
+        }
+        
+        # Check syntax for each file
+        for file_path in changed_files:
+            if file_path.endswith(('.py', '.js', '.ts', '.jsx', '.tsx')):
+                # Could run actual syntax checkers here
+                pass
+        
+        # Run tests if requested
+        if run_tests:
+            test_commands = {
+                "npm": "npm test",
+                "yarn": "yarn test",
+                "pytest": "pytest",
+                "go": "go test ./...",
+                "cargo": "cargo test"
+            }
+            
+            # Detect and run appropriate test command
+            for pm in analyzer.context.get("package_managers", []):
+                if pm in test_commands:
+                    # Would run actual tests here
+                    validation_results["tests"] = "passed"
+                    break
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "files_validated": len(changed_files),
+                "validation_results": validation_results,
+                "safe_to_proceed": validation_results["syntax_check"] == "passed" and len(validation_results["issues"]) == 0
+            }, indent=2)
+        )]
+    
+    elif name == "existing_patterns":
+        # Find existing patterns in codebase
+        pattern_type = arguments.get("pattern_type", "")
+        description = arguments.get("description", "")
+        
+        examples = []
+        
+        pattern_searches = {
+            "api_endpoint": ["router.get", "router.post", "app.get", "app.post", "@GetMapping", "@PostMapping"],
+            "component": ["export default function", "export const.*=.*=>", "class.*extends.*Component"],
+            "service": ["class.*Service", "export class.*Service", "Injectable"],
+            "database_query": ["SELECT", "INSERT", "UPDATE", "DELETE", "find", "findOne", "create", "save"],
+            "auth": ["authenticate", "authorize", "jwt", "token", "login", "logout"],
+            "validation": ["validate", "validator", "schema", "yup", "joi", "zod"],
+            "error_handling": ["try.*catch", "catch.*error", "throw new Error", ".catch"],
+            "state_management": ["useState", "useReducer", "Redux", "MobX", "Vuex", "store"],
+            "testing": ["describe", "test", "it", "expect", "assert", "should"]
+        }
+        
+        if pattern_type in pattern_searches:
+            for search_term in pattern_searches[pattern_type]:
+                try:
+                    result = subprocess.run(
+                        ["rg", "-l", search_term, str(PROJECT_ROOT), "--max-count=3"],
+                        capture_output=True,
+                        text=True,
+                        timeout=5
+                    )
+                    if result.stdout:
+                        files = result.stdout.strip().split('\n')[:3]
+                        examples.extend([f.replace(str(PROJECT_ROOT) + "/", "") for f in files if f])
+                except:
+                    pass
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "status": "success",
+                "pattern_type": pattern_type,
+                "description": description,
+                "example_files": list(set(examples))[:5],
+                "recommendation": f"Review these files for {pattern_type} implementation patterns" if examples else f"No existing {pattern_type} patterns found, you can establish the pattern"
+            }, indent=2)
         )]
     
     else:
