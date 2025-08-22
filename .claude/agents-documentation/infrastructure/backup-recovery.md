@@ -17,7 +17,8 @@ This document outlines the backup and recovery procedures for maintaining the Ag
 - Backup Frequency: After any agent modification
 
 #### 2. **MCP Server Infrastructure** (Priority: Critical)
-- `.claude/mcp/servers/core/` - All MCP server implementations
+- `.claude/mcp/servers/core/` - Core MCP server implementations
+- `.claude/mcp/servers/project-management/` - Project management MCP server
 - MCP server registration configuration
 - Python virtual environment dependencies
 - Recovery Time: < 15 minutes
@@ -31,7 +32,7 @@ This document outlines the backup and recovery procedures for maintaining the Ag
 
 #### 4. **Project Documentation** (Priority: High)
 - `README.md` and all documentation files
-- `.claude/docs/` - Project documentation
+- `.claude/agents-documentation/` - Consolidated documentation
 - Recovery Time: < 5 minutes
 - Backup Frequency: Daily or after documentation updates
 
@@ -55,7 +56,7 @@ This document outlines the backup and recovery procedures for maintaining the Ag
 # Add all critical files to git
 git add .claude/agents/ .claude/hooks/ .claude/scripts/
 git add .claude/mcp/servers/ .claude/settings*.json
-git add README.md docs/ .claude/docs/
+git add README.md .claude/agents-documentation/
 
 # Commit with descriptive message
 git commit -m "backup: Agent Army configuration $(date '+%Y-%m-%d %H:%M:%S')"
@@ -150,7 +151,7 @@ class AgentArmyBackup:
                 ".claude/hooks", 
                 ".claude/mcp/servers",
                 ".claude/scripts",
-                ".claude/docs"
+                ".claude/agents-documentation"
             ]
             
             for dir_path in critical_dirs:

@@ -33,7 +33,7 @@ Tech Lead:
 ```
 Senior Backend Engineer ─┐
 Senior Frontend Engineer ├─→ Tech Lead ─→ Scrum Master
-QA Engineer ─────────────┘
+QA Engineer ─────────┘
 ```
 
 ## Key Components

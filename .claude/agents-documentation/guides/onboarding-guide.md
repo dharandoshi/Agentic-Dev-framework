@@ -36,13 +36,13 @@ claude
 
 Agent Army is a sophisticated multi-agent orchestration system that enhances Claude Code with:
 
-- **16 Specialized AI Agents**: Each expert in their domain
-- **5 MCP Servers**: Providing tools for development tasks
+- **15 Specialized AI Agents**: Each expert in their domain
+- **6 MCP Servers**: Providing tools for development tasks
 - **Automated Workflows**: Complex tasks broken into coordinated steps
 - **Real-time Monitoring**: Track everything happening in the system
 - **Self-healing Infrastructure**: Automatic recovery from failures
 
-## 🏗️ System Architecture
+## 🏢 System Architecture
 
 ```
 ┌─────────────────────────────────────────┐
@@ -50,7 +50,7 @@ Agent Army is a sophisticated multi-agent orchestration system that enhances Cla
 ├─────────────────────────────────────────┤
 │                                          │
 │  Agents    Hooks    MCP Servers         │
-│    (16)  ←→  (3)  ←→    (5)            │
+│    (15)  ←→  (3)  ←→    (6)            │
 │                                          │
 │         Monitoring & Orchestration       │
 │                                          │
@@ -86,33 +86,21 @@ Agent Army is a sophisticated multi-agent orchestration system that enhances Cla
 - `technical-writer`: Documentation and guides
 
 **Special Agents**
-- `project-initializer`: New project setup
-- `god`: Meta-agent for agent management
+- `god-agent`: Meta-agent for agent management
 
 ## 🛠️ Available Tools (MCP Servers)
 
-### Workspace Tools
-- Project analysis and file operations
-- Framework detection
-- Dependency management
+### Core Servers
+- **workspace**: Project analysis and file operations
+- **docs**: Document creation and management
+- **coord**: Task creation and agent communication
+- **validation**: Code validation and quality checks
 
-### Coordination Tools
-- Task creation and assignment
-- Agent communication
-- Workflow management
+### Project Management
+- **project-management**: Advanced project coordination
 
-### Execution Tools
-- Code execution and testing
-- Debugging and profiling
-
-### Validation Tools
-- Syntax checking and linting
-- Code formatting
-- Type checking
-
-### Documentation Tools
-- Document creation and management
-- Knowledge base operations
+### Integration
+- **execution**: Code execution and testing tools
 
 ## 💻 Common Workflows
 
@@ -188,11 +176,12 @@ python3 .claude/scripts/monitoring-system.py --status
 
 🔧 MCP Servers
   workspace: 🟢 Connected  docs: 🟢 Connected
-  execution: 🟢 Connected  coord: 🟢 Connected
-  validation: 🟢 Connected
+  coord: 🟢 Connected  validation: 🟢 Connected
+  project-management: 🟢 Connected
+  execution: 🟢 Connected
 
 🤖 Agent System
-  Total Agents: 16  Hierarchy Levels: 5
+  Total Agents: 15  Hierarchy Levels: 5
 
 📈 Event Statistics
   Total: 1,234  🔴 Critical: 0  🟠 High: 2
@@ -248,7 +237,7 @@ git checkout HEAD -- .claude/
 ### Key Configuration Files
 
 | File | Purpose |
-|------|---------|
+|------|--------|
 | `.claude/settings.json` | Hook configuration |
 | `.claude/agents/agent-registry.json` | Agent definitions |
 | `.claude/config/alerting-config.json` | Alert rules |
@@ -268,7 +257,7 @@ export AGENT_ARMY_LOG_LEVEL="INFO"  # Logging verbosity
 # In Claude Code
 "Use mcp__workspace__analyze to understand the project structure"
 "Use mcp__coord__task_create to create a new development task"
-"Use mcp__execution__test to run the test suite"
+"Use mcp__validation__validate to run code quality checks"
 ```
 
 ### Custom Workflows
@@ -382,9 +371,9 @@ python3 .claude/scripts/monitoring-system.py --status
 ## 🆘 Getting Help
 
 ### Documentation
-- Integration Guide: `.claude/docs/integration-guide.md`
-- Backup Procedures: `.claude/docs/backup-recovery.md`
-- Claude Integration: `.claude/docs/claude-integration-diagram.md`
+- System Overview: `.claude/agents-documentation/system/overview.md`
+- Agent Reference: `.claude/agents-documentation/agents/team-reference.md`
+- Tool Reference: `.claude/agents-documentation/infrastructure/tool-reference.md`
 
 ### Logs and Debugging
 ```bash
@@ -401,7 +390,7 @@ AGENT_ARMY_LOG_LEVEL=DEBUG ./start-agent-army.sh
 
 ### Support Channels
 - Check system health first: `./run-tests.sh all`
-- Review documentation in `.claude/docs/`
+- Review documentation in `.claude/agents-documentation/`
 - Check example configurations in `.claude/example-*`
 
 ## ✅ Onboarding Checklist

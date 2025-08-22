@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
   "last_updated": "2025-08-08",
-  "total_agents": 16,
+  "total_agents": 15,
   "hierarchy": {
     "level_0_meta": [
       {
@@ -45,13 +45,6 @@
       }
     ],
     "level_3_implementation": [
-      {
-        "name": "project-initializer",
-        "model": "sonnet",
-        "specialization": "Project Setup (Managed by Tech-Lead)",
-        "status": "available",
-        "capacity": 100
-      },
       {
         "name": "senior-backend-engineer",
         "model": "sonnet",
@@ -149,7 +142,7 @@
   },
   "models": {
     "opus": 4,
-    "sonnet": 12,
+    "sonnet": 11,
     "haiku": 0
   }
 }

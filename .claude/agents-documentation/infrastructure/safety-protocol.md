@@ -42,9 +42,9 @@ CRITICAL CHECKS:
 
 ### ✅ ALWAYS DETECT:
 - Use `mcp__workspace__detect` to identify actual tech stack
-- Use `mcp__workspace__packages` to find package manager
-- Use `mcp__workspace__test_command` for test commands
-- Use `mcp__workspace__build_command` for build commands
+- Use `mcp__workspace__analyze` for comprehensive project understanding
+- Use existing tool detection capabilities
+- Adapt to whatever technology is actually in use
 
 ## Example Workflow
 

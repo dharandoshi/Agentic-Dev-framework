@@ -1,6 +1,6 @@
 # Agent Team Reference
 
-## Complete Agent Directory (16 Agents)
+## Complete Agent Directory (15 Agents)
 
 ### 🎯 Hierarchical Organization
 
@@ -14,14 +14,13 @@
 | Agent | Specialization | Key Responsibilities | MCP Tools |
 |-------|---------------|---------------------|-----------|
 | **system-architect** | System Design | Architecture design, database schemas, API contracts | workspace, docs, validation |
-| **tech-lead** | Code Quality & Standards | Code reviews, technical standards, design patterns | All tools (36 total) |
-| **project-initializer** | Project Setup | Parse documentation, extract requirements, initialize backlogs | workspace, docs |
+| **tech-lead** | Code Quality & Standards | Code reviews, technical standards, design patterns | All MCP tools |
 
 #### Level 3: Core Development
 | Agent | Specialization | Key Responsibilities | MCP Tools |
 |-------|---------------|---------------------|-----------|
-| **senior-backend-engineer** | Backend Development | API development, database optimization, microservices | All tools (33 total) |
-| **senior-frontend-engineer** | Frontend Development | UI/UX implementation, responsive design, performance | All tools (33 total) |  
+| **senior-backend-engineer** | Backend Development | API development, database optimization, microservices | All MCP tools |
+| **senior-frontend-engineer** | Frontend Development | UI/UX implementation, responsive design, performance | All MCP tools |  
 | **integration-engineer** | Third-party Integration | External service integration, webhooks, message queues | workspace, execution, docs |
 | **data-engineer** | Data Infrastructure | ETL pipelines, data warehouses, streaming, analytics | workspace, execution, coord, docs |
 
@@ -62,22 +61,22 @@ Any agent → scrum-master (project issues)
 ## Tool Distribution by Agent Type
 
 ### Full Stack Engineers (2 agents)
-**Tools**: All 33 MCP tools across 5 servers
+**Tools**: All MCP tools across 6 servers (core + project-management)
 - senior-backend-engineer
 - senior-frontend-engineer
 
 ### Specialized Engineers (7 agents)  
-**Tools**: Subset based on specialization (15-25 tools each)
+**Tools**: Subset based on specialization
 - integration-engineer, data-engineer, qa-engineer
 - security-engineer, devops-engineer, sre-engineer, cloud-architect
 
-### Architects & Leads (3 agents)
-**Tools**: Analysis and coordination focused (15-36 tools)
-- system-architect, tech-lead, project-initializer
+### Architects & Leads (2 agents)
+**Tools**: Analysis and coordination focused
+- system-architect, tech-lead
 
 ### Management & Documentation (4 agents)
-**Tools**: Communication and documentation focused (7-15 tools)
-- scrum-master, requirements-analyst, technical-writer
+**Tools**: Communication and documentation focused
+- scrum-master, requirements-analyst, technical-writer, god-agent
 
 ## Agent Capabilities Matrix
 
@@ -140,7 +139,7 @@ Use `mcp__coord__agent_workload` to check capacity before assignment.
 
 ---
 
-**Total Agents**: 16  
-**Total Available Tools**: 33 (across 5 MCP servers)  
-**Coordination Tools**: 7 (coord MCP server)  
-**Last Updated**: 2025-08-19
+**Total Agents**: 15  
+**MCP Servers**: 6 (core + project-management)  
+**Coordination System**: orchestrator.py hook + MCP coord server  
+**Last Updated**: 2025-08-22

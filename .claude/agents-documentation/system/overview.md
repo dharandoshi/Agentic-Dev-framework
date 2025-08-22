@@ -3,14 +3,14 @@
 ## System Architecture
 
 The Agent Army is a fully coordinated multi-agent system with:
-- **16 specialized agents** organized in hierarchical levels
-- **5 MCP servers** providing 33 operational tools
-- **3 intelligent hooks** for coordination and tracking
+- **15 specialized agents** organized in hierarchical levels
+- **6 MCP servers** (core and project-management) providing comprehensive tools
+- **orchestrator.py hook system** for coordination and tracking
 - **Complete verification suite** for validation
 
 ## ✅ System Components
 
-### 1. Agent Hierarchy (16 Agents)
+### 1. Agent Hierarchy (15 Agents)
 
 ```
 Level 1: Strategic Management
@@ -19,8 +19,7 @@ Level 1: Strategic Management
 
 Level 2: Technical Leadership  
 ├── system-architect (System Design)
-├── tech-lead (Code Quality & Standards)
-└── project-initializer (Project Setup)
+└── tech-lead (Code Quality & Standards)
 
 Level 3: Core Development
 ├── senior-backend-engineer (Backend Development)
@@ -39,25 +38,32 @@ Level 5: Documentation & Support
 └── technical-writer (Documentation)
 ```
 
-### 2. MCP Infrastructure (5 Servers - 33 Tools)
+### 2. MCP Infrastructure (6 Servers)
 
-**Location:** `.claude/mcp/servers/core/`
+**Locations:** `.claude/mcp/servers/core/` and `.claude/mcp/servers/project-management/`
 
 #### Core Servers:
-1. **docs** (7 tools) - Document management
-2. **workspace** (12 tools) - Project analysis and understanding  
-3. **validation** (7 tools) - Code validation and quality
-4. **execution** (7 tools) - Code execution and testing
-5. **coord** (7 tools) - Agent coordination and communication
+1. **workspace** - Project analysis and understanding  
+2. **docs** - Document management and registry
+3. **coord** - Agent coordination and communication
+4. **validation** - Code validation and quality
 
-### 3. Hook System (3 Active Hooks)
+#### Project Management Servers:
+5. **project-management** - Advanced project coordination
+6. **execution** - Code execution and testing (if available)
+
+### 3. Orchestrator Hook System
 
 **Location:** `.claude/hooks/`
 
-#### Active Hooks:
-1. **orchestrator.py** - Central coordination logic
-2. **communication-tracker.py** - Analytics and logging  
-3. **smart-suggestions.py** - Intelligent suggestions
+#### Primary Hook:
+1. **orchestrator.py** - Central coordination logic and agent communication
+
+The orchestrator.py provides:
+- Agent coordination and handoff management
+- Tool permission validation
+- Communication tracking and analytics
+- Smart suggestions and workflow optimization
 
 ### 4. Configuration Files
 
@@ -68,19 +74,22 @@ Level 5: Documentation & Support
 ## 📊 Current Status
 
 ### System Metrics:
-- ✅ **5 MCP Servers** operational with 33 tools
-- ✅ **16 Agents** configured with proper tool assignments  
-- ✅ **3 Hooks** active for coordination
+- ✅ **6 MCP Servers** operational (core + project-management)
+- ✅ **15 Agents** configured with proper tool assignments  
+- ✅ **orchestrator.py hook** active for coordination
 - ✅ **100% Agent Coverage** - All roles have assigned tools
 
-### Tool Distribution:
+### Server Distribution:
 ```
-coord: 7 coordination tools
-workspace: 12 project analysis tools
-validation: 7 code quality tools
-execution: 7 runtime tools
-docs: 7 document management tools
-Total: 33 operational tools
+Core Servers (4):
+- workspace: Project analysis and file operations
+- docs: Document management and registry
+- coord: Agent coordination and communication  
+- validation: Code quality and validation
+
+Project Management (2):
+- project-management: Advanced project coordination
+- execution: Code execution and testing
 ```
 
 ## 🚀 Quick Start
@@ -97,9 +106,9 @@ Total: 33 operational tools
 ```bash
 # All agents can access their assigned MCP tools
 # Example: senior-backend-engineer has access to:
-# - All workspace tools (project understanding)
-# - All validation tools (code quality)  
-# - All execution tools (testing/running code)
+# - workspace tools (project understanding)
+# - validation tools (code quality)  
+# - execution tools (testing/running code)
 # - coord tools (task coordination)
 ```
 
@@ -162,5 +171,5 @@ mcp__coord__task_handoff()
 ---
 
 **System Status:** 🟢 FULLY OPERATIONAL  
-**Last Updated:** 2025-08-19  
-**Version:** 2.0.0 (MCP Infrastructure)
+**Last Updated:** 2025-08-22  
+**Version:** 2.1.0 (Consolidated Documentation + 15 Agents)

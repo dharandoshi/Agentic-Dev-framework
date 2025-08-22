@@ -10,7 +10,7 @@ This directory contains comprehensive documentation for the Agent Army system, o
 
 ### 👥 Agent Documentation  
 **Location**: [`agents/`](agents/)
-- [`team-reference.md`](agents/team-reference.md) - Complete reference for all 16 agents
+- [`team-reference.md`](agents/team-reference.md) - Complete reference for all 15 agents
 - [`coordination-matrix.md`](agents/coordination-matrix.md) - Agent coordination rules and workflows
 
 ### 🔧 Infrastructure Documentation
@@ -45,15 +45,15 @@ This directory contains comprehensive documentation for the Agent Army system, o
 ## 📊 System Status
 
 ### Current Configuration
-- **16 Specialized Agents** across 5 hierarchical levels
-- **5 MCP Servers** providing 33 operational tools
-- **3 Active Hooks** for coordination and tracking  
+- **15 Specialized Agents** across 5 hierarchical levels
+- **6 MCP Servers** (core + project-management) providing comprehensive tools
+- **orchestrator.py hook system** for coordination and tracking  
 - **100% Agent Coverage** - all roles have proper tool assignments
 
 ### Key Statistics
-- Total MCP Tools: **33** 
-- Active Agents: **16**
-- Documentation Files: **9**
+- MCP Servers: **6** (core + project-management)
+- Active Agents: **15**
+- Documentation Files: **Complete**
 - System Status: **🟢 FULLY OPERATIONAL**
 
 ## 🔍 Finding Information
@@ -86,5 +86,5 @@ This directory contains comprehensive documentation for the Agent Army system, o
 
 **Total Documentation Files**: 9  
 **System Coverage**: 100%  
-**Last Updated**: 2025-08-19  
+**Last Updated**: 2025-08-22  
 **Documentation Status**: ✅ Complete and Current

@@ -5,9 +5,9 @@
 ## 🎯 Overview
 
 The Agent Army consists of multiple interconnected systems that need to work together seamlessly:
-- **16 Specialized Agents** - The workforce
-- **5 MCP Servers** - Tool infrastructure  
-- **Hook System** - Workflow automation
+- **15 Specialized Agents** - The workforce
+- **6 MCP Servers** - Tool infrastructure  
+- **Hook System** - Workflow automation via orchestrator.py
 - **Monitoring & Alerting** - System health tracking
 - **Testing Framework** - Quality assurance
 - **Backup System** - Disaster recovery
@@ -22,14 +22,14 @@ This guide explains how to integrate these components into a cohesive, productio
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │    Hooks    │  │   Agents    │  │     MCP     │         │
-│  │   System    │◄─►│   (16)     │◄─►│  Servers(5) │         │
+│  │ orchestrator.py │  │   Agents    │  │     MCP     │         │
+│  │   + Hooks    │◄─►│    (15)     │◄─►│  Servers(6) │         │
 │  └─────────────┘  └─────────────┘  └─────────────┘         │
-│         ▲               ▲                ▲                   │
+│         │               │                │                   │
 │         │               │                │                   │
 │         └───────────────┴────────────────┘                   │
 │                         │                                     │
-│                    ┌────▼────┐                               │
+│                    ┌────┴────┐                               │
 │                    │Monitoring│                               │
 │                    │  System  │                               │
 │                    └──────────┘                               │
@@ -38,9 +38,9 @@ This guide explains how to integrate these components into a cohesive, productio
 
 ## 📦 Component Integration Points
 
-### 1. **Hook System Integration**
+### 1. **Orchestrator Hook System Integration**
 
-The hook system orchestrates agent communication and workflow automation:
+The orchestrator.py hook orchestrates agent communication and workflow automation:
 
 #### **A. Orchestrator Hook** (`orchestrator.py`)
 - **Triggers**: Tool use events, agent handoffs
@@ -62,44 +62,43 @@ def handle_agent_error(agent, error):
     ))
 ```
 
-#### **B. Communication Tracker** (`communication-tracker.py`)
-- **Triggers**: All agent-to-agent messages
-- **Integration with Monitoring**: Tracks communication patterns and failures
-- **Integration with Agents**: Maintains communication history
-
-#### **C. Smart Suggestions** (`smart-suggestions.py`)
-- **Triggers**: User prompts and agent requests
-- **Integration with Agents**: Suggests appropriate agents for tasks
-- **Integration with MCP**: Recommends relevant tools
-
 ### 2. **MCP Server Integration**
 
 MCP servers provide tools that agents can use:
+
+#### **Core Servers**
 
 #### **A. Workspace Server** (`workspace.py`)
 - **Used by**: All development agents
 - **Integration**: Provides project analysis, file operations
 - **Monitoring**: Tracks file operation success/failure
 
-#### **B. Coordination Server** (`coord.py`)
+#### **B. Docs Server** (`docs.py`)
+- **Used by**: Technical writer, all agents
+- **Integration**: Manages documentation
+- **Monitoring**: Tracks documentation coverage
+
+#### **C. Coord Server** (`coord.py`)
 - **Used by**: Scrum-master, tech-lead
 - **Integration**: Manages task assignments and handoffs
 - **Monitoring**: Tracks workflow completion times
-
-#### **C. Execution Server** (`execution.py`)
-- **Used by**: Backend/frontend engineers, QA
-- **Integration**: Runs tests and code execution
-- **Monitoring**: Tracks execution times and failures
 
 #### **D. Validation Server** (`validation.py`)
 - **Used by**: QA engineer, security engineer
 - **Integration**: Validates code quality
 - **Monitoring**: Tracks validation errors
 
-#### **E. Docs Server** (`docs.py`)
-- **Used by**: Technical writer, all agents
-- **Integration**: Manages documentation
-- **Monitoring**: Tracks documentation coverage
+#### **Project Management Servers**
+
+#### **E. Project Management Server** (`project-management.py`)
+- **Used by**: Scrum-master, tech-lead, managers
+- **Integration**: Advanced project coordination
+- **Monitoring**: Tracks project milestones and progress
+
+#### **F. Execution Server** (`execution.py`)
+- **Used by**: Backend/frontend engineers, QA
+- **Integration**: Runs tests and code execution
+- **Monitoring**: Tracks execution times and failures
 
 ### 3. **Agent Integration**
 
@@ -137,7 +136,7 @@ The monitoring system observes all components:
 
 #### **A. Event Collection**
 ```python
-# In hooks/orchestrator.py
+# In orchestrator.py
 def on_tool_use(tool_name, agent, result):
     if result.get('error'):
         monitoring.add_event(
@@ -401,7 +400,7 @@ grep -r "password\|secret\|key" .claude/agents/ && {
 All tool usage goes through permission checks:
 
 ```python
-# In hooks/orchestrator.py
+# In orchestrator.py
 def validate_tool_permission(agent, tool):
     allowed_tools = AGENT_PERMISSIONS.get(agent, [])
     
@@ -579,9 +578,9 @@ Create dashboards to visualize:
    - Check: `claude mcp list`
    - Fix: `./.claude/scripts/register-mcp-servers.sh`
 
-2. **Hooks Not Triggering**
+2. **Orchestrator Hook Not Triggering**
    - Check: `.claude/settings.json` has correct hook config
-   - Fix: Ensure hooks are executable and paths are correct
+   - Fix: Ensure orchestrator.py is executable and paths are correct
 
 3. **Monitoring Not Receiving Events**
    - Check: Monitoring daemon is running
