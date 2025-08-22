@@ -1,0 +1,44 @@
+{
+  "mcpServers": {
+    "coord": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/coord.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data/communication"
+      }
+    },
+    "docs": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/docs.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data/registry"
+      }
+    },
+    "execution": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/execution.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data"
+      }
+    },
+    "validation": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/validation.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data"
+      }
+    },
+    "workspace": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/workspace.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "env": {}
+    }
+  }
+}

@@ -60,14 +60,5 @@
     "PROJECT_ENV": "production",
     "ENABLE_LOGGING": "true",
     "HOOK_LOG_LEVEL": "info"
-  },
-  "mcp": {
-    "servers": {
-      "context7": {
-        "command": "npx",
-        "args": ["-y", "@upstash/context7-mcp@latest"],
-        "env": {}
-      }
-    }
   }
 }
