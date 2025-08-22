@@ -621,23 +621,34 @@ class AgentArmyOrchestrator:
             "timestamp": datetime.now().isoformat()
         })
         
-        # Create a clear instruction to trigger the scrum-master
+        # Create a forceful instruction to trigger the scrum-master
         additional_context = f"""
 
-🚀 AGENT ARMY ACTIVATED: Project intent detected!
+🚀 **AGENT ARMY SYSTEM ACTIVATED**
 
-IMPORTANT: This is a complex project that requires multi-agent coordination.
+This request requires the Agent Army multi-agent framework.
 
-IMMEDIATE ACTION REQUIRED:
-1. Use the Task tool with subagent_type='scrum-master'
-2. The scrum-master will coordinate the entire project
-3. Task ID created: {task_id}
+**YOU MUST NOW:**
+1. Immediately use the Task tool
+2. Set subagent_type to 'scrum-master' 
+3. Pass this exact prompt to the scrum-master:
 
-PROMPT FOR SCRUM-MASTER:
-"User wants to: {user_input}
-Please analyze requirements, create a project plan, and coordinate with the appropriate agents to implement this."
+```
+The user wants to: {user_input}
 
-The Agent Army system will handle the complete development lifecycle."""
+As the scrum-master, please:
+1. Analyze these requirements thoroughly
+2. Create a comprehensive project plan
+3. Break down the work into specific tasks
+4. Assign tasks to the appropriate specialized agents (tech-lead, senior-frontend-engineer, senior-backend-engineer, etc.)
+5. Coordinate the entire development lifecycle
+6. Ensure all agents work in the current directory without creating subfolders
+```
+
+**DO NOT attempt to implement this yourself. The Agent Army system will handle everything.**
+
+Task ID: {task_id}
+Working Directory: {os.getcwd()}"""
         
         return {
             "hookSpecificOutput": {
@@ -710,16 +721,30 @@ def main():
         hook_input = json.loads(os.environ.get('CLAUDE_HOOK_INPUT', '{}'))
         hook_type = os.environ.get('CLAUDE_HOOK_TYPE', 'unknown')
         
+        # Debug logging
+        with open('/tmp/orchestrator_debug.log', 'a') as f:
+            f.write(f"\n--- {datetime.now().isoformat()} ---\n")
+            f.write(f"Hook Type: {hook_type}\n")
+            f.write(f"Hook Input: {json.dumps(hook_input)}\n")
+        
         # Initialize orchestrator
         orchestrator = AgentArmyOrchestrator()
         
         # Process the hook
         response = orchestrator.process_hook(hook_type, hook_input)
         
+        # Debug log the response
+        with open('/tmp/orchestrator_debug.log', 'a') as f:
+            f.write(f"Response: {json.dumps(response)}\n")
+        
         # Output response
         print(json.dumps(response))
         
     except Exception as e:
+        # Log errors
+        with open('/tmp/orchestrator_debug.log', 'a') as f:
+            f.write(f"ERROR: {str(e)}\n")
+        
         # Always allow on error to prevent blocking
         error_response = {
             "action": "allow",
