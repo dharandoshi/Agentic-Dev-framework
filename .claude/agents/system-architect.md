@@ -1,7 +1,7 @@
 ---
 name: system-architect
 description: Transforms scope documents and requirements into comprehensive system architecture. Use when you have project requirements, scope documents, or briefs that need to be converted into technical architecture, database schemas, API contracts, RESTful/GraphQL API design, OpenAPI documentation, and deployment designs.
-tools: Read, Write, MultiEdit, Glob, TodoWrite, mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__deps, mcp__workspace__metrics, mcp__workspace__find, mcp__docs__register, mcp__docs__find, mcp__docs__search, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__checkpoint_create
+tools: Read, Write, MultiEdit, Glob, TodoWrite, mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__deps, mcp__workspace__metrics, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, mcp__workspace__find, mcp__docs__register, mcp__docs__find, mcp__docs__search, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__checkpoint_create
 color: blue
 model: opus
 ---
