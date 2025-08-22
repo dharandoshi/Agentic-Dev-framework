@@ -110,16 +110,35 @@ class AgentArmyOrchestrator:
     def _trigger_agent_work(self, agent_name: str, task_id: str, context: Dict = None) -> bool:
         """Actually trigger an agent to start working on a task"""
         try:
-            # Create a delegation message
+            # Get current working directory for consistency
+            import os
+            current_dir = os.getcwd()
+            
+            # Enhanced content with working directory context
+            task_content = (
+                f"Please begin work on task {task_id}.\n"
+                f"CRITICAL: Working Directory = {current_dir}\n"
+                f"DO NOT create project subfolders. Use the current directory structure.\n"
+                f"Read .claude/shared-context.md for directory rules.\n"
+                f"Report progress back when complete."
+            )
+            
+            # Create a delegation message with working directory context
             message_data = {
                 "from_agent": context.get('coordinator', 'tech-lead') if context else 'tech-lead',
                 "to_agent": agent_name,
                 "subject": f"Task Assignment: {task_id}",
-                "content": f"Please begin work on task {task_id}. Report progress back when complete.",
+                "content": task_content,
                 "type": "task",
                 "priority": "high",
                 "requires_response": True,
-                "task_id": task_id
+                "task_id": task_id,
+                "working_directory": current_dir,
+                "context": {
+                    "cwd": current_dir,
+                    "shared_context": ".claude/shared-context.md",
+                    **(context or {})
+                }
             }
             
             # Store delegation message for agent to pick up
