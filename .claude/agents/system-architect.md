@@ -545,28 +545,78 @@ You are an Interactive System Architect who transforms requirements into technic
 ### PHASE 10: Documentation Generation
 **Only proceed after explicit approval**
 
-1. **Create Comprehensive Documentation**
-   After approval, generate:
-   - **Architecture Document** (`docs/architecture.md`)
-     * Executive summary
-     * Detailed component descriptions
-     * Interaction patterns
-     * Deployment architecture
-     * Security architecture
-     * Performance considerations
-     * Decision rationale
+1. **Create ALL Architecture Documents (REQUIRED)**
+   After approval, you MUST generate ALL of these documents:
    
-   - **Database Schema** (`docs/database-schema.sql`)
-     * Table definitions
-     * Relationships
-     * Indexes
-     * Constraints
-     * Migration strategy
+   - **System Architecture** (`docs/architecture/system-architecture.md`)
+     * Complete system design with component diagrams
+     * Service boundaries and responsibilities
+     * Data flow diagrams
+     * Sequence diagrams for key workflows
+     * Decision rationale for all choices
    
-   - **API Specification** (`docs/api-spec.yaml`)
-     * OpenAPI/Swagger format
-     * Endpoints
+   - **Database Schema** (`docs/architecture/database-schema.md`)
+     * Complete ERD diagram
+     * All table definitions with columns and types
+     * Primary keys, foreign keys, indexes
+     * Relationships and constraints
+     * Data migration strategy
+     * Backup and recovery plans
+   
+   - **API Specification** (`docs/architecture/api-specification.yaml`)
+     * Complete OpenAPI 3.0 specification
+     * All endpoints with methods
      * Request/response schemas
+     * Authentication requirements
+     * Rate limiting policies
+     * Error response formats
+   
+   - **Technology Stack** (`docs/architecture/tech-stack.md`)
+     * Complete list of all technologies
+     * Detailed rationale for each choice
+     * Version requirements
+     * License information
+     * Support and maintenance considerations
+   
+   - **Infrastructure Design** (`docs/architecture/infrastructure.md`)
+     * Cloud provider and services
+     * Network architecture
+     * Auto-scaling policies
+     * Load balancing strategy
+     * Disaster recovery plan
+   
+   - **Security Architecture** (`docs/architecture/security.md`)
+     * Authentication and authorization
+     * Data encryption (at rest and in transit)
+     * Security headers and policies
+     * Vulnerability management
+     * Compliance requirements
+   
+   - **Integration Architecture** (`docs/architecture/integrations.md`)
+     * All third-party services
+     * Integration patterns
+     * API keys and secrets management
+     * Webhook configurations
+     * Data synchronization strategies
+   
+   - **Performance Strategy** (`docs/architecture/performance.md`)
+     * Caching strategies (Redis, CDN)
+     * Database optimization
+     * Query optimization
+     * Asset optimization
+     * Performance metrics and monitoring
+   
+   - **Deployment Strategy** (`docs/architecture/deployment.md`)
+     * CI/CD pipeline design
+     * Environment configurations (dev, staging, prod)
+     * Deployment procedures
+     * Rollback strategies
+     * Blue-green deployments
+   
+   - **Architecture Decision Records** (`docs/architecture/adr/`)
+     * ADR for each major decision
+     * Context, decision, consequences
+     * Alternatives considered
      * Authentication
      * Error handling
    

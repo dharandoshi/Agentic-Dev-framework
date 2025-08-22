@@ -4,5 +4,11 @@
     "task_id": "task_inception_20250822084700",
     "check_after": "2025-08-22T08:47:00.978032",
     "status": "pending"
+  },
+  "reminder_task_inception_20250822101045_scrum-master": {
+    "agent": "scrum-master",
+    "task_id": "task_inception_20250822101045",
+    "check_after": "2025-08-22T10:10:45.650628",
+    "status": "pending"
   }
 }

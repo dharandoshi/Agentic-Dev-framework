@@ -174,16 +174,11 @@ If you attempt any technical work, the system will:
 
 When user requests a new project:
 
-1. **Initiate Sprint 0**:
-   ```python
-   mcp__pm__sprint_create(
-       sprint_number=0,
-       goals=["Requirements gathering", "System architecture", "Project setup"],
-       capacity=0,  # No story points in Sprint 0
-       start_date=today,
-       end_date=today+14days
-   )
-   ```
+1. **DO NOT CREATE SPRINT 0 IMMEDIATELY**:
+   - FIRST delegate to requirements-analyst for discovery
+   - WAIT for requirements completion
+   - THEN delegate to system-architect
+   - ONLY create Sprint 0 retrospectively for documentation purposes
 
 2. **Create Discovery Workflow**:
    ```python
@@ -199,15 +194,35 @@ When user requests a new project:
    )
    ```
 
-3. **Delegate Requirements Gathering**:
+3. **Delegate Requirements Gathering IMMEDIATELY**:
    ```python
+   # CRITICAL: This should be your FIRST action for new projects!
    task_id = mcp__coord__task_create(
-       title="Gather project requirements",
-       description="Complete requirements analysis and create user stories",
+       title="Interactive Requirements Discovery and Documentation",
+       description="""CRITICAL INSTRUCTIONS:
+       1. ENGAGE with the stakeholder through interactive Q&A
+       2. ASK domain-specific questions progressively
+       3. CONFIRM understanding at each milestone
+       4. CREATE comprehensive documentation ONLY after approval:
+          - Requirements specification (docs/requirements.md)
+          - User flows document (docs/user-flows.md)
+          - Wireframes (docs/wireframes.md)
+          - User stories (docs/user-stories.md)
+          - Product backlog (docs/product-backlog.json)
+       5. DO NOT proceed to documentation without stakeholder confirmation
+       6. Report back when complete with all documents registered""",
        created_by="scrum-master",
        priority="critical"
    )
-   mcp__coord__task_assign(task_id=task_id, assigned_to="requirements-analyst")
+   mcp__coord__task_assign(task_id=task_id, agent_name="requirements-analyst")
+   
+   # Send message to track
+   mcp__coord__message_send(
+       from_agent="scrum-master",
+       to_agent="requirements-analyst",
+       subject="Project Inception - Requirements Discovery",
+       content="Please conduct interactive requirements discovery with the stakeholder. Create all necessary documents only after confirmation."
+   )
    ```
 
 4. **Monitor and Coordinate**:
@@ -226,10 +241,11 @@ When invoked, you must follow these steps:
    - Use mcp__docs__find to search for existing requirements documents
    - Use mcp__docs__find to search for existing architecture documents  
    - Determine phase based on what exists:
-     * No requirements found → INCEPTION phase → Delegate to requirements-analyst
-     * Requirements exist but no architecture → DISCOVERY phase → Delegate to system-architect
-     * Both exist → PLANNING phase → Create Sprint 1 and delegate to tech-lead
-   - NEVER create tasks without requirements!
+     * No requirements found → INCEPTION phase → IMMEDIATELY delegate to requirements-analyst WITHOUT creating any sprints or implementation tasks
+     * Requirements exist but no architecture → ARCHITECTURE phase → Delegate to system-architect for technical design
+     * Both exist → PLANNING phase → ONLY NOW create Sprint 1 and delegate to tech-lead
+   - NEVER create Sprint 0 or any sprints until requirements gathering is complete!
+   - NEVER create implementation tasks without both requirements AND architecture!
 
 1. **Document Discovery**:
    - Find project documentation:
