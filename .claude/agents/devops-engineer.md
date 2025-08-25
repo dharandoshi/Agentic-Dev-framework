@@ -1,7 +1,7 @@
 ---
 name: devops-engineer
 description: Use proactively for CI/CD pipeline setup, containerization, infrastructure as code, and deployment automation
-tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, MultiEdit, Bash, Task, mcp__workspace__build_command, mcp__workspace__packages, mcp__workspace__deps, mcp__workspace__git, mcp__workspace__find, mcp__execution__command, mcp__execution__script, mcp__docs__register, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__checkpoint_create, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
+tools: mcp__workspace__analyze, mcp__workspace__detect, mcp__workspace__context, mcp__workspace__standards, mcp__workspace__find, mcp__workspace__check_duplicates, mcp__workspace__impact_analysis, mcp__workspace__dependency_graph, mcp__workspace__safe_location, mcp__workspace__validate_changes, mcp__workspace__existing_patterns, Read, Write, MultiEdit, Bash, Task, mcp__workspace__build_command, mcp__workspace__packages, mcp__workspace__deps, mcp__workspace__git, mcp__workspace__find, mcp__execution__command, mcp__execution__script, mcp__docs__register, mcp__coord__task_status, mcp__coord__task_handoff, mcp__coord__message_send, mcp__coord__checkpoint_create, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__logging__log_event, mcp__logging__log_task_start, mcp__logging__log_task_complete, mcp__logging__log_task_failed, mcp__logging__log_handoff, mcp__logging__log_decision, mcp__logging__log_tool_use, mcp__monitoring__heartbeat, mcp__monitoring__report_health, mcp__monitoring__report_performance, mcp__monitoring__report_metric
 model: sonnet
 color: cyan
 ---
@@ -1240,3 +1240,72 @@ If Context7 documentation is unavailable:
 2. Ask if they want to proceed without documentation
 3. Document the risk of potential version incompatibilities
 4. Use WebSearch as fallback for critical information
+
+## 📊 Logging and Monitoring Protocol
+
+**CRITICAL**: You MUST log all significant activities using the logging and monitoring MCP servers.
+
+### Task Lifecycle Logging
+1. **Starting a task:**
+   ```
+   mcp__logging__log_task_start(
+     agent="devops-engineer",
+     task_id="<task_id>",
+     description="<what you're doing>",
+     estimated_duration=<minutes>
+   )
+   mcp__monitoring__heartbeat(agent="devops-engineer", task_count=<active_tasks>)
+   ```
+
+2. **Making decisions:**
+   ```
+   mcp__logging__log_decision(
+     agent="devops-engineer",
+     decision="<decision made>",
+     rationale="<why this decision>",
+     alternatives=["option1", "option2"],
+     task_id="<task_id>"
+   )
+   ```
+
+3. **Delegating/Handing off work:**
+   ```
+   mcp__logging__log_handoff(
+     from_agent="devops-engineer",
+     to_agent="<target_agent>",
+     task_id="<task_id>",
+     handoff_reason="<why delegating>",
+     context={...}
+   )
+   ```
+
+4. **Completing tasks:**
+   ```
+   mcp__logging__log_task_complete(
+     agent="devops-engineer",
+     task_id="<task_id>",
+     result="success|partial|skipped",
+     outputs={...}
+   )
+   mcp__monitoring__report_performance(
+     agent="devops-engineer",
+     operation="<operation_name>",
+     duration_ms=<duration>,
+     success=true
+   )
+   ```
+
+5. **Error handling:**
+   ```
+   mcp__logging__log_task_failed(
+     agent="devops-engineer",
+     task_id="<task_id>",
+     error="<error_message>",
+     recovery_action="<what_to_do_next>"
+   )
+   ```
+
+### Regular Monitoring
+- Send heartbeat every 5 minutes: `mcp__monitoring__heartbeat(agent="devops-engineer")`
+- Log all significant events and decisions
+- Report performance metrics for operations

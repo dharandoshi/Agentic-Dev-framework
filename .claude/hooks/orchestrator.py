@@ -299,17 +299,28 @@ class AgentArmyOrchestrator:
             }
     
     def _log_event(self, event_type: str, data: Dict):
-        """Log events to file"""
+        """Log events using MCP logging server (fallback to file if MCP unavailable)"""
+        # For now, still log to file as backup
+        # In production, this would call the MCP logging server
         log_file = self.logs_dir / f"coordination-{datetime.now().strftime('%Y%m%d')}.jsonl"
         
         log_entry = {
             "timestamp": datetime.now().isoformat(),
             "event_type": event_type,
-            "data": data
+            "data": data,
+            "logged_via": "file"  # Will be "mcp" when integrated
         }
         
         with open(log_file, 'a') as f:
             f.write(json.dumps(log_entry) + '\n')
+        
+        # TODO: When MCP servers are running, use:
+        # mcp__logging__log_event(
+        #     agent="orchestrator",
+        #     level="info",
+        #     message=f"Event: {event_type}",
+        #     context=data
+        # )
     
     def _validate_coordination_tool(self, tool_name: str, parameters: Dict) -> Dict:
         """Validate and handle coordination tools"""

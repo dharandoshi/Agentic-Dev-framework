@@ -39,6 +39,20 @@
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"],
       "env": {}
+    },
+    "logging": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/logging_server.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data/logging"
+      }
+    },
+    "monitoring": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/monitoring_server.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data/monitoring"
+      }
     }
   }
 }
