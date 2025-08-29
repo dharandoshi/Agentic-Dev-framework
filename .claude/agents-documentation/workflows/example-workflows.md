@@ -39,7 +39,6 @@
 "Act as senior-frontend-engineer and create the React components for task list, task form, and user dashboard"
 
 # Step 7: Integration
-"Act as integration-engineer and integrate the frontend with backend APIs including error handling"
 
 # Step 8: Testing
 "Act as qa-engineer and create comprehensive test cases for the task management features"
@@ -54,7 +53,6 @@
 "Act as technical-writer and create API documentation and user guide for the task management app"
 
 # Step 12: Monitoring
-"Act as sre-engineer and set up monitoring and alerting for the production application"
 ```
 
 ### Expected Deliverables:
@@ -119,7 +117,7 @@
 "Act as qa-engineer and document the critical bug where users lose data when session expires"
 
 # Step 2: Investigation
-"Act as tech-lead and investigate the root cause of the session management bug"
+"Act as engineering-manager and investigate the root cause of the session management bug"
 
 # Step 3: Solution Design
 "Act as senior-backend-engineer and propose a solution for graceful session handling with data persistence"
@@ -137,7 +135,6 @@
 "Act as devops-engineer and deploy the hotfix to production with rollback plan"
 
 # Step 8: Monitoring
-"Act as sre-engineer and monitor the fix in production and verify no data loss occurs"
 ```
 
 ### Expected Deliverables:
@@ -162,16 +159,15 @@
 "Act as security-engineer and scan for OWASP Top 10 vulnerabilities in the codebase"
 
 # Step 3: Code Review
-"Act as tech-lead and review authentication and authorization code for security issues"
+"Act as engineering-manager and review authentication and authorization code for security issues"
 
 # Step 4: Infrastructure Review
-"Act as cloud-architect and audit cloud infrastructure for security misconfigurations"
 
 # Step 5: Penetration Testing Plan
 "Act as security-engineer and create a penetration testing plan for the application"
 
 # Step 6: Remediation Plan
-"Act as tech-lead and prioritize security findings and create remediation plan"
+"Act as engineering-manager and prioritize security findings and create remediation plan"
 
 # Step 7: Implementation
 "Act as senior-backend-engineer and fix high-priority security vulnerabilities"
@@ -199,7 +195,6 @@
 
 ```bash
 # Step 1: Performance Analysis
-"Act as sre-engineer and analyze application performance metrics and identify bottlenecks"
 
 # Step 2: Database Optimization
 "Act as data-engineer and optimize slow database queries and add appropriate indexes"
@@ -211,13 +206,11 @@
 "Act as senior-frontend-engineer and implement code splitting, lazy loading, and bundle optimization"
 
 # Step 5: Infrastructure Scaling
-"Act as cloud-architect and design auto-scaling strategy for handling traffic spikes"
 
 # Step 6: Load Testing
 "Act as qa-engineer and create load testing scenarios to validate performance improvements"
 
 # Step 7: Monitoring Setup
-"Act as sre-engineer and set up performance monitoring with custom metrics and alerts"
 
 # Step 8: Documentation
 "Act as technical-writer and document performance optimization strategies and results"
@@ -305,7 +298,6 @@
 "Act as senior-backend-engineer and configure feature flags for gradual rollout"
 
 # Step 8: Monitoring
-"Act as sre-engineer and monitor the feature release and track key metrics"
 
 # Step 9: Support Preparation
 "Act as technical-writer and create support documentation and FAQs"
@@ -340,16 +332,15 @@
 "Act as devops-engineer and create step-by-step deployment and configuration guide"
 
 # Step 5: Developer Guide
-"Act as tech-lead and write developer onboarding and contribution guidelines"
+"Act as engineering-manager and write developer onboarding and contribution guidelines"
 
 # Step 6: User Manual
 "Act as technical-writer and create end-user documentation with screenshots"
 
 # Step 7: Troubleshooting Guide
-"Act as sre-engineer and document common issues and their solutions"
 
 # Step 8: Review and Publish
-"Act as tech-lead and review all documentation before publishing"
+"Act as engineering-manager and review all documentation before publishing"
 ```
 
 ### Expected Deliverables:
@@ -393,7 +384,6 @@
 
 ### 6. **Monitor in Production**
 ```bash
-"Act as sre-engineer and monitor [the deployed feature]"
 ```
 
 ---

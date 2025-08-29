@@ -7,11 +7,11 @@ The delegation system enables semi-automatic task delegation where agents can in
 
 ### 1. Task Creation & Assignment
 - **Scrum Master** creates high-level feature tasks
-- Tasks are assigned to **Tech Lead** using `mcp__coord__task_assign`
+- Tasks are assigned to **Engineering Manager** using `mcp__coord__task_assign`
 - The orchestrator hook intercepts and triggers delegation
 
 ### 2. Automatic Delegation
-When Tech Lead receives a task, the orchestrator:
+When Engineering Manager receives a task, the orchestrator:
 - Creates subtasks for appropriate developers
 - Sends delegation messages via `mcp__coord__message_send`
 - Tracks task dependencies and status
@@ -20,11 +20,11 @@ When Tech Lead receives a task, the orchestrator:
 Developers:
 - Receive task assignments through messages
 - Complete their work
-- Report back to Tech Lead using `mcp__coord__task_status`
+- Report back to Engineering Manager using `mcp__coord__task_status`
 - Send completion messages via `mcp__coord__message_send`
 
-### 4. Tech Lead Aggregation
-Tech Lead:
+### 4. Engineering Manager Aggregation
+Engineering Manager:
 - Receives completion reports from developers
 - Validates all subtasks are complete
 - Reports feature completion to Scrum Master
@@ -32,7 +32,7 @@ Tech Lead:
 ### 5. Reporting Chain
 ```
 Senior Backend Engineer ─┐
-Senior Frontend Engineer ├─→ Tech Lead ─→ Scrum Master
+Senior Frontend Engineer ├─→ Engineering Manager ─→ Scrum Master
 QA Engineer ─────────┘
 ```
 
@@ -68,11 +68,11 @@ mcp__coord__task_create(
 )
 ```
 
-### Assigning to Tech Lead
+### Assigning to Engineering Manager
 ```python
 mcp__coord__task_assign(
     task_id="task_123",
-    agent_name="tech-lead"
+    agent_name="engineering-manager"
 )
 # Orchestrator automatically triggers delegation
 ```
@@ -84,13 +84,13 @@ mcp__coord__task_status(
     status="completed",
     progress=100
 )
-# Orchestrator creates report to tech-lead
+# Orchestrator creates report to engineering-manager
 ```
 
-### Tech Lead Reporting to Scrum Master
+### Engineering Manager Reporting to Scrum Master
 ```python
 mcp__coord__message_send(
-    from_agent="tech-lead",
+    from_agent="engineering-manager",
     to_agent="scrum-master",
     subject="Feature Complete",
     content="Authentication implemented and tested",
@@ -107,10 +107,10 @@ python3 .claude/scripts/test_delegation.py
 
 This demonstrates:
 1. Task creation by Scrum Master
-2. Delegation to Tech Lead
+2. Delegation to Engineering Manager
 3. Sub-delegation to developers
 4. Developer completion reports
-5. Tech Lead aggregation
+5. Engineering Manager aggregation
 6. Final report to Scrum Master
 
 ## Current Limitations

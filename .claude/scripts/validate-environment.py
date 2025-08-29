@@ -234,7 +234,7 @@ class AgentArmyValidator:
             
         # Check some key agent definitions
         key_agents = [
-            "scrum-master.md", "tech-lead.md", 
+            "scrum-master.md", "engineering-manager.md", 
             "senior-backend-engineer.md", "senior-frontend-engineer.md"
         ]
         

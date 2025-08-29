@@ -41,10 +41,10 @@ All 16 agents should have proper MCP tool access configured. The system includes
 
 ### Code Implementation
 ```bash
-# 2. System architect designs, then hands off to tech lead
-@tech-lead plan implementation of authentication system
+# 2. System architect designs, then hands off to engineering manager
+@engineering-manager plan implementation of authentication system
 
-# Tech lead will:
+# Engineering manager will:
 # - Use mcp__workspace__ tools to understand codebase
 # - Use mcp__validation__ tools to check code standards  
 # - Assign specific tasks to senior engineers
@@ -69,7 +69,7 @@ All 16 agents should have proper MCP tool access configured. The system includes
 ### Simple Feature Development
 ```
 1. @scrum-master create sprint for user management features
-2. Auto-assigned: requirements-analyst → system-architect → tech-lead → engineers
+2. Auto-assigned: requirements-analyst → system-architect → engineering-manager → engineers
 3. Engineers coordinate using mcp__coord__ tools
 4. QA and deployment handled automatically through handoff chain
 ```
@@ -88,7 +88,7 @@ All 16 agents should have proper MCP tool access configured. The system includes
 1. @system-architect review current API design
 2. Uses mcp__workspace__analyze for complete system understanding
 3. Creates improvement recommendations
-4. Coordinates with @tech-lead for implementation planning
+4. Coordinates with @engineering-manager for implementation planning
 ```
 
 ## 🛠️ Key Agent Roles
@@ -99,20 +99,17 @@ All 16 agents should have proper MCP tool access configured. The system includes
 
 ### Technical Level  
 - **system-architect**: System design, database schemas, API contracts
-- **tech-lead**: Code quality, technical standards, team coordination
+- **engineering-manager**: Parallel task orchestration, quality verification, team coordination
 
 ### Implementation Level
 - **senior-backend-engineer**: API development, database work, microservices
 - **senior-frontend-engineer**: UI/UX implementation, responsive design  
-- **integration-engineer**: Third-party services, webhooks, message queues
 - **data-engineer**: ETL pipelines, data warehouses, analytics
 
 ### Quality & Operations
 - **qa-engineer**: Testing, quality assurance, bug tracking
 - **security-engineer**: Security audits, vulnerability assessment
 - **devops-engineer**: CI/CD, containerization, infrastructure  
-- **sre-engineer**: Monitoring, incident response, system reliability
-- **cloud-architect**: Cloud design, serverless, cost optimization
 
 ## 📋 Task Coordination
 
@@ -185,7 +182,7 @@ mcp__coord__escalation_create(
     task_id="FEAT-001",
     reason="Waiting for external API documentation",
     severity="medium", 
-    to_agent="tech-lead"
+    to_agent="engineering-manager"
 )
 ```
 

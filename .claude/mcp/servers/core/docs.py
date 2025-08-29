@@ -254,7 +254,7 @@ async def handle_list_tools() -> list[types.Tool]:
                 "properties": {
                     "owner": {
                         "type": "string",
-                        "description": "Owner name (e.g., requirements-analyst, tech-lead)"
+                        "description": "Owner name (e.g., requirements-analyst, engineering-manager)"
                     }
                 },
                 "required": ["owner"]

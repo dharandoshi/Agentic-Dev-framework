@@ -12,7 +12,6 @@ agents_to_fix=(
     "devops-engineer"
     "qa-engineer"
     "security-engineer"
-    "sre-engineer"
     "scrum-master"
     "technical-writer"
     "god-agent"

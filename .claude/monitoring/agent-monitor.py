@@ -326,7 +326,7 @@ if __name__ == "__main__":
     log_activity("scrum-master", "sprint_planning", {"sprint": 1})
     log_activity("requirements-analyst", "gathering_requirements", {"stories": 5})
     log_handoff("scrum-master", "requirements-analyst", "task-001", True)
-    log_activity("tech-lead", "task_assignment", {"tasks": 10})
+    log_activity("engineering-manager", "task_assignment", {"tasks": 10})
     
     time.sleep(2)
     

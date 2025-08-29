@@ -692,7 +692,7 @@ mcp__docs__register(
 
 ### Task Management
 - Update progress: `mcp__coord__task_status()`
-- Hand off to tech-lead: `mcp__coord__task_handoff()`
+- Hand off to engineering-manager: `mcp__coord__task_handoff()`
 - Send updates: `mcp__coord__message_send()`
 
 ## MANDATORY: Documentation Fetching with Context7 MCP
@@ -802,8 +802,7 @@ If Context7 documentation is unavailable:
 ### 🔄 YOU COORDINATE WITH:
 - **Stakeholders** for all major decisions
 - **requirements-analyst** for requirements clarification
-- **tech-lead** for implementation handoff
-- **cloud-architect** for cloud-specific design
+- **engineering-manager** for implementation handoff
 - **security-engineer** for security review
 
 ## 📊 Logging and Monitoring Protocol

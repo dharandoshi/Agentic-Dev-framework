@@ -21,7 +21,7 @@ class SmartSuggestions:
                  "📝 This looks like a development task. Consider:\n1. Use TodoWrite to track it\n2. Start with requirements-analyst\n3. Follow the development workflow"),
                 
                 (r'\b(bug|issue|error|problem|broken|failing)\b',
-                 "🐛 This looks like a bug. Consider:\n1. Create an escalation if critical\n2. Assign to tech-lead for triage\n3. Track with TodoWrite"),
+                 "🐛 This looks like a bug. Consider:\n1. Create an escalation if critical\n2. Assign to engineering-manager for triage\n3. Track with TodoWrite"),
                 
                 (r'\b(deploy|release|rollout|launch)\b',
                  "🚀 This looks like deployment. Consider:\n1. Ensure QA has completed testing\n2. Create checkpoint before deployment\n3. Coordinate with devops-engineer")
@@ -32,7 +32,7 @@ class SmartSuggestions:
                  "🤝 For coordination, use:\n- message_send for direct communication\n- task_handoff for work transfer\n- workflow_start for multi-step processes"),
                 
                 (r'\b(assign|delegate|distribute)\b',
-                 "📋 For task assignment:\n- Only scrum-master and tech-lead can assign\n- Use task_assign with clear specifications\n- Check agent_workload first"),
+                 "📋 For task assignment:\n- Only scrum-master and engineering-manager can assign\n- Use task_assign with clear specifications\n- Check agent_workload first"),
                 
                 (r'\b(escalate|urgent|critical|blocker)\b',
                  "⚠️ For escalations:\n- Use escalation_create\n- Specify severity level\n- Include detailed reason")
@@ -109,11 +109,9 @@ class SmartSuggestions:
     def _extract_agents(self, text: str) -> List[str]:
         """Extract agent names from text"""
         agent_names = [
-            'scrum-master', 'system-architect', 'tech-lead', 
+            'scrum-master', 'system-architect', 'engineering-manager', 
             'requirements-analyst', 'senior-backend-engineer',
-            'senior-frontend-engineer', 'integration-engineer',
             'data-engineer', 'qa-engineer', 'security-engineer',
-            'devops-engineer', 'sre-engineer', 'cloud-architect',
             'technical-writer'
         ]
         
@@ -142,7 +140,7 @@ class SmartSuggestions:
                 "Next: Create tasks with task_create",
             
             'mcp__communication__escalation_create':
-                "Next: Scrum-master or tech-lead should respond",
+                "Next: Scrum-master or engineering-manager should respond",
             
             'mcp__communication__checkpoint_create':
                 "Next: Safe to proceed with next phase"

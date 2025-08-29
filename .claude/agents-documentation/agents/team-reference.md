@@ -14,14 +14,13 @@
 | Agent | Specialization | Key Responsibilities | MCP Tools |
 |-------|---------------|---------------------|-----------|
 | **system-architect** | System Design | Architecture design, database schemas, API contracts | workspace, docs, validation |
-| **tech-lead** | Code Quality & Standards | Code reviews, technical standards, design patterns | All MCP tools |
+| **engineering-manager** | Parallel Task Orchestration | Quality verification, team coordination, parallel execution oversight | All MCP tools |
 
 #### Level 3: Core Development
 | Agent | Specialization | Key Responsibilities | MCP Tools |
 |-------|---------------|---------------------|-----------|
 | **senior-backend-engineer** | Backend Development | API development, database optimization, microservices | All MCP tools |
 | **senior-frontend-engineer** | Frontend Development | UI/UX implementation, responsive design, performance | All MCP tools |  
-| **integration-engineer** | Third-party Integration | External service integration, webhooks, message queues | workspace, execution, docs |
 | **data-engineer** | Data Infrastructure | ETL pipelines, data warehouses, streaming, analytics | workspace, execution, coord, docs |
 
 #### Level 4: Quality & Operations
@@ -30,8 +29,6 @@
 | **qa-engineer** | Quality Assurance | Test planning, test cases, bug tracking, acceptance testing | workspace, validation, execution, coord, docs |
 | **security-engineer** | Security Implementation | Security audits, vulnerability assessment, compliance | workspace, validation, execution, coord, docs |
 | **devops-engineer** | CI/CD & Deployment | Pipeline setup, containerization, infrastructure as code | workspace, execution, coord, docs |
-| **sre-engineer** | Site Reliability | Monitoring, incident response, system resilience | workspace, execution, coord, docs |
-| **cloud-architect** | Cloud Infrastructure | Cloud design, multi-cloud strategies, serverless | workspace, execution, coord, docs |
 
 #### Level 5: Documentation & Support
 | Agent | Specialization | Key Responsibilities | MCP Tools |
@@ -52,9 +49,8 @@ All agents use standardized MCP coordination tools:
 
 ### Standard Handoff Chains
 ```
-requirements-analyst → system-architect → tech-lead → engineers
-engineers → qa-engineer → devops-engineer → sre-engineer  
-Any agent → tech-lead (code review)
+requirements-analyst → system-architect → engineering-manager → engineers
+Any agent → engineering-manager (quality verification)
 Any agent → scrum-master (project issues)
 ```
 
@@ -67,12 +63,10 @@ Any agent → scrum-master (project issues)
 
 ### Specialized Engineers (7 agents)  
 **Tools**: Subset based on specialization
-- integration-engineer, data-engineer, qa-engineer
-- security-engineer, devops-engineer, sre-engineer, cloud-architect
 
 ### Architects & Leads (2 agents)
 **Tools**: Analysis and coordination focused
-- system-architect, tech-lead
+- system-architect, engineering-manager
 
 ### Management & Documentation (4 agents)
 **Tools**: Communication and documentation focused
@@ -111,8 +105,8 @@ All agents can:
 ```
 1. @requirements-analyst gather requirements for user authentication
 2. Auto-handoff to @system-architect for design  
-3. Auto-handoff to @tech-lead for implementation planning
-4. @tech-lead assigns to @senior-backend-engineer and @senior-frontend-engineer
+3. Auto-handoff to @engineering-manager for implementation planning
+4. @engineering-manager assigns to @senior-backend-engineer and @senior-frontend-engineer
 5. Engineers hand off to @qa-engineer for testing
 6. @qa-engineer hands off to @devops-engineer for deployment
 ```
@@ -120,7 +114,7 @@ All agents can:
 #### Issue Resolution Flow
 ```
 1. Any agent detects issue
-2. Escalate to @tech-lead (technical) or @scrum-master (process)
+2. Escalate to @engineering-manager (technical) or @scrum-master (process)
 3. Lead triages and assigns to appropriate specialist
 4. Specialist resolves and reports back
 5. Lead validates resolution

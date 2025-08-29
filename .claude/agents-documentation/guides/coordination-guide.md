@@ -11,22 +11,20 @@ This guide explains how agents coordinate work using the MCP coordination system
 1. Task Creation (scrum-master)
 2. Requirements Gathering (requirements-analyst)  
 3. System Design (system-architect)
-4. Implementation Planning (tech-lead)
+4. Implementation Planning (engineering-manager)
 5. Development (engineers)
 6. Quality Assurance (qa-engineer)
 7. Deployment (devops-engineer)
-8. Monitoring (sre-engineer)
 ```
 
 ### Handoff Chain Rules
 | From Agent | To Agent | Trigger |
 |------------|----------|---------|
 | requirements-analyst | system-architect | Requirements complete |
-| system-architect | tech-lead | Design approved |
-| tech-lead | Engineers | Tasks assigned |
+| system-architect | engineering-manager | Design approved |
+| engineering-manager | Engineers | Tasks assigned |
 | Engineers | qa-engineer | Implementation complete |
 | qa-engineer | devops-engineer | Tests passing |
-| devops-engineer | sre-engineer | Deployment successful |
 
 ## 🛠️ Coordination Tools
 
@@ -90,7 +88,6 @@ mcp__coord__escalation_create(
     task_id="FEAT-001",
     reason="Third-party API documentation incomplete", 
     severity="medium",
-    to_agent="integration-engineer"
 )
 ```
 
@@ -143,7 +140,7 @@ mcp__coord__task_status(
 ### Sequential Development
 For features requiring strict dependencies:
 ```
-requirements-analyst → system-architect → tech-lead → engineer → qa-engineer
+requirements-analyst → system-architect → engineering-manager → engineer → qa-engineer
 ```
 
 ### Parallel Development  
@@ -163,7 +160,6 @@ mcp__coord__workflow_start(
 ### Cross-Team Coordination
 For features involving multiple specializations:
 ```
-tech-lead → [backend-engineer, frontend-engineer, data-engineer] → qa-engineer → [devops-engineer, sre-engineer]
 ```
 
 ## 🚨 Escalation Procedures
@@ -178,11 +174,10 @@ tech-lead → [backend-engineer, frontend-engineer, data-engineer] → qa-engine
 ### Escalation Targets
 | Issue Type | Escalate To |
 |------------|-------------|
-| Technical problems | tech-lead |
+| Technical problems | engineering-manager |
 | Resource/priority conflicts | scrum-master |
 | Architecture decisions | system-architect |
 | Quality standards | qa-engineer |
-| Production issues | sre-engineer |
 | Security concerns | security-engineer |
 
 ### Escalation Examples
@@ -192,7 +187,7 @@ mcp__coord__escalation_create(
     task_id="FEAT-001",
     reason="Database performance below requirements, need architecture review",
     severity="high",
-    to_agent="tech-lead"
+    to_agent="engineering-manager"
 )
 
 # Resource escalation
@@ -208,7 +203,6 @@ mcp__coord__escalation_create(
     task_id="INC-001",
     reason="Authentication service down, users cannot login", 
     severity="critical",
-    to_agent="sre-engineer"
 )
 ```
 
@@ -274,7 +268,7 @@ mcp__coord__escalation_create(
     task_id="BUG-001",
     reason="Security implications of invalid email validation", 
     severity="high",
-    to_agent="tech-lead"
+    to_agent="engineering-manager"
 )
 
 # 3. Tech lead assigns to frontend engineer

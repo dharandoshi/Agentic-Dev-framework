@@ -20,13 +20,9 @@ AGENT_EXPERTISE = {
     'devops-engineer': ['deploy', 'ci/cd', 'pipeline', 'docker', 'kubernetes', 'infrastructure'],
     'security-engineer': ['security', 'vulnerability', 'authentication', 'authorization', 'encryption'],
     'data-engineer': ['etl', 'pipeline', 'data', 'warehouse', 'analytics', 'stream'],
-    'integration-engineer': ['webhook', 'integration', 'third-party', 'api', 'sync'],
-    'sre-engineer': ['monitoring', 'reliability', 'incident', 'metrics', 'observability'],
-    'cloud-architect': ['aws', 'azure', 'gcp', 'cloud', 'serverless', 'scaling'],
     'system-architect': ['architecture', 'design', 'system', 'schema', 'structure'],
     'requirements-analyst': ['requirements', 'user story', 'acceptance', 'criteria', 'specification'],
     'technical-writer': ['documentation', 'readme', 'guide', 'tutorial', 'api docs'],
-    'tech-lead': ['technical', 'coordinate', 'review', 'architecture', 'planning'],
     'scrum-master': ['sprint', 'backlog', 'agile', 'planning', 'retrospective'],
     'project-initializer': ['setup', 'initialize', 'bootstrap', 'scaffold', 'structure']
 }
@@ -51,48 +47,42 @@ class AgentArmyOrchestrator:
         self.coordination_rules = {
             # Who can hand off to whom
             'handoff_patterns': {
-                'scrum-master': ['tech-lead', 'requirements-analyst', 'project-initializer'],
-                'tech-lead': ['senior-backend-engineer', 'senior-frontend-engineer', 'system-architect', 
-                             'security-engineer', 'data-engineer', 'integration-engineer'],
-                'requirements-analyst': ['system-architect', 'technical-writer', 'tech-lead'],
-                'system-architect': ['tech-lead', 'senior-backend-engineer', 'senior-frontend-engineer'],
-                'senior-backend-engineer': ['qa-engineer', 'security-engineer', 'data-engineer', 'integration-engineer'],
+                'scrum-master': ['engineering-manager', 'requirements-analyst', 'project-initializer'],
+                'engineering-manager': ['senior-backend-engineer', 'senior-frontend-engineer', 'system-architect', 
+                             'security-engineer', 'data-engineer'],
+                'requirements-analyst': ['system-architect', 'technical-writer', 'engineering-manager'],
+                'system-architect': ['engineering-manager', 'senior-backend-engineer', 'senior-frontend-engineer'],
+                'senior-backend-engineer': ['qa-engineer', 'security-engineer', 'data-engineer'],
                 'senior-frontend-engineer': ['qa-engineer', 'technical-writer'],
-                'data-engineer': ['qa-engineer', 'integration-engineer'],
-                'integration-engineer': ['qa-engineer', 'security-engineer'],
-                'qa-engineer': ['devops-engineer', 'sre-engineer', 'tech-lead'],
-                'devops-engineer': ['sre-engineer', 'cloud-architect'],
-                'security-engineer': ['devops-engineer', 'tech-lead'],
-                'sre-engineer': ['tech-lead', 'devops-engineer'],
-                'cloud-architect': ['devops-engineer', 'tech-lead'],
-                'technical-writer': ['tech-lead'],
-                'project-initializer': ['tech-lead', 'system-architect']
+                'data-engineer': ['qa-engineer'],
+                'qa-engineer': ['devops-engineer', 'engineering-manager'],
+                'devops-engineer': ['engineering-manager'],
+                'security-engineer': ['devops-engineer', 'engineering-manager'],
+                'technical-writer': ['engineering-manager'],
+                'project-initializer': ['engineering-manager', 'system-architect']
             },
             
             # Automatic coordination triggers
             'auto_coordinate': {
-                'requirements_complete': ['system-architect', 'tech-lead'],
-                'architecture_complete': ['tech-lead'],
+                'requirements_complete': ['system-architect', 'engineering-manager'],
+                'architecture_complete': ['engineering-manager'],
                 'backend_complete': ['qa-engineer'],
                 'frontend_complete': ['qa-engineer'],
                 'testing_complete': ['devops-engineer'],
-                'deployment_ready': ['sre-engineer']
+                'deployment_ready': ['devops-engineer']
             },
             
             # Reporting hierarchy
             'reporting_chain': {
-                'senior-backend-engineer': 'tech-lead',
-                'senior-frontend-engineer': 'tech-lead',
-                'qa-engineer': 'tech-lead',
-                'devops-engineer': 'tech-lead',
-                'security-engineer': 'tech-lead',
-                'data-engineer': 'tech-lead',
-                'integration-engineer': 'tech-lead',
-                'sre-engineer': 'tech-lead',
-                'cloud-architect': 'tech-lead',
-                'system-architect': 'tech-lead',
-                'technical-writer': 'tech-lead',
-                'tech-lead': 'scrum-master',
+                'senior-backend-engineer': 'engineering-manager',
+                'senior-frontend-engineer': 'engineering-manager',
+                'qa-engineer': 'engineering-manager',
+                'devops-engineer': 'engineering-manager',
+                'security-engineer': 'engineering-manager',
+                'data-engineer': 'engineering-manager',
+                'system-architect': 'engineering-manager',
+                'technical-writer': 'engineering-manager',
+                'engineering-manager': 'scrum-master',
                 'requirements-analyst': 'scrum-master',
                 'project-initializer': 'scrum-master'
             },
@@ -125,7 +115,7 @@ class AgentArmyOrchestrator:
             
             # Create a delegation message with working directory context
             message_data = {
-                "from_agent": context.get('coordinator', 'tech-lead') if context else 'tech-lead',
+                "from_agent": context.get('coordinator', 'engineering-manager') if context else 'engineering-manager',
                 "to_agent": agent_name,
                 "subject": f"Task Assignment: {task_id}",
                 "content": task_content,
@@ -655,9 +645,9 @@ As the scrum-master, you MUST:
 3. If DISCOVERY phase (requirements exist, no architecture):
    - Delegate to system-architect for technical design
 4. If PLANNING phase (both exist):
-   - Create Sprint 1 and delegate to tech-lead
+   - Create Sprint 1 and delegate to engineering-manager
 5. Ensure all agents work in the current directory without creating subfolders
-6. Follow the proper coordination chain: requirements-analyst → system-architect → tech-lead
+6. Follow the proper coordination chain: requirements-analyst → system-architect → engineering-manager
 ```
 
 **DO NOT attempt to implement this yourself. The Agent Army system will handle everything.**

@@ -10,20 +10,17 @@ This directory contains the complete specifications for all 15 agents in the Age
 
 ### Level 2: Technical Leadership
 - **system-architect** - System design and architecture
-- **tech-lead** - Technical direction and code reviews
+- **engineering-manager** - Parallel task orchestration and quality verification
 
 ### Level 3: Core Development
 - **senior-backend-engineer** - Backend development and APIs
 - **senior-frontend-engineer** - Frontend development and UI/UX
-- **integration-engineer** - Third-party integrations
 - **data-engineer** - Data pipelines and analytics
 
 ### Level 4: Quality & Operations
 - **qa-engineer** - Testing and quality assurance
 - **security-engineer** - Security and compliance
 - **devops-engineer** - CI/CD and deployment
-- **sre-engineer** - Site reliability engineering
-- **cloud-architect** - Cloud infrastructure
 
 ### Level 5: Documentation
 - **technical-writer** - Documentation and guides
@@ -40,16 +37,13 @@ All agent specifications are stored in `.claude/agents/` directory:
 ├── scrum-master.md
 ├── requirements-analyst.md
 ├── system-architect.md
-├── tech-lead.md
+├── engineering-manager.md
 ├── senior-backend-engineer.md
 ├── senior-frontend-engineer.md
-├── integration-engineer.md
 ├── data-engineer.md
 ├── qa-engineer.md
 ├── security-engineer.md
 ├── devops-engineer.md
-├── sre-engineer.md
-├── cloud-architect.md
 ├── technical-writer.md
 ├── god-agent.md
 └── agent-registry.json

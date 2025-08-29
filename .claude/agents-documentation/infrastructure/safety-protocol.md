@@ -89,7 +89,7 @@ When handing off to another agent, ALWAYS include:
 - Run tests before and after changes
 - Check all dependencies
 - Validate all modifications
-- If unsure, escalate to tech-lead
+- If unsure, escalate to engineering-manager
 
 ## Technology Adaptation
 

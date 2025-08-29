@@ -262,7 +262,7 @@ class CeremonyAutomation:
             "type": "sprint_planning",
             "date": start.isoformat(),
             "duration_hours": 4,
-            "attendees": ["scrum-master", "tech-lead", "team"],
+            "attendees": ["scrum-master", "engineering-manager", "team"],
             "location": "Main Conference Room"
         })
         

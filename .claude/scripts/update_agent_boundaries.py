@@ -27,7 +27,6 @@ agent_boundaries = {
         "coordinate": {
             "senior-backend-engineer": "for data API needs",
             "devops-engineer": "for pipeline deployment",
-            "integration-engineer": "for external data sources"
         }
     },
     "security-engineer": {
@@ -51,10 +50,8 @@ agent_boundaries = {
         "coordinate": {
             "senior-backend-engineer": "for security implementations",
             "devops-engineer": "for security configurations",
-            "sre-engineer": "for security monitoring"
         }
     },
-    "sre-engineer": {
         "can": [
             "Set up monitoring and alerting",
             "Implement SLIs/SLOs/SLAs",
@@ -99,7 +96,7 @@ agent_boundaries = {
         "coordinate": {
             "scrum-master": "for sprint planning",
             "system-architect": "for technical feasibility",
-            "tech-lead": "for implementation approach"
+            "engineering-manager": "for implementation approach"
         }
     },
     "system-architect": {
@@ -121,9 +118,8 @@ agent_boundaries = {
             "Write actual code"
         ],
         "coordinate": {
-            "tech-lead": "for implementation",
+            "engineering-manager": "for implementation",
             "requirements-analyst": "for requirements",
-            "cloud-architect": "for cloud design"
         }
     },
     "technical-writer": {
@@ -150,7 +146,6 @@ agent_boundaries = {
             "devops-engineer": "for deployment docs"
         }
     },
-    "cloud-architect": {
         "can": [
             "Design cloud infrastructure",
             "Create multi-cloud strategies",
@@ -171,7 +166,6 @@ agent_boundaries = {
         "coordinate": {
             "devops-engineer": "for implementation",
             "system-architect": "for system design",
-            "sre-engineer": "for reliability"
         }
     },
     "project-initializer": {
@@ -193,7 +187,7 @@ agent_boundaries = {
             "Make business decisions"
         ],
         "coordinate": {
-            "tech-lead": "for technical setup",
+            "engineering-manager": "for technical setup",
             "devops-engineer": "for CI/CD setup",
             "system-architect": "for structure approval"
         }

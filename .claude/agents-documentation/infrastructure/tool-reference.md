@@ -146,7 +146,6 @@ mcp__coord__escalation_create(
     task_id="BUG-042",
     reason="Database connection failing in production",
     severity="critical", 
-    to_agent="sre-engineer"
 )
 ```
 

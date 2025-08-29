@@ -8,22 +8,19 @@ Level 1: Strategic (Project Management)
 │
 Level 2: Tactical (Technical Leadership)  
 ├── system-architect (Design Authority)
-├── tech-lead (Implementation Director)
+├── engineering-manager (Implementation Director)
 │
 Level 3: Operational (Implementation)
 ├── requirements-analyst (Requirements & Design)
 ├── senior-backend-engineer (Backend Development)
 ├── senior-frontend-engineer (Frontend Development)
-├── integration-engineer (External Integration)
 ├── data-engineer (Data & Analytics)
 │
 Level 4: Quality & Operations
 ├── qa-engineer (Quality Assurance)
 ├── security-engineer (Security)
 ├── devops-engineer (CI/CD & Deployment)
-├── sre-engineer (Site Reliability)
 ├── performance-engineer (Performance)
-├── cloud-architect (Infrastructure)
 │
 Level 5: Documentation
 └── technical-writer (Documentation)
@@ -45,11 +42,11 @@ Level 5: Documentation
 ### Level 2: Technical Leadership
 **system-architect** (Design Authority)
 - `task_status` - Update design task status
-- `task_handoff` - Hand off designs to tech-lead
+- `task_handoff` - Hand off designs to engineering-manager
 - `message_send` - Communicate with teams
 - `checkpoint_create` - Create design checkpoints
 
-**tech-lead** (Implementation Director)
+**engineering-manager** (Implementation Director)
 - `task_assign` - Assign to developers
 - `task_list` - View development tasks
 - `task_status` - Update implementation status
@@ -78,7 +75,6 @@ Level 5: Documentation
 - `checkpoint_create` - Save UI milestones
 - `escalation_create` - Escalate UI/UX issues
 
-**integration-engineer**
 - `task_status` - Update integration status
 - `task_handoff` - Hand off to testing
 - `message_send` - Coordinate APIs
@@ -105,12 +101,10 @@ Level 5: Documentation
 - `message_send` - Deployment notifications
 - `checkpoint_create` - Save deployment states
 
-**sre-engineer**
 - `task_status` - Update reliability status
 - `message_send` - Incident notifications
 - `escalation_create` - Escalate incidents
 
-**cloud-architect**
 - `task_status` - Update infrastructure status
 - `message_send` - Infrastructure updates
 
@@ -123,7 +117,7 @@ Level 5: Documentation
 
 ### 1. Feature Development Flow
 ```
-scrum-master → requirements-analyst → system-architect → tech-lead
+scrum-master → requirements-analyst → system-architect → engineering-manager
     ↓                                                         ↓
 workflow_start                                    task_assign to:
                                                   - senior-backend-engineer
@@ -140,14 +134,12 @@ senior-backend-engineer/senior-frontend-engineer → qa-engineer → security-en
 
 ### 3. Deployment Flow
 ```
-qa-engineer → devops-engineer → sre-engineer → cloud-architect
       ↓              ↓               ↓              ↓
 task_handoff  checkpoint_create  escalation   message_send
 ```
 
 ### 4. Incident Response Flow
 ```
-sre-engineer → tech-lead → scrum-master
       ↓            ↓            ↓
 escalation    task_assign  message_broadcast
 ```
@@ -162,7 +154,7 @@ message_send   task_status
 ## Coordination Rules
 
 ### Task Assignment Rules
-1. Only `scrum-master` and `tech-lead` can assign tasks
+1. Only `scrum-master` and `engineering-manager` can assign tasks
 2. Tasks flow downward in hierarchy
 3. Escalations flow upward in hierarchy
 
@@ -204,11 +196,11 @@ requirements_analyst.task_handoff(
 )
 
 system_architect.task_handoff(
-    to="tech-lead", 
+    to="engineering-manager", 
     artifacts=["architecture.md", "api-spec.yaml"]
 )
 
-tech_lead.task_assign(
+engineering_manager.task_assign(
     to=["senior-backend-engineer", "senior-frontend-engineer"],
     tasks=implementation_tasks
 )
@@ -228,7 +220,6 @@ devops_engineer.checkpoint_create(
 )
 
 devops_engineer.task_handoff(
-    to="sre-engineer",
     artifacts=["deployment.yaml"]
 )
 ```

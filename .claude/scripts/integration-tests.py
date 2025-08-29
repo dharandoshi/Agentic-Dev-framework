@@ -256,12 +256,11 @@ class AgentArmyIntegrationTests:
         # Map workflow steps to responsible agents
         agent_workflow_map = {
             "Requirements gathering": ["requirements-analyst", "scrum-master"],
-            "Technical planning": ["tech-lead", "system-architect"], 
+            "Technical planning": ["engineering-manager", "system-architect"], 
             "Architecture design": ["system-architect", "senior-backend-engineer"],
             "Implementation": ["senior-backend-engineer", "senior-frontend-engineer"],
             "Testing": ["qa-engineer"],
             "Documentation": ["technical-writer"],
-            "Deployment": ["devops-engineer", "sre-engineer"]
         }
         
         # Validate that required agents exist for each workflow step
@@ -388,7 +387,7 @@ class AgentArmyIntegrationTests:
                 name="scrum_master_to_tech_lead_handoff",
                 description="Test task handoff from Scrum Master to Tech Lead",
                 severity=TestSeverity.CRITICAL,
-                agents_involved=["scrum-master", "tech-lead"],
+                agents_involved=["scrum-master", "engineering-manager"],
                 expected_workflow=["task_creation", "assignment", "acknowledgment"],
                 timeout_seconds=30
             ),
@@ -397,7 +396,7 @@ class AgentArmyIntegrationTests:
                 name="tech_lead_to_engineers_handoff",
                 description="Test technical task distribution to engineering teams",
                 severity=TestSeverity.CRITICAL,
-                agents_involved=["tech-lead", "senior-backend-engineer", "senior-frontend-engineer"],
+                agents_involved=["engineering-manager", "senior-backend-engineer", "senior-frontend-engineer"],
                 expected_workflow=["task_breakdown", "assignment", "coordination"],
                 timeout_seconds=45
             ),
@@ -416,7 +415,7 @@ class AgentArmyIntegrationTests:
                 name="multi_agent_coordination",
                 description="Test coordination protocols across agent hierarchy",
                 severity=TestSeverity.CRITICAL,
-                agents_involved=["scrum-master", "tech-lead", "system-architect", "senior-backend-engineer"],
+                agents_involved=["scrum-master", "engineering-manager", "system-architect", "senior-backend-engineer"],
                 expected_workflow=["coordination_setup", "status_sync", "conflict_resolution"],
                 timeout_seconds=60
             ),
@@ -435,7 +434,7 @@ class AgentArmyIntegrationTests:
                 name="agent_communication_protocols",
                 description="Test agent-to-agent communication protocols",
                 severity=TestSeverity.HIGH,
-                agents_involved=["scrum-master", "tech-lead", "senior-backend-engineer", "qa-engineer"],
+                agents_involved=["scrum-master", "engineering-manager", "senior-backend-engineer", "qa-engineer"],
                 expected_workflow=["message_sending", "acknowledgment", "response"],
                 timeout_seconds=30
             ),
@@ -444,7 +443,7 @@ class AgentArmyIntegrationTests:
                 name="escalation_communication",
                 description="Test escalation communication flows",
                 severity=TestSeverity.HIGH,
-                agents_involved=["senior-backend-engineer", "tech-lead", "scrum-master"],
+                agents_involved=["senior-backend-engineer", "engineering-manager", "scrum-master"],
                 expected_workflow=["issue_identification", "escalation", "resolution"],
                 timeout_seconds=30
             ),
@@ -470,7 +469,7 @@ class AgentArmyIntegrationTests:
                 name="bug_fix_workflow",
                 description="Test bug identification and resolution workflow",
                 severity=TestSeverity.HIGH,
-                agents_involved=["qa-engineer", "tech-lead", "senior-backend-engineer", "devops-engineer"],
+                agents_involved=["qa-engineer", "engineering-manager", "senior-backend-engineer", "devops-engineer"],
                 expected_workflow=["bug_identification", "assignment", "fix_implementation", "validation", "deployment"],
                 timeout_seconds=90
             ),
@@ -480,7 +479,7 @@ class AgentArmyIntegrationTests:
                 name="mcp_server_integration",
                 description="Test MCP server availability and integration",
                 severity=TestSeverity.CRITICAL,
-                agents_involved=["tech-lead"],  # Any agent using MCP tools
+                agents_involved=["engineering-manager"],  # Any agent using MCP tools
                 expected_workflow=["server_connection", "tool_availability", "function_execution"],
                 timeout_seconds=30
             ),

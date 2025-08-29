@@ -86,7 +86,7 @@ Add hooks to your Claude settings (`~/.claude/settings.json` or project-specific
 **Purpose:** Enforce agent hierarchy rules
 **Features:**
 - Only scrum-master can broadcast
-- Only scrum-master and tech-lead can assign tasks
+- Only scrum-master and engineering-manager can assign tasks
 - Validates escalation paths
 
 ### 3. Auto Todo Tracker (`auto-todo-tracker.sh`)
@@ -127,9 +127,8 @@ def validate_chain_of_command(from_agent, to_agent, action):
     """Ensure communication follows hierarchy"""
     hierarchy = {
         1: ["scrum-master"],
-        2: ["system-architect", "tech-lead"],
+        2: ["system-architect", "engineering-manager"],
         3: ["senior-backend-engineer", "senior-frontend-engineer"],
-        4: ["qa-engineer", "devops-engineer", "sre-engineer"]
     }
     # Validate based on levels
 ```

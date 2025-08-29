@@ -19,20 +19,17 @@ Level 1: Strategic Management
 
 Level 2: Technical Leadership  
 ├── system-architect (System Design)
-└── tech-lead (Code Quality & Standards)
+└── engineering-manager (Parallel Task Orchestration & Quality Verification)
 
 Level 3: Core Development
 ├── senior-backend-engineer (Backend Development)
 ├── senior-frontend-engineer (Frontend Development)
-├── integration-engineer (Third-party Integration)
 └── data-engineer (Data Infrastructure)
 
 Level 4: Quality & Operations
 ├── qa-engineer (Quality Assurance)
 ├── security-engineer (Security Implementation)
 ├── devops-engineer (CI/CD & Deployment)
-├── sre-engineer (Site Reliability)
-└── cloud-architect (Cloud Infrastructure)
 
 Level 5: Documentation & Support
 └── technical-writer (Documentation)

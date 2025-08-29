@@ -87,13 +87,10 @@ EOF
 TECHNICAL_AGENTS=(
     "senior-backend-engineer"
     "senior-frontend-engineer"
-    "tech-lead"
+    "engineering-manager"
     "devops-engineer"
-    "cloud-architect"
-    "integration-engineer"
     "security-engineer"
     "data-engineer"
-    "sre-engineer"
     "qa-engineer"
     "system-architect"
 )

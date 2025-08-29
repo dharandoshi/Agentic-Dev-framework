@@ -66,21 +66,18 @@ Agent Army is a sophisticated multi-agent orchestration system that enhances Cla
 
 **Level 2 - Architectural**  
 - `system-architect`: System design and architecture
-- `tech-lead`: Technical direction and code reviews
+- `engineering-manager`: Parallel task orchestration and quality verification
 
 **Level 3 - Implementation**
 - `senior-backend-engineer`: Backend development
 - `senior-frontend-engineer`: Frontend development
 - `requirements-analyst`: Requirements gathering
 - `data-engineer`: Data pipelines and analytics
-- `integration-engineer`: Third-party integrations
 
 **Level 4 - Quality & Operations**
 - `qa-engineer`: Testing and quality assurance
 - `security-engineer`: Security and compliance
 - `devops-engineer`: CI/CD and deployment
-- `sre-engineer`: Site reliability
-- `cloud-architect`: Cloud infrastructure
 
 **Level 5 - Documentation**
 - `technical-writer`: Documentation and guides
@@ -131,7 +128,7 @@ Agent Army is a sophisticated multi-agent orchestration system that enhances Cla
 "Act as qa-engineer and document the login error bug"
 
 # Assign to developer
-"Act as tech-lead and assign the bug to backend team"
+"Act as engineering-manager and assign the bug to backend team"
 
 # Fix the bug
 "Act as senior-backend-engineer and fix the authentication timeout issue"
@@ -143,13 +140,12 @@ Agent Army is a sophisticated multi-agent orchestration system that enhances Cla
 ### 3. Code Review
 ```bash
 # Request review
-"Act as tech-lead and review the recent changes"
+"Act as engineering-manager and review the recent changes"
 
 # Security review
 "Act as security-engineer and audit the authentication implementation"
 
 # Performance review
-"Act as sre-engineer and check for performance issues"
 ```
 
 ## 📊 Monitoring Your Work

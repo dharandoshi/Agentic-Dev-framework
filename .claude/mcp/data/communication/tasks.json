@@ -1,12 +1,1 @@
-{
-  "task_inception_20250825043415": {
-    "title": "Project Inception",
-    "description": "User request: @.claude/mcp/data/project-management/workflow-templates.json is it being used?",
-    "created_by": "orchestrator",
-    "priority": "critical",
-    "id": "task_inception_20250825043415",
-    "status": "pending",
-    "assigned_to": "scrum-master",
-    "created_at": "2025-08-25T04:34:15.914770"
-  }
-}
+{}

@@ -65,7 +65,7 @@
 ### Scrum Master CANNOT:
 - Create Sprint 0 before requirements gathering
 - Create implementation tasks without requirements
-- Skip directly to tech-lead without requirements/architecture
+- Skip directly to engineering-manager without requirements/architecture
 - Write any code or technical specifications
 
 ### Requirements Analyst CANNOT:
@@ -108,14 +108,14 @@ Before proceeding to next phase, verify:
 - [ ] Stakeholder approved architecture
 - [ ] ALL 10 architecture documents created
 - [ ] Documents registered with mcp__docs__register
-- [ ] Handoff message sent to tech-lead
+- [ ] Handoff message sent to engineering-manager
 
 ### Phase 4 → 5 (Tech Lead to Engineers):
 - [ ] ALL documentation reviewed
 - [ ] Tasks broken down by team
 - [ ] API contracts defined
 - [ ] Tasks assigned to engineers
-- [ ] NO code written by tech-lead
+- [ ] NO code written by engineering-manager
 
 ## 🔄 MCP Tool Usage
 
@@ -133,7 +133,7 @@ Before proceeding to next phase, verify:
 - mcp__workspace__analyze - Understand project
 - mcp__docs__create - Create architecture docs
 - mcp__docs__register - Register all documents
-- mcp__coord__task_handoff - Hand off to tech-lead
+- mcp__coord__task_handoff - Hand off to engineering-manager
 
 **Development Coordination:**
 - mcp__docs__find - Get all documentation

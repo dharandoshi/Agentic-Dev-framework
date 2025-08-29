@@ -83,7 +83,7 @@
         },
         {
           "pattern": "Task(subagent_type='{agent_name}')",
-          "example": "Task(subagent_type='tech-lead', prompt='Review code')",
+          "example": "Task(subagent_type='engineering-manager', prompt='Review code')",
           "handler": "Invoke agent through Task tool"
         },
         {
@@ -94,7 +94,7 @@
       ],
       "available_agents": [
         "scrum-master",
-        "tech-lead",
+        "engineering-manager",
         "system-architect",
         "requirements-analyst",
         "senior-backend-engineer",
@@ -103,10 +103,7 @@
         "technical-writer",
         "devops-engineer",
         "security-engineer",
-        "sre-engineer",
         "data-engineer",
-        "cloud-architect",
-        "integration-engineer",
         "project-initializer",
         "god"
       ]

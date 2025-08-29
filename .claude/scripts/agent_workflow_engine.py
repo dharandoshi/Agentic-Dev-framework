@@ -24,7 +24,7 @@ class AgentWorkflowEngine:
         
         # Agent responsibility mapping
         self.agent_workflows = {
-            'tech-lead': self._tech_lead_workflow,
+            'engineering-manager': self._tech_lead_workflow,
             'senior-backend-engineer': self._senior_backend_engineer_workflow,
             'senior-frontend-engineer': self._senior_frontend_engineer_workflow,
             'qa-engineer': self._qa_engineer_workflow,
@@ -241,9 +241,9 @@ class AgentWorkflowEngine:
         """Coordinate development task"""
         self._log(f"Coordinating development task {task_id}")
         
-        # Assign subtasks to tech-lead
-        if task_data.get('assigned_to') != 'tech-lead':
-            self._assign_task_to_agent(task_id, 'tech-lead')
+        # Assign subtasks to engineering-manager
+        if task_data.get('assigned_to') != 'engineering-manager':
+            self._assign_task_to_agent(task_id, 'engineering-manager')
         
         return True
     

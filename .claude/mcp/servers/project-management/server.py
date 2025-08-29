@@ -157,7 +157,7 @@ class ProjectManagementServer:
             ProjectPhase.INCEPTION.value: "Start with requirements gathering. Delegate to requirements-analyst.",
             ProjectPhase.DISCOVERY.value: "Requirements found. Now create system architecture. Delegate to system-architect.",
             ProjectPhase.ARCHITECTURE.value: "Architecture ready. Initialize backlog and prepare for sprint planning.",
-            ProjectPhase.PLANNING.value: "Ready for Sprint 1 planning. Review backlog and assign to tech-lead.",
+            ProjectPhase.PLANNING.value: "Ready for Sprint 1 planning. Review backlog and assign to engineering-manager.",
             ProjectPhase.EXECUTION.value: "Sprint active. Monitor progress and facilitate ceremonies.",
             ProjectPhase.TESTING.value: "Development complete. Focus on QA and bug fixes.",
             ProjectPhase.DEPLOYMENT.value: "Ready for release. Coordinate with DevOps.",

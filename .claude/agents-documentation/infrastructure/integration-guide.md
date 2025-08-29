@@ -79,7 +79,7 @@ MCP servers provide tools that agents can use:
 - **Monitoring**: Tracks documentation coverage
 
 #### **C. Coord Server** (`coord.py`)
-- **Used by**: Scrum-master, tech-lead
+- **Used by**: Scrum-master, engineering-manager
 - **Integration**: Manages task assignments and handoffs
 - **Monitoring**: Tracks workflow completion times
 
@@ -91,7 +91,7 @@ MCP servers provide tools that agents can use:
 #### **Project Management Servers**
 
 #### **E. Project Management Server** (`project-management.py`)
-- **Used by**: Scrum-master, tech-lead, managers
+- **Used by**: Scrum-master, engineering-manager, managers
 - **Integration**: Advanced project coordination
 - **Monitoring**: Tracks project milestones and progress
 

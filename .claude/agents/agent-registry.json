@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "last_updated": "2025-08-08",
-  "total_agents": 15,
+  "last_updated": "2025-08-29",
+  "total_agents": 12,
   "hierarchy": {
     "level_0_meta": [
       {
@@ -37,9 +37,9 @@
         "capacity": 100
       },
       {
-        "name": "tech-lead",
+        "name": "engineering-manager",
         "model": "opus",
-        "specialization": "Technical Director - Task Assignment & Developer Coordination",
+        "specialization": "Engineering Manager - Parallel Task Orchestration & Quality Verification",
         "status": "available",
         "capacity": 100
       }
@@ -48,28 +48,21 @@
       {
         "name": "senior-backend-engineer",
         "model": "sonnet",
-        "specialization": "Backend Development (Managed by Tech-Lead)",
+        "specialization": "Backend Development, API Integration & Data Processing (Managed by Engineering-Manager)",
         "status": "available",
         "capacity": 100
       },
       {
         "name": "senior-frontend-engineer",
         "model": "sonnet",
-        "specialization": "Frontend Development (Managed by Tech-Lead)",
-        "status": "available",
-        "capacity": 100
-      },
-      {
-        "name": "integration-engineer",
-        "model": "sonnet",
-        "specialization": "API Integration (Managed by Tech-Lead)",
+        "specialization": "Frontend Development (Managed by Engineering-Manager)",
         "status": "available",
         "capacity": 100
       },
       {
         "name": "data-engineer",
         "model": "sonnet",
-        "specialization": "Data Engineering (Managed by Tech-Lead)",
+        "specialization": "Data Engineering (Managed by Engineering-Manager)",
         "status": "available",
         "capacity": 100
       },
@@ -88,23 +81,9 @@
         "capacity": 100
       },
       {
-        "name": "cloud-architect",
-        "model": "sonnet",
-        "specialization": "Cloud Infrastructure Design",
-        "status": "available",
-        "capacity": 100
-      },
-      {
         "name": "devops-engineer",
         "model": "sonnet",
-        "specialization": "CI/CD & Deployment",
-        "status": "available",
-        "capacity": 100
-      },
-      {
-        "name": "sre-engineer",
-        "model": "sonnet",
-        "specialization": "Site Reliability & Monitoring",
+        "specialization": "CI/CD, Deployment, Cloud Infrastructure & Site Reliability",
         "status": "available",
         "capacity": 100
       },
@@ -120,29 +99,29 @@
   "communication": {
     "protocol_version": "3.0.0",
     "project_coordinator": "scrum-master",
-    "technical_director": "tech-lead",
+    "engineering_orchestrator": "engineering-manager",
     "flow": {
       "phase_1": "requirements-analyst → system-architect",
-      "phase_2": "scrum-master (feature planning) → tech-lead (technical orchestration)",
-      "phase_3": "tech-lead assigns tasks to developers",
-      "phase_4": "parallel development coordinated by tech-lead (backend, frontend, integrations, data)",
-      "phase_5": "quality gates (tech-lead review, qa-engineer testing, security-engineer audit)",
-      "phase_6": "deployment (cloud-architect, devops-engineer, sre-engineer)",
+      "phase_2": "scrum-master (feature planning) → engineering-manager (parallel task orchestration)",
+      "phase_3": "engineering-manager assigns tasks in PARALLEL to all teams",
+      "phase_4": "parallel development coordinated by engineering-manager (backend, frontend, QA, DevOps, security)",
+      "phase_5": "quality gates (engineering-manager review, qa-engineer testing, security-engineer audit)",
+      "phase_6": "deployment (devops-engineer handles infrastructure, deployment, and monitoring)",
       "phase_7": "documentation (technical-writer)"
     },
     "authority_structure": {
       "project_level": "scrum-master manages features, sprints, and stakeholder communication",
-      "technical_level": "tech-lead manages all technical implementation and developer coordination"
+      "technical_level": "engineering-manager orchestrates parallel development and quality verification"
     },
     "quality_gates": [
-      "tech-lead (code review & technical approval)",
+      "engineering-manager (architecture compliance, coding standards, pattern verification, quality approval)",
       "qa-engineer (testing)",
       "security-engineer (security audit)"
     ]
   },
   "models": {
     "opus": 4,
-    "sonnet": 11,
+    "sonnet": 8,
     "haiku": 0
   }
 }

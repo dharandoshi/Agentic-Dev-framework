@@ -80,7 +80,7 @@ class CoordinationStarter:
             
             if agent_name == 'scrum-master':
                 workflow_started = self._start_scrum_master_workflow(task_id, task_data)
-            elif agent_name == 'tech-lead':
+            elif agent_name == 'engineering-manager':
                 workflow_started = self._start_tech_lead_workflow(task_id, task_data)
             elif agent_name in ['senior-frontend-engineer', 'senior-backend-engineer']:
                 workflow_started = self._start_engineer_workflow(task_id, task_data)
@@ -222,15 +222,15 @@ class CoordinationStarter:
     # Helper methods
     
     def _create_tech_lead_handoff(self, task_id: str, task_data: Dict) -> bool:
-        """Create handoff from scrum master to tech lead"""
+        """Create handoff from scrum master to engineering manager"""
         try:
-            # If task is not already assigned to tech-lead, reassign it
-            if task_data.get('assigned_to') != 'tech-lead':
-                self._update_task_assignment(task_id, 'tech-lead')
-                self._log(f"Handed off task {task_id} from scrum-master to tech-lead")
+            # If task is not already assigned to engineering-manager, reassign it
+            if task_data.get('assigned_to') != 'engineering-manager':
+                self._update_task_assignment(task_id, 'engineering-manager')
+                self._log(f"Handed off task {task_id} from scrum-master to engineering-manager")
             return True
         except Exception as e:
-            self._log(f"Error creating tech lead handoff: {str(e)}")
+            self._log(f"Error creating engineering manager handoff: {str(e)}")
             return False
     
     def _break_down_and_assign(self, task_id: str, task_data: Dict) -> bool:

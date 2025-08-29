@@ -28,7 +28,7 @@ BOUNDARY_RULES = {
             r"git\s+push",  # Git deployment
         ],
         "must_delegate_to": {
-            "code_writing": "tech-lead",
+            "code_writing": "engineering-manager",
             "requirements": "requirements-analyst",
             "architecture": "system-architect"
         }
@@ -51,10 +51,10 @@ BOUNDARY_RULES = {
         ],
         "must_delegate_to": {
             "technical_design": "system-architect",
-            "implementation": "tech-lead"
+            "implementation": "engineering-manager"
         }
     },
-    "tech-lead": {
+    "engineering-manager": {
         "forbidden_actions": [
             "business requirements gathering",
             "sprint planning",
@@ -121,7 +121,7 @@ BOUNDARY_RULES = {
             r"helm\s+upgrade.*prod",  # Production deployment
         ],
         "must_delegate_to": {
-            "bug_fixes": "tech-lead",
+            "bug_fixes": "engineering-manager",
             "deployment": "devops-engineer"
         }
     }
@@ -185,14 +185,13 @@ class BoundaryValidator:
         """Validate if a handoff is allowed"""
         # Define valid handoff patterns
         VALID_HANDOFFS = {
-            "scrum-master": ["requirements-analyst", "system-architect", "tech-lead"],
+            "scrum-master": ["requirements-analyst", "system-architect", "engineering-manager"],
             "requirements-analyst": ["system-architect", "scrum-master"],
-            "system-architect": ["tech-lead", "scrum-master"],
-            "tech-lead": ["senior-frontend-engineer", "senior-backend-engineer", "qa-engineer"],
-            "senior-frontend-engineer": ["qa-engineer", "tech-lead"],
-            "senior-backend-engineer": ["qa-engineer", "tech-lead"],
-            "qa-engineer": ["devops-engineer", "tech-lead"],
-            "devops-engineer": ["sre-engineer", "scrum-master"],
+            "system-architect": ["engineering-manager", "scrum-master"],
+            "engineering-manager": ["senior-frontend-engineer", "senior-backend-engineer", "qa-engineer"],
+            "senior-frontend-engineer": ["qa-engineer", "engineering-manager"],
+            "senior-backend-engineer": ["qa-engineer", "engineering-manager"],
+            "qa-engineer": ["devops-engineer", "engineering-manager"],
         }
         
         valid_targets = VALID_HANDOFFS.get(from_agent, [])
@@ -272,7 +271,7 @@ if __name__ == "__main__":
     tests = [
         ("scrum-master", "write code", "def hello_world():"),
         ("requirements-analyst", "create database", "CREATE TABLE users"),
-        ("tech-lead", "coordinate development", "assign tasks to team"),
+        ("engineering-manager", "coordinate development", "assign tasks to team"),
         ("qa-engineer", "test feature", "run test suite"),
     ]
     
@@ -282,9 +281,9 @@ if __name__ == "__main__":
     
     # Test handoffs
     handoffs = [
-        ("scrum-master", "tech-lead"),
+        ("scrum-master", "engineering-manager"),
         ("scrum-master", "qa-engineer"),  # Invalid
-        ("tech-lead", "senior-frontend-engineer"),
+        ("engineering-manager", "senior-frontend-engineer"),
     ]
     
     for from_agent, to_agent in handoffs:

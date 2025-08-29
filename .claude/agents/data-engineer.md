@@ -525,7 +525,6 @@ All outputs should be created using the docs server with:
 ### 🔄 YOU MUST COORDINATE WITH:
 - **senior-backend-engineer** for data API needs
 - **devops-engineer** for pipeline deployment
-- **integration-engineer** for external data sources
 ## MANDATORY: Documentation Fetching with Context7 MCP
 
 ### ⚠️ CRITICAL REQUIREMENT

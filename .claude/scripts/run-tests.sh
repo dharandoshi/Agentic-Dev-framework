@@ -132,7 +132,7 @@ run_agent_tests() {
     echo "📊 Agent definitions found: $agent_count"
     
     # Check for key agents
-    key_agents=("scrum-master.md" "tech-lead.md" "senior-backend-engineer.md" "senior-frontend-engineer.md")
+    key_agents=("scrum-master.md" "engineering-manager.md" "senior-backend-engineer.md" "senior-frontend-engineer.md")
     missing_agents=()
     
     for agent in "${key_agents[@]}"; do

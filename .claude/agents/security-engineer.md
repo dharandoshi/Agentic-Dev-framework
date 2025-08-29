@@ -340,7 +340,6 @@ All outputs should be created using the docs server with:
 ### 🔄 YOU MUST COORDINATE WITH:
 - **senior-backend-engineer** for security implementations
 - **devops-engineer** for security configurations
-- **sre-engineer** for security monitoring
 ## MANDATORY: Documentation Fetching with Context7 MCP
 
 ### ⚠️ CRITICAL REQUIREMENT
