@@ -582,14 +582,15 @@ class AgentArmyOrchestrator:
         text_lower = text.lower()
         return any(keyword in text_lower for keyword in PROJECT_KEYWORDS)
     
-    def auto_trigger_scrum_master(self, user_input: str) -> Dict:
-        """Automatically trigger scrum-master for project work"""
-        # Create inception task
+    def auto_trigger_requirements_analyst(self, user_input: str) -> Dict:
+        """Automatically trigger requirements-analyst for new projects (BMAD Phase 1)"""
+        # Create inception task for requirements gathering
         task_data = {
-            "title": "Project Inception",
+            "title": "Requirements Discovery - BMAD Phase 1",
             "description": f"User request: {user_input}",
             "created_by": "orchestrator",
-            "priority": "critical"
+            "priority": "critical",
+            "phase": "inception"
         }
         
         # Store task for scrum-master
@@ -601,59 +602,67 @@ class AgentArmyOrchestrator:
             with open(tasks_file, 'r') as f:
                 tasks = json.load(f)
         
-        task_id = f"task_inception_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        task_id = f"task_requirements_{datetime.now().strftime('%Y%m%d%H%M%S')}"
         tasks[task_id] = {
             **task_data,
             "id": task_id,
             "status": "pending",
-            "assigned_to": "scrum-master",
+            "assigned_to": "requirements-analyst",
             "created_at": datetime.now().isoformat()
         }
         
         with open(tasks_file, 'w') as f:
             json.dump(tasks, f, indent=2)
         
-        # Trigger scrum-master
-        self._trigger_agent_work("scrum-master", task_id, {"phase": "auto_detect"})
+        # Trigger requirements-analyst (BMAD flow)
+        self._trigger_agent_work("requirements-analyst", task_id, {
+            "phase": "inception",
+            "bmad_flow": True
+        })
         
-        self._log_event("auto_trigger_scrum_master", {
+        self._log_event("auto_trigger_requirements_analyst", {
             "user_input": user_input,
             "task_id": task_id,
             "timestamp": datetime.now().isoformat()
         })
         
-        # Create a forceful instruction to trigger the scrum-master
+        # Create instruction to trigger requirements-analyst (BMAD Phase 1)
         additional_context = f"""
 
-🚀 **AGENT ARMY SYSTEM ACTIVATED**
+🚀 **BMAD AGENT ARMY ACTIVATED - PHASE 1: REQUIREMENTS DISCOVERY**
 
-This request requires the Agent Army multi-agent framework.
+This request requires the BMAD-aligned Agent Army framework.
 
 **YOU MUST NOW:**
 1. Immediately use the Task tool
-2. Set subagent_type to 'scrum-master' 
-3. Pass this exact prompt to the scrum-master:
+2. Set subagent_type to 'requirements-analyst'
+3. Pass this exact prompt to the requirements-analyst:
 
 ```
 The user wants to: {user_input}
 
-As the scrum-master, you MUST:
-1. FIRST check project phase using mcp__docs__find for requirements and architecture
-2. If INCEPTION phase (no requirements exist):
-   - Delegate to requirements-analyst for discovery
-   - DO NOT create implementation tasks yet!
-3. If DISCOVERY phase (requirements exist, no architecture):
-   - Delegate to system-architect for technical design
-4. If PLANNING phase (both exist):
-   - Create Sprint 1 and delegate to engineering-manager
-5. Ensure all agents work in the current directory without creating subfolders
-6. Follow the proper coordination chain: requirements-analyst → system-architect → engineering-manager
+As the Business Analyst, you MUST follow the BMAD methodology:
+1. START with interactive discovery to understand the project vision
+2. CREATE a Project Brief early (after initial understanding)
+3. PROGRESSIVELY build the Product Requirements Document (PRD)
+4. GATHER detailed functional and non-functional requirements
+5. PREPARE complete documentation for handoff to system-architect
+6. Work in the current directory: {os.getcwd()}
+7. DO NOT create project subfolders
+
+Follow the BMAD flow:
+- Phase 1: Project Inception → Create Project Brief
+- Phase 2-5: Progressive Discovery → Build PRD
+- Phase 6-7: Finalization → Handoff to Architecture
+
+The proper flow is: Requirements-Analyst → System-Architect → Engineering-Manager
 ```
 
-**DO NOT attempt to implement this yourself. The Agent Army system will handle everything.**
+**DO NOT attempt to implement this yourself. Let the requirements-analyst handle discovery.**
 
 Task ID: {task_id}
-Working Directory: {os.getcwd()}"""
+Working Directory: {os.getcwd()}
+BMAD Phase: Planning (Requirements Discovery)"""
         
         return {
             "hookSpecificOutput": {
@@ -686,7 +695,18 @@ Working Directory: {os.getcwd()}"""
                             )
                     
                     if not has_active_project:
-                        return self.auto_trigger_scrum_master(user_input)
+                        # Check if we already have requirements docs
+                        docs_dir = self.project_root / 'docs'
+                        has_requirements = (docs_dir / 'prd.md').exists() or (docs_dir / 'requirements.md').exists()
+                        
+                        if has_requirements:
+                            # Requirements exist, might need architecture or implementation
+                            self._log_event("requirements_exist", {"checking_next_phase": True})
+                            # Could check for architecture and route accordingly
+                            # For now, still trigger requirements-analyst to assess
+                        
+                        # Always start with requirements-analyst for new projects
+                        return self.auto_trigger_requirements_analyst(user_input)
             
             elif hook_type == "pre-tool-use":
                 # Process coordination tools before they execute
