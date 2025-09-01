@@ -1,0 +1,12 @@
+{
+  "project_id": "agent-army-trial",
+  "project_name": "Agent Army Trial",
+  "version": "1.0.0",
+  "created": "2025-01-09",
+  "description": "Main Agent Army development project",
+  "settings": {
+    "log_retention_days": 30,
+    "enable_human_logs": true,
+    "mcp_isolation": true
+  }
+}

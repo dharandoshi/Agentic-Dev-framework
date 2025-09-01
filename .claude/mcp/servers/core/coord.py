@@ -69,11 +69,32 @@ workflows: Dict[str, Dict] = {}
 message_threads: Dict[str, List[str]] = {}
 
 # Persistence
-# Use absolute path relative to this script file
-data_dir = Path(__file__).parent.parent.parent / "data" / "communication"
+# Function to find project root
+def find_project_root():
+    """Find the project root by looking for .claude directory"""
+    current = Path.cwd()
+    while current != current.parent:
+        if (current / '.claude').exists():
+            return current / '.claude'
+        current = current.parent
+    # Fallback to relative path from script location
+    return Path(__file__).parent.parent.parent
+
+# Use project-aware path
+project_root = find_project_root()
+data_dir = project_root / "mcp" / "data" / "communication"
 data_dir.mkdir(parents=True, exist_ok=True)
 
-# File paths
+# Load project config if exists
+project_config = {}
+project_json = project_root / "project.json"
+if project_json.exists():
+    with open(project_json) as f:
+        project_config = json.load(f)
+
+PROJECT_ID = project_config.get("project_id", "default")
+
+# File paths - now project-aware
 TASKS_FILE = data_dir / "tasks.json"
 MESSAGES_FILE = data_dir / "messages.json"
 AGENTS_FILE = data_dir / "agents.json"

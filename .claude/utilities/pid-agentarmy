@@ -26,6 +26,12 @@ fi
 PROJECT_NAME=$(basename $(dirname "$CLAUDE_DIR"))
 UTIL_DIR="$CLAUDE_DIR/utilities"
 
+# Load project ID from project.json if exists
+PROJECT_ID="$PROJECT_NAME"
+if [[ -f "$CLAUDE_DIR/project.json" ]]; then
+    PROJECT_ID=$(grep '"project_id"' "$CLAUDE_DIR/project.json" | cut -d'"' -f4 || echo "$PROJECT_NAME")
+fi
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -40,7 +46,7 @@ show_help() {
     echo -e "${CYAN}║         ${GREEN}🤖 PensionID Agent Army Command Center 🤖${CYAN}           ║${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "${YELLOW}Project:${NC} $PROJECT_NAME"
+    echo -e "${YELLOW}Project:${NC} $PROJECT_NAME (ID: $PROJECT_ID)"
     echo -e "${YELLOW}Location:${NC} $(dirname $CLAUDE_DIR)"
     echo ""
     echo -e "${YELLOW}Usage:${NC} pid-agentarmy [command] [options]"

@@ -62,11 +62,32 @@ agent_logs: Dict[str, List[Dict]] = defaultdict(list)
 workflow_logs: Dict[str, List[Dict]] = defaultdict(list)
 metrics: Dict[str, Dict] = defaultdict(lambda: {"count": 0, "total_duration": 0, "errors": 0})
 
-# Persistence
-data_dir = Path(__file__).parent.parent.parent / "data" / "logging"
+# Function to find project root
+def find_project_root():
+    """Find the project root by looking for .claude directory"""
+    current = Path.cwd()
+    while current != current.parent:
+        if (current / '.claude').exists():
+            return current / '.claude'
+        current = current.parent
+    # Fallback to relative path from script location
+    return Path(__file__).parent.parent.parent
+
+# Persistence - with project detection
+project_root = find_project_root()
+data_dir = project_root / "mcp" / "data" / "logging"
 data_dir.mkdir(parents=True, exist_ok=True)
 
-# File paths
+# Load project config if exists
+project_config = {}
+project_json = project_root / "project.json"
+if project_json.exists():
+    with open(project_json) as f:
+        project_config = json.load(f)
+
+PROJECT_ID = project_config.get("project_id", "default")
+
+# File paths - now project-aware
 LOGS_FILE = data_dir / f"logs_{datetime.now().strftime('%Y%m%d')}.jsonl"
 HUMAN_LOG_FILE = data_dir / f"agents_{datetime.now().strftime('%Y%m%d')}.log"  # Human-readable log
 METRICS_FILE = data_dir / "metrics.json"
