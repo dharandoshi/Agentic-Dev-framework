@@ -27,11 +27,12 @@ AGENT_EXPERTISE = {
     'project-initializer': ['setup', 'initialize', 'bootstrap', 'scaffold', 'structure']
 }
 
-# Project intent keywords for auto-triggering
-PROJECT_KEYWORDS = [
-    'build', 'create', 'develop', 'implement', 'make',
-    'application', 'app', 'system', 'feature', 'project',
-    'website', 'service', 'api', 'platform', 'tool'
+# Agent names that can be explicitly mentioned
+AGENT_NAMES = [
+    'senior-frontend-engineer', 'senior-backend-engineer', 'qa-engineer',
+    'devops-engineer', 'security-engineer', 'data-engineer',
+    'system-architect', 'requirements-analyst', 'technical-writer',
+    'scrum-master', 'project-initializer', 'engineering-manager'
 ]
 
 class AgentArmyOrchestrator:
@@ -41,7 +42,7 @@ class AgentArmyOrchestrator:
         self.project_root = Path(os.environ.get('CLAUDE_PROJECT_ROOT', '.'))
         self.logs_dir = self.project_root / 'logs'
         self.logs_dir.mkdir(parents=True, exist_ok=True)
-        self.auto_trigger_enabled = True
+        self.auto_trigger_enabled = False  # Disabled auto agent selection
         
         # Comprehensive agent coordination rules
         self.coordination_rules = {
@@ -575,22 +576,40 @@ class AgentArmyOrchestrator:
             "message": f"✅ Handed off task {task_id} from {from_agent} to {to_agent}"
         }
     
-    def detect_project_intent(self, text: str) -> bool:
-        """Detect if user wants to start a project"""
+    def detect_explicit_agent(self, text: str) -> Optional[str]:
+        """Detect if user explicitly mentioned an agent"""
         if not text:
-            return False
+            return None
         text_lower = text.lower()
-        return any(keyword in text_lower for keyword in PROJECT_KEYWORDS)
+        
+        # Check for explicit agent mentions
+        for agent_name in AGENT_NAMES:
+            # Check various formats: "use qa-engineer", "qa engineer", "QA engineer"
+            agent_variations = [
+                agent_name,
+                agent_name.replace('-', ' '),
+                agent_name.replace('-', '_'),
+            ]
+            
+            for variation in agent_variations:
+                if variation in text_lower:
+                    self._log_event("explicit_agent_detected", {
+                        "agent": agent_name,
+                        "user_input": text
+                    })
+                    return agent_name
+        
+        return None
     
-    def auto_trigger_requirements_analyst(self, user_input: str) -> Dict:
-        """Automatically trigger requirements-analyst for new projects (BMAD Phase 1)"""
-        # Create inception task for requirements gathering
+    def trigger_explicit_agent(self, agent_name: str, user_input: str) -> Dict:
+        """Trigger an explicitly mentioned agent"""
+        # Create task for the explicitly mentioned agent
         task_data = {
-            "title": "Requirements Discovery - BMAD Phase 1",
+            "title": f"Task for {agent_name}",
             "description": f"User request: {user_input}",
             "created_by": "orchestrator",
-            "priority": "critical",
-            "phase": "inception"
+            "priority": "high",
+            "explicit_request": True
         }
         
         # Store task for scrum-master
@@ -602,67 +621,55 @@ class AgentArmyOrchestrator:
             with open(tasks_file, 'r') as f:
                 tasks = json.load(f)
         
-        task_id = f"task_requirements_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        task_id = f"task_{agent_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
         tasks[task_id] = {
             **task_data,
             "id": task_id,
             "status": "pending",
-            "assigned_to": "requirements-analyst",
+            "assigned_to": agent_name,
             "created_at": datetime.now().isoformat()
         }
         
         with open(tasks_file, 'w') as f:
             json.dump(tasks, f, indent=2)
         
-        # Trigger requirements-analyst (BMAD flow)
-        self._trigger_agent_work("requirements-analyst", task_id, {
-            "phase": "inception",
-            "bmad_flow": True
+        # Trigger the explicitly mentioned agent
+        self._trigger_agent_work(agent_name, task_id, {
+            "explicit_request": True,
+            "user_input": user_input
         })
         
-        self._log_event("auto_trigger_requirements_analyst", {
+        self._log_event("explicit_agent_triggered", {
+            "agent": agent_name,
             "user_input": user_input,
             "task_id": task_id,
             "timestamp": datetime.now().isoformat()
         })
         
-        # Create instruction to trigger requirements-analyst (BMAD Phase 1)
+        # Create instruction to trigger the explicitly mentioned agent
         additional_context = f"""
 
-🚀 **BMAD AGENT ARMY ACTIVATED - PHASE 1: REQUIREMENTS DISCOVERY**
+🎯 **AGENT EXPLICITLY REQUESTED: {agent_name}**
 
-This request requires the BMAD-aligned Agent Army framework.
+The user has explicitly requested the {agent_name} agent.
 
 **YOU MUST NOW:**
 1. Immediately use the Task tool
-2. Set subagent_type to 'requirements-analyst'
-3. Pass this exact prompt to the requirements-analyst:
+2. Set subagent_type to '{agent_name}'
+3. Pass this exact prompt to the {agent_name}:
 
 ```
-The user wants to: {user_input}
+User request: {user_input}
 
-As the Business Analyst, you MUST follow the BMAD methodology:
-1. START with interactive discovery to understand the project vision
-2. CREATE a Project Brief early (after initial understanding)
-3. PROGRESSIVELY build the Product Requirements Document (PRD)
-4. GATHER detailed functional and non-functional requirements
-5. PREPARE complete documentation for handoff to system-architect
-6. Work in the current directory: {os.getcwd()}
-7. DO NOT create project subfolders
-
-Follow the BMAD flow:
-- Phase 1: Project Inception → Create Project Brief
-- Phase 2-5: Progressive Discovery → Build PRD
-- Phase 6-7: Finalization → Handoff to Architecture
-
-The proper flow is: Requirements-Analyst → System-Architect → Engineering-Manager
+You have been explicitly requested to handle this task.
+Working Directory: {os.getcwd()}
+DO NOT create project subfolders unless specifically requested.
 ```
 
-**DO NOT attempt to implement this yourself. Let the requirements-analyst handle discovery.**
+**Let the {agent_name} handle this task as requested by the user.**
 
 Task ID: {task_id}
-Working Directory: {os.getcwd()}
-BMAD Phase: Planning (Requirements Discovery)"""
+Working Directory: {os.getcwd()}"""
         
         return {
             "hookSpecificOutput": {
@@ -676,37 +683,22 @@ BMAD Phase: Planning (Requirements Discovery)"""
         response = {}
         
         try:
-            # Handle user prompt submission for auto-triggering
+            # Handle user prompt submission - only trigger if agent explicitly mentioned
             if hook_type == "UserPromptSubmit" or hook_type == "user-prompt-submit":
                 user_input = input_data.get('prompt', '')
-                if self.auto_trigger_enabled and self.detect_project_intent(user_input):
-                    # Check if scrum-master should be auto-triggered
-                    tasks_file = self.project_root / 'mcp' / 'data' / 'communication' / 'tasks.json'
-                    has_active_project = False
-                    
-                    if tasks_file.exists():
-                        with open(tasks_file, 'r') as f:
-                            tasks = json.load(f)
-                            # Check if there's already an active project
-                            has_active_project = any(
-                                t.get('status') in ['pending', 'in_progress'] and 
-                                t.get('assigned_to') == 'scrum-master'
-                                for t in tasks.values()
-                            )
-                    
-                    if not has_active_project:
-                        # Check if we already have requirements docs
-                        docs_dir = self.project_root / 'docs'
-                        has_requirements = (docs_dir / 'prd.md').exists() or (docs_dir / 'requirements.md').exists()
-                        
-                        if has_requirements:
-                            # Requirements exist, might need architecture or implementation
-                            self._log_event("requirements_exist", {"checking_next_phase": True})
-                            # Could check for architecture and route accordingly
-                            # For now, still trigger requirements-analyst to assess
-                        
-                        # Always start with requirements-analyst for new projects
-                        return self.auto_trigger_requirements_analyst(user_input)
+                
+                # Check if user explicitly mentioned an agent
+                explicit_agent = self.detect_explicit_agent(user_input)
+                
+                if explicit_agent:
+                    # User explicitly mentioned an agent, trigger it
+                    return self.trigger_explicit_agent(explicit_agent, user_input)
+                
+                # No explicit agent mentioned, let Claude handle normally
+                self._log_event("no_explicit_agent", {
+                    "user_input": user_input,
+                    "timestamp": datetime.now().isoformat()
+                })
             
             elif hook_type == "pre-tool-use":
                 # Process coordination tools before they execute
