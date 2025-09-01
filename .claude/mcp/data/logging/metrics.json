@@ -1,0 +1,7 @@
+{
+  "agent:test-agent": {
+    "count": 1,
+    "total_duration": 1299.909987,
+    "errors": 0
+  }
+}

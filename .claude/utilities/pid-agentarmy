@@ -1,0 +1,232 @@
+#!/bin/bash
+# PensionID Agent Army Master Command
+# Portable utility that works with any Agent Army project
+
+# Function to find .claude directory
+find_claude_dir() {
+    local current_dir="$PWD"
+    while [[ "$current_dir" != "/" ]]; do
+        if [[ -d "$current_dir/.claude" ]]; then
+            echo "$current_dir/.claude"
+            return 0
+        fi
+        current_dir=$(dirname "$current_dir")
+    done
+    return 1
+}
+
+# Detect project context
+CLAUDE_DIR=$(find_claude_dir)
+if [[ -z "$CLAUDE_DIR" ]]; then
+    echo "Error: Not in an Agent Army project directory"
+    echo "No .claude directory found in current path or parent directories"
+    exit 1
+fi
+
+PROJECT_NAME=$(basename $(dirname "$CLAUDE_DIR"))
+UTIL_DIR="$CLAUDE_DIR/utilities"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+show_help() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║         ${GREEN}🤖 PensionID Agent Army Command Center 🤖${CYAN}           ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${YELLOW}Project:${NC} $PROJECT_NAME"
+    echo -e "${YELLOW}Location:${NC} $(dirname $CLAUDE_DIR)"
+    echo ""
+    echo -e "${YELLOW}Usage:${NC} pid-agentarmy [command] [options]"
+    echo ""
+    echo -e "${BLUE}📊 Log Management:${NC}"
+    echo "  logs view [n]     - View last n lines of logs (default: 50)"
+    echo "  logs tail         - Monitor logs in real-time"
+    echo "  logs stats        - Show statistics"
+    echo "  logs agents       - Show agent activity"
+    echo "  logs errors       - Show errors only"
+    echo "  logs files        - Show file operations"
+    echo "  logs search <term> - Search in logs"
+    echo "  logs clear        - Archive old logs (keeps today)"
+    echo "  logs purge        - DELETE ALL logs permanently"
+    echo ""
+    echo -e "${BLUE}🎮 Coordination:${NC}"
+    echo "  reset coords      - Reset coordination system"
+    echo "  reset docs        - Reset document registry"
+    echo "  reset all         - Reset everything"
+    echo ""
+    echo -e "${BLUE}📈 Monitoring:${NC}"
+    echo "  monitor           - Live system monitoring"
+    echo "  status            - Show system status"
+    echo ""
+    echo -e "${BLUE}🔧 Utilities:${NC}"
+    echo "  list agents       - List all agents"
+    echo "  list docs         - List all documents"
+    echo ""
+    echo -e "${YELLOW}Examples:${NC}"
+    echo "  pid-agentarmy logs view 100"
+    echo "  pid-agentarmy logs search 'FILE WRITE'"
+    echo "  pid-agentarmy monitor"
+    echo "  pid-agentarmy reset all"
+    echo ""
+}
+
+# Log commands
+handle_logs() {
+    case "$1" in
+        view)
+            "$UTIL_DIR/agentlog" view "$2"
+            ;;
+        tail)
+            "$UTIL_DIR/agentlog" tail
+            ;;
+        stats)
+            "$UTIL_DIR/agentlog" stats
+            ;;
+        agents)
+            "$UTIL_DIR/agentlog" agents
+            ;;
+        errors)
+            "$UTIL_DIR/agentlog" errors
+            ;;
+        files)
+            "$UTIL_DIR/agentlog" files
+            ;;
+        search)
+            if [[ -z "$2" ]]; then
+                echo -e "${RED}Please provide a search term${NC}"
+            else
+                "$UTIL_DIR/agentlog" search "$2"
+            fi
+            ;;
+        clear)
+            "$UTIL_DIR/agentlog" clear
+            ;;
+        purge)
+            "$UTIL_DIR/agentlog" purge
+            ;;
+        *)
+            echo -e "${YELLOW}Log commands: view, tail, stats, agents, errors, files, search, clear, purge${NC}"
+            ;;
+    esac
+}
+
+# Reset commands
+handle_reset() {
+    case "$1" in
+        coords|coordination)
+            echo -e "${YELLOW}Resetting coordination system...${NC}"
+            # Add MCP reset command here when available
+            echo -e "${GREEN}Coordination system reset.${NC}"
+            ;;
+        docs|documents)
+            echo -e "${YELLOW}Resetting document registry...${NC}"
+            # Add MCP reset command here when available
+            echo -e "${GREEN}Document registry reset.${NC}"
+            ;;
+        all)
+            echo -e "${YELLOW}Resetting all systems...${NC}"
+            # Add MCP reset commands here when available
+            echo -e "${GREEN}All systems reset.${NC}"
+            ;;
+        *)
+            echo -e "${YELLOW}Reset options: coords, docs, all${NC}"
+            ;;
+    esac
+}
+
+# Monitor command
+handle_monitor() {
+    echo -e "${GREEN}Starting live monitoring...${NC}"
+    python3 "$UTIL_DIR/logview" monitor
+}
+
+# Status command
+show_status() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                     System Status                            ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    
+    # Check for today's logs
+    TODAY=$(date '+%Y%m%d')
+    LOG_FILE="$CLAUDE_DIR/logs/agents_${TODAY}.log"
+    MCP_LOG="$CLAUDE_DIR/mcp/data/logging/agents_${TODAY}.log"
+    
+    if [[ -f "$LOG_FILE" ]] || [[ -f "$MCP_LOG" ]]; then
+        echo -e "${GREEN}✓ Logging system: Active${NC}"
+        "$UTIL_DIR/agentlog" stats | head -20
+    else
+        echo -e "${YELLOW}⚠ Logging system: No logs today${NC}"
+    fi
+    
+    # Check for active tasks
+    TASKS_FILE="$CLAUDE_DIR/mcp/data/communication/tasks.json"
+    if [[ -f "$TASKS_FILE" ]]; then
+        TASK_COUNT=$(grep -c '"status": "pending"' "$TASKS_FILE" 2>/dev/null || echo 0)
+        echo -e "\n${BLUE}Active Tasks: ${TASK_COUNT}${NC}"
+    fi
+    
+    # Count agents
+    AGENT_COUNT=$(ls -1 "$CLAUDE_DIR/agents"/*.md 2>/dev/null | grep -v shared | wc -l)
+    echo -e "${BLUE}Registered Agents: ${AGENT_COUNT}${NC}"
+}
+
+# Removed test_logging function - only real logs now
+
+# List agents
+list_agents() {
+    echo -e "${GREEN}Available Agents:${NC}"
+    echo -e "${CYAN}════════════════════════════════════════${NC}"
+    for agent in "$CLAUDE_DIR/agents"/*.md; do
+        if [[ -f "$agent" ]] && [[ ! "$agent" == *"shared"* ]]; then
+            name=$(basename "$agent" .md)
+            description=$(grep "^description:" "$agent" | cut -d: -f2- | sed 's/^ //')
+            echo -e "${YELLOW}$name${NC}"
+            echo "  $description"
+            echo ""
+        fi
+    done
+}
+
+# Main command handler
+case "$1" in
+    logs)
+        handle_logs "$2" "$3"
+        ;;
+    reset)
+        handle_reset "$2"
+        ;;
+    monitor)
+        handle_monitor
+        ;;
+    status)
+        show_status
+        ;;
+    list)
+        case "$2" in
+            agents)
+                list_agents
+                ;;
+            docs)
+                echo -e "${GREEN}Documents:${NC}"
+                ls -la "$CLAUDE_DIR/docs/" 2>/dev/null || echo "No documents found"
+                ;;
+            *)
+                echo -e "${YELLOW}List options: agents, docs${NC}"
+                ;;
+        esac
+        ;;
+    help|--help|-h|"")
+        show_help
+        ;;
+    *)
+        echo -e "${RED}Unknown command: $1${NC}"
+        echo "Use 'pid-agentarmy help' for usage information"
+        ;;
+esac

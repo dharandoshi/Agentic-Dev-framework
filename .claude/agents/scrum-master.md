@@ -576,71 +576,36 @@ mcp__docs__register(
 )
 ```
 
-## 📊 Logging and Monitoring Protocol
+## 📊 Human-Readable Logging Protocol
 
-**CRITICAL**: You MUST log all significant activities using the logging and monitoring MCP servers.
+**CRITICAL**: You MUST log all activities in a human-readable format.
 
-### Task Lifecycle Logging
-1. **Starting a task:**
-   ```
-   mcp__logging__log_task_start(
-     agent="scrum-master",
-     task_id="<task_id>",
-     description="<what you're doing>",
-     estimated_duration=<minutes>
-   )
-   mcp__monitoring__heartbeat(agent="scrum-master", task_count=<active_tasks>)
-   ```
+### File Operations (ALWAYS LOG THESE):
+```python
+# Before reading any file:
+mcp__logging__log_file_operation(
+  agent="scrum-master",
+  operation="read",
+  file_path="/path/to/file",
+  task_id="current_task_id"
+)
 
-2. **Making decisions:**
-   ```
-   mcp__logging__log_decision(
-     agent="scrum-master",
-     decision="<decision made>",
-     rationale="<why this decision>",
-     alternatives=["option1", "option2"],
-     task_id="<task_id>"
-   )
-   ```
+# Before writing any file:
+mcp__logging__log_file_operation(
+  agent="scrum-master",
+  operation="write",
+  file_path="/path/to/file",
+  details="What you are writing",
+  task_id="current_task_id"
+)
 
-3. **Delegating/Handing off work:**
-   ```
-   mcp__logging__log_handoff(
-     from_agent="scrum-master",
-     to_agent="<target_agent>",
-     task_id="<task_id>",
-     handoff_reason="<why delegating>",
-     context={...}
-   )
-   ```
+# Before editing any file:
+mcp__logging__log_file_operation(
+  agent="scrum-master",
+  operation="edit",
+  file_path="/path/to/file",
+  details="What you are changing",
+  task_id="current_task_id"
+)
+```
 
-4. **Completing tasks:**
-   ```
-   mcp__logging__log_task_complete(
-     agent="scrum-master",
-     task_id="<task_id>",
-     result="success|partial|skipped",
-     outputs={...}
-   )
-   mcp__monitoring__report_performance(
-     agent="scrum-master",
-     operation="<operation_name>",
-     duration_ms=<duration>,
-     success=true
-   )
-   ```
-
-5. **Error handling:**
-   ```
-   mcp__logging__log_task_failed(
-     agent="scrum-master",
-     task_id="<task_id>",
-     error="<error_message>",
-     recovery_action="<what_to_do_next>"
-   )
-   ```
-
-### Regular Monitoring
-- Send heartbeat every 5 minutes: `mcp__monitoring__heartbeat(agent="scrum-master")`
-- Log all significant events and decisions
-- Report performance metrics for operations

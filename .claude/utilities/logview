@@ -1,0 +1,314 @@
+#!/usr/bin/env python3
+"""
+Advanced Log Viewer for Agent Army
+Provides rich terminal output with filtering and analysis
+"""
+
+import os
+import sys
+import json
+import argparse
+from datetime import datetime, timedelta
+from pathlib import Path
+from collections import defaultdict, Counter
+from typing import List, Dict, Optional
+
+# Color codes for terminal
+class Colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def find_claude_dir():
+    """Find .claude directory in current or parent directories"""
+    current_dir = Path.cwd()
+    while current_dir != current_dir.parent:
+        if (current_dir / '.claude').exists():
+            return current_dir / '.claude'
+        current_dir = current_dir.parent
+    return None
+
+class LogViewer:
+    def __init__(self):
+        claude_dir = find_claude_dir()
+        if not claude_dir:
+            print(f"{Colors.RED}Error: Not in an Agent Army project directory{Colors.ENDC}")
+            sys.exit(1)
+        
+        self.claude_dir = claude_dir
+        self.project_name = claude_dir.parent.name
+        self.log_dir = claude_dir / "logs"
+        self.mcp_dir = claude_dir / "mcp" / "data" / "logging"
+        self.today = datetime.now().strftime('%Y%m%d')
+        
+    def get_log_file(self) -> Optional[Path]:
+        """Find today's log file"""
+        primary = self.log_dir / f"agents_{self.today}.log"
+        secondary = self.mcp_dir / f"agents_{self.today}.log"
+        
+        if primary.exists():
+            return primary
+        elif secondary.exists():
+            return secondary
+        return None
+    
+    def parse_log_line(self, line: str) -> Dict:
+        """Parse a log line into components"""
+        try:
+            # Format: [TIMESTAMP] AGENT | TYPE | DETAILS
+            parts = line.split('|')
+            if len(parts) >= 3:
+                timestamp_agent = parts[0].strip()
+                log_type = parts[1].strip()
+                details = '|'.join(parts[2:]).strip()
+                
+                # Extract timestamp and agent
+                if ']' in timestamp_agent:
+                    timestamp = timestamp_agent.split(']')[0].strip('[')
+                    agent = timestamp_agent.split(']')[1].strip()
+                else:
+                    timestamp = ""
+                    agent = timestamp_agent
+                
+                return {
+                    'timestamp': timestamp,
+                    'agent': agent,
+                    'type': log_type,
+                    'details': details,
+                    'raw': line
+                }
+        except:
+            pass
+        return {'raw': line}
+    
+    def live_monitor(self):
+        """Live monitoring of logs"""
+        log_file = self.get_log_file()
+        
+        print(f"{Colors.GREEN}📡 Live Log Monitor (Ctrl+C to stop){Colors.ENDC}")
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        
+        if not log_file:
+            print(f"{Colors.YELLOW}Waiting for logs to be created...{Colors.ENDC}")
+            # Wait for file creation
+            import time
+            while not log_file or not log_file.exists():
+                time.sleep(1)
+                log_file = self.get_log_file()
+        
+        # Follow the file
+        import subprocess
+        try:
+            subprocess.run(['tail', '-f', str(log_file)])
+        except KeyboardInterrupt:
+            print(f"\n{Colors.YELLOW}Monitoring stopped.{Colors.ENDC}")
+    
+    def show_summary(self):
+        """Show summary statistics"""
+        log_file = self.get_log_file()
+        
+        if not log_file:
+            print(f"{Colors.RED}No logs found for today.{Colors.ENDC}")
+            return
+        
+        print(f"{Colors.GREEN}📊 Log Summary for {datetime.now().strftime('%Y-%m-%d')}{Colors.ENDC}")
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        
+        # Parse all logs
+        logs = []
+        with open(log_file, 'r') as f:
+            for line in f:
+                parsed = self.parse_log_line(line.strip())
+                if 'type' in parsed:
+                    logs.append(parsed)
+        
+        if not logs:
+            print(f"{Colors.YELLOW}No structured logs found.{Colors.ENDC}")
+            return
+        
+        # Statistics
+        agent_counts = Counter(log['agent'] for log in logs if 'agent' in log)
+        type_counts = Counter(log['type'] for log in logs if 'type' in log)
+        
+        # Agent activity
+        print(f"\n{Colors.BLUE}Agent Activity:{Colors.ENDC}")
+        for agent, count in agent_counts.most_common():
+            bar = '█' * min(50, count)
+            print(f"  {agent:20} {bar} {count}")
+        
+        # Log types
+        print(f"\n{Colors.PURPLE}Log Types:{Colors.ENDC}")
+        for log_type, count in type_counts.most_common():
+            bar = '▓' * min(50, count)
+            print(f"  {log_type:15} {bar} {count}")
+        
+        # Time analysis
+        if logs:
+            first_log = logs[0].get('timestamp', '')
+            last_log = logs[-1].get('timestamp', '')
+            print(f"\n{Colors.YELLOW}Time Range:{Colors.ENDC}")
+            print(f"  First: {first_log}")
+            print(f"  Last:  {last_log}")
+            print(f"  Total: {len(logs)} events")
+    
+    def filter_logs(self, filter_type: str, value: Optional[str] = None):
+        """Filter logs by various criteria"""
+        log_file = self.get_log_file()
+        
+        if not log_file:
+            print(f"{Colors.RED}No logs found.{Colors.ENDC}")
+            return
+        
+        filters = {
+            'errors': lambda l: 'ERROR' in l.get('type', '') or 'FAILED' in l.get('type', ''),
+            'files': lambda l: 'FILE' in l.get('type', ''),
+            'decisions': lambda l: 'DECISION' in l.get('type', ''),
+            'tasks': lambda l: 'TASK' in l.get('type', '') or 'HANDOFF' in l.get('type', ''),
+            'agent': lambda l: value and value.lower() in l.get('agent', '').lower(),
+        }
+        
+        if filter_type not in filters:
+            print(f"{Colors.RED}Unknown filter: {filter_type}{Colors.ENDC}")
+            return
+        
+        print(f"{Colors.GREEN}Filtered Logs: {filter_type} {value or ''}{Colors.ENDC}")
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        
+        with open(log_file, 'r') as f:
+            for line in f:
+                parsed = self.parse_log_line(line.strip())
+                if filters[filter_type](parsed):
+                    self.format_log_line(parsed)
+    
+    def format_log_line(self, log: Dict):
+        """Format and print a log line with colors"""
+        if 'type' not in log:
+            print(log.get('raw', ''))
+            return
+        
+        # Color based on type
+        type_colors = {
+            'ERROR': Colors.RED,
+            'FILE WRITE': Colors.GREEN,
+            'FILE READ': Colors.CYAN,
+            'FILE EDIT': Colors.YELLOW,
+            'DECISION': Colors.BLUE,
+            'TASK START': Colors.GREEN,
+            'TASK COMPLETE': Colors.GREEN,
+            'HANDOFF': Colors.YELLOW,
+        }
+        
+        color = type_colors.get(log['type'], Colors.ENDC)
+        
+        print(f"[{log['timestamp']}] {Colors.BOLD}{log['agent']:15}{Colors.ENDC} | "
+              f"{color}{log['type']:13}{Colors.ENDC} | {log['details']}")
+    
+    def search(self, term: str):
+        """Search logs for a term"""
+        log_file = self.get_log_file()
+        
+        if not log_file:
+            print(f"{Colors.RED}No logs found.{Colors.ENDC}")
+            return
+        
+        print(f"{Colors.GREEN}Search Results for: {term}{Colors.ENDC}")
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        
+        matches = 0
+        with open(log_file, 'r') as f:
+            for line in f:
+                if term.lower() in line.lower():
+                    parsed = self.parse_log_line(line.strip())
+                    self.format_log_line(parsed)
+                    matches += 1
+        
+        print(f"\n{Colors.YELLOW}Found {matches} matches.{Colors.ENDC}")
+    
+    def timeline(self, agent: Optional[str] = None):
+        """Show timeline of events"""
+        log_file = self.get_log_file()
+        
+        if not log_file:
+            print(f"{Colors.RED}No logs found.{Colors.ENDC}")
+            return
+        
+        title = f"Timeline for {agent}" if agent else "Complete Timeline"
+        print(f"{Colors.GREEN}📅 {title}{Colors.ENDC}")
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        
+        with open(log_file, 'r') as f:
+            for line in f:
+                parsed = self.parse_log_line(line.strip())
+                if agent and agent.lower() not in parsed.get('agent', '').lower():
+                    continue
+                
+                # Special formatting for timeline
+                if 'TASK START' in parsed.get('type', ''):
+                    print(f"\n{Colors.GREEN}▶ {parsed.get('raw', '')}{Colors.ENDC}")
+                elif 'TASK COMPLETE' in parsed.get('type', ''):
+                    print(f"{Colors.BLUE}✓ {parsed.get('raw', '')}{Colors.ENDC}")
+                elif 'ERROR' in parsed.get('type', ''):
+                    print(f"{Colors.RED}✗ {parsed.get('raw', '')}{Colors.ENDC}")
+                elif 'HANDOFF' in parsed.get('type', ''):
+                    print(f"{Colors.YELLOW}→ {parsed.get('raw', '')}{Colors.ENDC}")
+                else:
+                    print(f"  {parsed.get('raw', '')}")
+
+def main():
+    parser = argparse.ArgumentParser(description='Agent Army Log Viewer')
+    parser.add_argument('command', choices=['monitor', 'summary', 'errors', 'files', 
+                                           'decisions', 'tasks', 'search', 'timeline'],
+                       help='Command to execute')
+    parser.add_argument('value', nargs='?', help='Search term or agent name')
+    
+    args = parser.parse_args()
+    viewer = LogViewer()
+    
+    if args.command == 'monitor':
+        viewer.live_monitor()
+    elif args.command == 'summary':
+        viewer.show_summary()
+    elif args.command == 'errors':
+        viewer.filter_logs('errors')
+    elif args.command == 'files':
+        viewer.filter_logs('files')
+    elif args.command == 'decisions':
+        viewer.filter_logs('decisions')
+    elif args.command == 'tasks':
+        viewer.filter_logs('tasks')
+    elif args.command == 'search':
+        if args.value:
+            viewer.search(args.value)
+        else:
+            print(f"{Colors.RED}Please provide a search term{Colors.ENDC}")
+    elif args.command == 'timeline':
+        viewer.timeline(args.value)
+
+if __name__ == "__main__":
+    # If no arguments, show help
+    if len(sys.argv) == 1:
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        print(f"{Colors.GREEN}Agent Army Log Viewer{Colors.ENDC}")
+        print(f"{Colors.CYAN}{'='*70}{Colors.ENDC}")
+        print("\nUsage: python3 log-viewer.py <command> [value]")
+        print("\nCommands:")
+        print("  monitor   - Live monitoring of logs")
+        print("  summary   - Show statistics summary")
+        print("  errors    - Show only errors")
+        print("  files     - Show file operations")
+        print("  decisions - Show decisions made")
+        print("  tasks     - Show task lifecycle")
+        print("  search    - Search for a term")
+        print("  timeline  - Show event timeline")
+        print("\nExamples:")
+        print("  python3 log-viewer.py monitor")
+        print("  python3 log-viewer.py search 'FILE WRITE'")
+        print("  python3 log-viewer.py timeline requirements-analyst")
+    else:
+        main()

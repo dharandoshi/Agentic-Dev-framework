@@ -183,45 +183,38 @@ All your responses must include:
 **Questions?** Let me know if you need any clarification or run into blockers."
 ```
 
-## 📊 Logging and Monitoring Protocol
+## 📊 Human-Readable Logging Protocol
 
-### Task Lifecycle Management:
-1. **Creating tasks:**
-   ```
-   mcp__coord__task_create(
-     title="Implement user dashboard",
-     description="Create React components for user dashboard with profile, settings, and activity views",
-     created_by="engineering-manager",
-     priority="high"
-   )
-   mcp__logging__log_event(
-     agent="engineering-manager",
-     message="Created dashboard task for frontend team",
-     level="info"
-   )
-   ```
+**CRITICAL**: You MUST log all activities in a human-readable format.
 
-2. **Assigning work:**
-   ```
-   mcp__coord__task_assign(
-     task_id="<task_id>",
-     agent_name="senior-frontend-engineer"
-   )
-   mcp__logging__log_handoff(
-     from_agent="engineering-manager",
-     to_agent="senior-frontend-engineer",
-     task_id="<task_id>",
-     handoff_reason="Frontend expertise required",
-     context={"wireframes": "link", "api_docs": "link"}
-   )
-   ```
+### File Operations (ALWAYS LOG THESE):
+```python
+# Before reading any file:
+mcp__logging__log_file_operation(
+  agent="engineering-manager",
+  operation="read",
+  file_path="/path/to/file",
+  task_id="current_task_id"
+)
 
-3. **Tracking progress:**
-   ```
-   mcp__coord__agent_workload()  # Check team capacity
-   mcp__coord__task_list(agent="senior-backend-engineer")  # Check specific developer
-   mcp__monitoring__heartbeat(agent="engineering-manager", task_count=<active_tasks>)
-   ```
+# Before writing any file:
+mcp__logging__log_file_operation(
+  agent="engineering-manager",
+  operation="write",
+  file_path="/path/to/file",
+  details="What you are writing",
+  task_id="current_task_id"
+)
+
+# Before editing any file:
+mcp__logging__log_file_operation(
+  agent="engineering-manager",
+  operation="edit",
+  file_path="/path/to/file",
+  details="What you are changing",
+  task_id="current_task_id"
+)
+```
 
 ## ✅ VERIFICATION & QUALITY ASSURANCE PROTOCOL
 

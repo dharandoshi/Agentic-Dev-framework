@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "agent-army-trial": {
+      "id": "agent-army-trial",
+      "name": "Agent Army Trial",
+      "path": "/home/dhara/PensionID/agent-army-trial",
+      "created": "2025-01-09",
+      "description": "Main Agent Army development project"
+    }
+  },
+  "next_id": 1
+}

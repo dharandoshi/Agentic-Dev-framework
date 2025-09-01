@@ -33,7 +33,18 @@ class ProjectManagementServer:
     """MCP Server for Project Management"""
     
     def __init__(self):
-        self.data_dir = Path("/home/dhara/PensionID/agent-army-trial/.claude/mcp/data/project-management")
+        # Find project root dynamically
+        current_dir = Path.cwd()
+        while current_dir != current_dir.parent:
+            if (current_dir / '.claude').exists():
+                self.project_root = current_dir
+                break
+            current_dir = current_dir.parent
+        else:
+            # Fallback to current directory if no .claude found
+            self.project_root = Path.cwd()
+        
+        self.data_dir = self.project_root / ".claude" / "mcp" / "data" / "project-management"
         self.data_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize data files
@@ -122,7 +133,7 @@ class ProjectManagementServer:
     async def detect_phase(self) -> Dict:
         """Automatically detect current project phase"""
         # Check for requirements
-        docs_dir = Path("/home/dhara/PensionID/agent-army-trial/docs")
+        docs_dir = self.project_root / "docs"
         has_requirements = any(docs_dir.glob("*requirements*.md"))
         has_architecture = any(docs_dir.glob("*architecture*.md"))
         

@@ -14,7 +14,18 @@ class CeremonyAutomation:
     """Automate Scrum ceremonies"""
     
     def __init__(self):
-        self.data_dir = Path("/home/dhara/PensionID/agent-army-trial/.claude/mcp/data/project-management")
+        # Find project root dynamically
+        current_dir = Path.cwd()
+        while current_dir != current_dir.parent:
+            if (current_dir / '.claude').exists():
+                project_root = current_dir
+                break
+            current_dir = current_dir.parent
+        else:
+            project_root = Path.cwd()
+        
+        self.data_dir = project_root / ".claude" / "mcp" / "data" / "project-management"
+        self.data_dir.mkdir(parents=True, exist_ok=True)
         self.ceremonies_file = self.data_dir / "ceremonies.json"
         self.standup_file = self.data_dir / "daily-standups.json"
         self.retro_file = self.data_dir / "retrospectives.json"

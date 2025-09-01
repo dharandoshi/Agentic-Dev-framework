@@ -46,6 +46,13 @@ class LogType(str, Enum):
     ERROR = "error"
     METRIC = "metric"
     TOOL_USE = "tool_use"
+    FILE_READ = "file_read"
+    FILE_WRITE = "file_write"
+    FILE_EDIT = "file_edit"
+    CODE_ANALYSIS = "code_analysis"
+    API_CALL = "api_call"
+    DISCOVERY = "discovery"
+    VALIDATION = "validation"
 
 
 # Storage for server state
@@ -61,6 +68,7 @@ data_dir.mkdir(parents=True, exist_ok=True)
 
 # File paths
 LOGS_FILE = data_dir / f"logs_{datetime.now().strftime('%Y%m%d')}.jsonl"
+HUMAN_LOG_FILE = data_dir / f"agents_{datetime.now().strftime('%Y%m%d')}.log"  # Human-readable log
 METRICS_FILE = data_dir / "metrics.json"
 ACTIVE_TASKS_FILE = data_dir / "active_tasks.json"
 
@@ -106,12 +114,72 @@ def load_data():
 
 
 def save_log_entry(entry: Dict):
-    """Persist a single log entry"""
+    """Persist a single log entry in both JSON and human-readable format"""
     try:
+        # Save JSON for programmatic access
         with open(LOGS_FILE, 'a') as f:
             f.write(json.dumps(entry, default=str) + '\n')
+        
+        # Save human-readable log
+        with open(HUMAN_LOG_FILE, 'a') as f:
+            f.write(format_human_log(entry) + '\n')
     except Exception as e:
         print(f"Error saving log entry: {e}")
+
+def format_human_log(entry: Dict) -> str:
+    """Format log entry for human readability"""
+    timestamp = datetime.fromisoformat(entry['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
+    agent = entry.get('agent', 'SYSTEM').upper()
+    level = entry.get('level', 'info').upper()
+    log_type = entry.get('type', 'event').upper().replace('_', ' ')
+    message = entry.get('message', '')
+    task_id = entry.get('task_id', '')
+    
+    # Color codes for terminal (optional)
+    level_colors = {
+        'DEBUG': '\033[90m',  # Gray
+        'INFO': '\033[0m',    # Default
+        'WARNING': '\033[93m', # Yellow
+        'ERROR': '\033[91m',   # Red
+        'CRITICAL': '\033[91m\033[1m'  # Bold Red
+    }
+    reset = '\033[0m'
+    
+    # Format based on log type
+    if entry.get('type') == LogType.FILE_READ:
+        file_path = entry.get('context', {}).get('file_path', 'unknown')
+        return f"[{timestamp}] {agent:15} | FILE READ     | {file_path}"
+    elif entry.get('type') == LogType.FILE_WRITE:
+        file_path = entry.get('context', {}).get('file_path', 'unknown')
+        return f"[{timestamp}] {agent:15} | FILE WRITE    | {file_path}"
+    elif entry.get('type') == LogType.FILE_EDIT:
+        file_path = entry.get('context', {}).get('file_path', 'unknown')
+        changes = entry.get('context', {}).get('changes', 'unknown')
+        return f"[{timestamp}] {agent:15} | FILE EDIT     | {file_path} - {changes}"
+    elif entry.get('type') == LogType.TOOL_USE:
+        tool = entry.get('context', {}).get('tool', 'unknown')
+        success = '✓' if entry.get('context', {}).get('success') else '✗'
+        return f"[{timestamp}] {agent:15} | TOOL USE      | {tool} {success}"
+    elif entry.get('type') == LogType.TASK_START:
+        desc = entry.get('context', {}).get('description', message)[:60]
+        return f"[{timestamp}] {agent:15} | TASK START    | {task_id}: {desc}"
+    elif entry.get('type') == LogType.TASK_COMPLETE:
+        result = entry.get('context', {}).get('result', 'unknown')
+        return f"[{timestamp}] {agent:15} | TASK COMPLETE | {task_id}: {result}"
+    elif entry.get('type') == LogType.HANDOFF:
+        to_agent = entry.get('context', {}).get('to_agent', 'unknown')
+        return f"[{timestamp}] {agent:15} | HANDOFF       | {task_id} → {to_agent}"
+    elif entry.get('type') == LogType.DECISION:
+        decision = entry.get('context', {}).get('decision', message)[:60]
+        return f"[{timestamp}] {agent:15} | DECISION      | {decision}"
+    elif entry.get('type') == LogType.ERROR:
+        error = message[:80]
+        return f"[{timestamp}] {agent:15} | ERROR         | {error}"
+    else:
+        # Default format
+        msg = message[:80] if message else f"{log_type}"
+        task_str = f"[{task_id}] " if task_id else ""
+        return f"[{timestamp}] {agent:15} | {log_type:13} | {task_str}{msg}"
 
 
 def save_metrics():
@@ -384,6 +452,38 @@ async def handle_list_tools() -> list[types.Tool]:
         ),
         
         # Tool Usage Logging
+        types.Tool(
+            name="log_file_operation",
+            description="Log file operations (read, write, edit)",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "agent": {
+                        "type": "string",
+                        "description": "Agent performing the operation"
+                    },
+                    "operation": {
+                        "type": "string",
+                        "enum": ["read", "write", "edit", "delete"],
+                        "description": "Type of file operation"
+                    },
+                    "file_path": {
+                        "type": "string",
+                        "description": "Path to the file"
+                    },
+                    "details": {
+                        "type": "string",
+                        "description": "Additional details (e.g., lines edited, bytes written)"
+                    },
+                    "task_id": {
+                        "type": "string",
+                        "description": "Associated task ID"
+                    }
+                },
+                "required": ["agent", "operation", "file_path"]
+            }
+        ),
+        
         types.Tool(
             name="log_tool_use",
             description="Log tool usage by agents",
@@ -697,6 +797,34 @@ async def handle_call_tool(
         return [types.TextContent(
             type="text",
             text=f"Decision logged: {arguments['decision']}"
+        )]
+    
+    elif name == "log_file_operation":
+        operation = arguments["operation"]
+        log_type_map = {
+            "read": LogType.FILE_READ,
+            "write": LogType.FILE_WRITE,
+            "edit": LogType.FILE_EDIT,
+            "delete": LogType.FILE_WRITE  # Treat delete as write
+        }
+        
+        entry = create_log_entry(
+            agent=arguments["agent"],
+            level="debug",
+            message=f"File {operation}: {arguments['file_path']}",
+            log_type=log_type_map[operation],
+            task_id=arguments.get("task_id"),
+            context={
+                "operation": operation,
+                "file_path": arguments["file_path"],
+                "details": arguments.get("details"),
+                "changes": arguments.get("details", "")
+            }
+        )
+        
+        return [types.TextContent(
+            type="text",
+            text=f"File operation logged: {operation} {arguments['file_path']}"
         )]
     
     elif name == "log_tool_use":

@@ -1,0 +1,399 @@
+#!/bin/bash
+# Log Management Utility for Agent Army
+# Portable version that works with any Agent Army project
+
+# Function to find .claude directory
+find_claude_dir() {
+    local current_dir="$PWD"
+    while [[ "$current_dir" != "/" ]]; do
+        if [[ -d "$current_dir/.claude" ]]; then
+            echo "$current_dir/.claude"
+            return 0
+        fi
+        current_dir=$(dirname "$current_dir")
+    done
+    return 1
+}
+
+# Detect project context
+CLAUDE_DIR=$(find_claude_dir)
+if [[ -z "$CLAUDE_DIR" ]]; then
+    echo "Error: Not in an Agent Army project directory"
+    exit 1
+fi
+
+LOG_DIR="$CLAUDE_DIR/logs"
+MCP_DATA_DIR="$CLAUDE_DIR/mcp/data/logging"
+TODAY=$(date '+%Y%m%d')
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+show_help() {
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}            Agent Army Log Manager${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo "Usage: $0 [command] [options]"
+    echo ""
+    echo -e "${YELLOW}Commands:${NC}"
+    echo "  view [n]      - View last n lines of today's log (default: 50)"
+    echo "  tail          - Follow log in real-time (like tail -f)"
+    echo "  today         - Show all of today's logs"
+    echo "  search [term] - Search for specific term in logs"
+    echo "  stats         - Show log statistics"
+    echo "  agents        - Show activity by agent"
+    echo "  errors        - Show only errors and warnings"
+    echo "  files         - Show file operations"
+    echo "  decisions     - Show all decisions made"
+    echo "  tasks         - Show task lifecycle events"
+    echo "  clear         - Archive old logs (keeps today's logs)"
+    echo "  purge         - DELETE ALL logs permanently (requires confirmation)"
+    echo "  list          - List all log files"
+    echo "  help          - Show this help message"
+    echo ""
+    echo -e "${YELLOW}Examples:${NC}"
+    echo "  $0 view 100          # View last 100 lines"
+    echo "  $0 search 'FILE WRITE' # Search for file writes"
+    echo "  $0 agents            # Show agent activity summary"
+    echo "  $0 tail              # Monitor logs in real-time"
+    echo ""
+}
+
+view_logs() {
+    local lines=${1:-50}
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${GREEN}Showing last $lines lines of today's log:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        tail -n "$lines" "$log_file"
+    else
+        echo -e "${YELLOW}No logs found for today. Log file would be: $log_file${NC}"
+        echo "Checking MCP logs directory..."
+        if [[ -f "$MCP_DATA_DIR/agents_${TODAY}.log" ]]; then
+            echo -e "${GREEN}Found MCP logs:${NC}"
+            tail -n "$lines" "$MCP_DATA_DIR/agents_${TODAY}.log"
+        else
+            echo -e "${RED}No logs found in MCP directory either.${NC}"
+        fi
+    fi
+}
+
+tail_logs() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    local mcp_log="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    echo -e "${GREEN}Monitoring logs in real-time (Ctrl+C to stop)...${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+    
+    if [[ -f "$log_file" ]]; then
+        tail -f "$log_file"
+    elif [[ -f "$mcp_log" ]]; then
+        tail -f "$mcp_log"
+    else
+        echo -e "${YELLOW}Waiting for log file to be created...${NC}"
+        # Wait for file to exist then tail it
+        while [[ ! -f "$log_file" && ! -f "$mcp_log" ]]; do
+            sleep 1
+        done
+        if [[ -f "$log_file" ]]; then
+            tail -f "$log_file"
+        else
+            tail -f "$mcp_log"
+        fi
+    fi
+}
+
+show_today() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    local mcp_log="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${GREEN}Today's complete log:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        cat "$log_file"
+    elif [[ -f "$mcp_log" ]]; then
+        echo -e "${GREEN}Today's complete log (from MCP):${NC}"
+        cat "$mcp_log"
+    else
+        echo -e "${YELLOW}No logs found for today.${NC}"
+    fi
+}
+
+search_logs() {
+    local search_term="$1"
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    local mcp_log="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    echo -e "${GREEN}Searching for: ${YELLOW}$search_term${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+    
+    if [[ -f "$log_file" ]]; then
+        grep --color=always -i "$search_term" "$log_file"
+    elif [[ -f "$mcp_log" ]]; then
+        grep --color=always -i "$search_term" "$mcp_log"
+    else
+        echo -e "${RED}No logs found to search.${NC}"
+    fi
+}
+
+show_stats() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    [[ ! -f "$log_file" ]] && log_file="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${GREEN}Log Statistics for Today:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        
+        local total_lines=$(wc -l < "$log_file")
+        local file_reads=$(grep -c "FILE READ" "$log_file" 2>/dev/null || echo 0)
+        local file_writes=$(grep -c "FILE WRITE" "$log_file" 2>/dev/null || echo 0)
+        local file_edits=$(grep -c "FILE EDIT" "$log_file" 2>/dev/null || echo 0)
+        local decisions=$(grep -c "DECISION" "$log_file" 2>/dev/null || echo 0)
+        local errors=$(grep -c "ERROR" "$log_file" 2>/dev/null || echo 0)
+        local tasks_started=$(grep -c "TASK START" "$log_file" 2>/dev/null || echo 0)
+        local tasks_completed=$(grep -c "TASK COMPLETE" "$log_file" 2>/dev/null || echo 0)
+        local handoffs=$(grep -c "HANDOFF" "$log_file" 2>/dev/null || echo 0)
+        
+        echo -e "${YELLOW}Total Events:${NC} $total_lines"
+        echo ""
+        echo -e "${BLUE}File Operations:${NC}"
+        echo "  • Reads:  $file_reads"
+        echo "  • Writes: $file_writes"
+        echo "  • Edits:  $file_edits"
+        echo ""
+        echo -e "${PURPLE}Task Management:${NC}"
+        echo "  • Started:   $tasks_started"
+        echo "  • Completed: $tasks_completed"
+        echo "  • Handoffs:  $handoffs"
+        echo ""
+        echo -e "${CYAN}Other:${NC}"
+        echo "  • Decisions: $decisions"
+        echo "  • Errors:    $errors"
+    else
+        echo -e "${RED}No logs found for statistics.${NC}"
+    fi
+}
+
+show_agents() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    [[ ! -f "$log_file" ]] && log_file="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${GREEN}Agent Activity Summary:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        
+        # Extract unique agents and count their activities
+        awk -F'|' '{print $1}' "$log_file" | sed 's/\[.*\]//' | sort | uniq -c | sort -rn | while read count agent; do
+            if [[ ! -z "$agent" && "$agent" != *"═"* ]]; then
+                printf "${YELLOW}%-20s${NC} %s events\n" "$agent" "$count"
+            fi
+        done
+    else
+        echo -e "${RED}No logs found for agent analysis.${NC}"
+    fi
+}
+
+show_errors() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    [[ ! -f "$log_file" ]] && log_file="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${RED}Errors and Warnings:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        grep -E "ERROR|WARNING|FAILED" "$log_file" --color=always
+    else
+        echo -e "${YELLOW}No logs found.${NC}"
+    fi
+}
+
+show_files() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    [[ ! -f "$log_file" ]] && log_file="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${GREEN}File Operations:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        grep -E "FILE READ|FILE WRITE|FILE EDIT" "$log_file" --color=always
+    else
+        echo -e "${YELLOW}No logs found.${NC}"
+    fi
+}
+
+show_decisions() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    [[ ! -f "$log_file" ]] && log_file="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${PURPLE}Decisions Made:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        grep "DECISION" "$log_file" --color=always
+    else
+        echo -e "${YELLOW}No logs found.${NC}"
+    fi
+}
+
+show_tasks() {
+    local log_file="$LOG_DIR/agents_${TODAY}.log"
+    [[ ! -f "$log_file" ]] && log_file="$MCP_DATA_DIR/agents_${TODAY}.log"
+    
+    if [[ -f "$log_file" ]]; then
+        echo -e "${BLUE}Task Lifecycle:${NC}"
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        grep -E "TASK START|TASK COMPLETE|TASK FAILED|HANDOFF" "$log_file" --color=always
+    else
+        echo -e "${YELLOW}No logs found.${NC}"
+    fi
+}
+
+clear_logs() {
+    echo -e "${YELLOW}This will archive and clear old logs.${NC}"
+    echo -n "Are you sure? (y/N): "
+    read -r response
+    
+    if [[ "$response" == "y" || "$response" == "Y" ]]; then
+        # Create archive directory
+        local archive_dir="$LOG_DIR/archive"
+        mkdir -p "$archive_dir"
+        
+        # Archive old logs (older than today)
+        local archived=0
+        for log in "$LOG_DIR"/*.log "$LOG_DIR"/*.jsonl; do
+            if [[ -f "$log" && ! "$log" == *"$TODAY"* ]]; then
+                mv "$log" "$archive_dir/"
+                ((archived++))
+            fi
+        done
+        
+        # Also check MCP directory
+        for log in "$MCP_DATA_DIR"/*.log "$MCP_DATA_DIR"/*.jsonl; do
+            if [[ -f "$log" && ! "$log" == *"$TODAY"* ]]; then
+                mv "$log" "$archive_dir/"
+                ((archived++))
+            fi
+        done
+        
+        echo -e "${GREEN}Archived $archived old log files to $archive_dir${NC}"
+    else
+        echo -e "${YELLOW}Clear cancelled.${NC}"
+    fi
+}
+
+purge_logs() {
+    echo -e "${RED}⚠️  WARNING: This will PERMANENTLY DELETE ALL logs!${NC}"
+    echo -e "${RED}This includes today's logs, archived logs, and all log history.${NC}"
+    echo ""
+    echo -n "Type 'DELETE ALL LOGS' to confirm: "
+    read -r response
+    
+    if [[ "$response" == "DELETE ALL LOGS" ]]; then
+        echo -e "${YELLOW}Purging all logs...${NC}"
+        
+        local deleted=0
+        
+        # Delete all logs from main directory
+        for log in "$LOG_DIR"/*.log "$LOG_DIR"/*.jsonl; do
+            if [[ -f "$log" ]]; then
+                rm -f "$log"
+                ((deleted++))
+            fi
+        done
+        
+        # Delete all logs from MCP directory
+        for log in "$MCP_DATA_DIR"/*.log "$MCP_DATA_DIR"/*.jsonl; do
+            if [[ -f "$log" ]]; then
+                rm -f "$log"
+                ((deleted++))
+            fi
+        done
+        
+        # Delete entire archive directory
+        if [[ -d "$LOG_DIR/archive" ]]; then
+            local archive_count=$(find "$LOG_DIR/archive" -type f | wc -l)
+            rm -rf "$LOG_DIR/archive"
+            deleted=$((deleted + archive_count))
+        fi
+        
+        echo -e "${GREEN}✓ Purged $deleted log files${NC}"
+        echo -e "${CYAN}Log system reset. New logs will be created when agents run.${NC}"
+    else
+        echo -e "${YELLOW}Purge cancelled. Logs remain intact.${NC}"
+    fi
+}
+
+list_logs() {
+    echo -e "${GREEN}Available Log Files:${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+    
+    echo -e "${YELLOW}Standard logs directory:${NC}"
+    ls -lah "$LOG_DIR"/*.log 2>/dev/null || echo "  No logs found"
+    
+    echo ""
+    echo -e "${YELLOW}MCP logs directory:${NC}"
+    ls -lah "$MCP_DATA_DIR"/*.log 2>/dev/null || echo "  No logs found"
+    
+    echo ""
+    echo -e "${YELLOW}Archive directory:${NC}"
+    ls -lah "$LOG_DIR/archive"/*.log 2>/dev/null || echo "  No archived logs"
+}
+
+# Main command handler
+case "$1" in
+    view)
+        view_logs "$2"
+        ;;
+    tail)
+        tail_logs
+        ;;
+    today)
+        show_today
+        ;;
+    search)
+        if [[ -z "$2" ]]; then
+            echo -e "${RED}Please provide a search term${NC}"
+            echo "Usage: $0 search <term>"
+        else
+            search_logs "$2"
+        fi
+        ;;
+    stats)
+        show_stats
+        ;;
+    agents)
+        show_agents
+        ;;
+    errors)
+        show_errors
+        ;;
+    files)
+        show_files
+        ;;
+    decisions)
+        show_decisions
+        ;;
+    tasks)
+        show_tasks
+        ;;
+    clear)
+        clear_logs
+        ;;
+    purge)
+        purge_logs
+        ;;
+    list)
+        list_logs
+        ;;
+    help)
+        show_help
+        ;;
+    *)
+        show_help
+        ;;
+esac
