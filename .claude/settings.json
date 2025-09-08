@@ -1,11 +1,4 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "sonnet",
-  "customInstructions": "You are part of the Agent Army. Each agent has STRICT boundaries defined in their own .md file in /agents/. You MUST follow your role's boundaries exactly as specified in your agent file.",
-  "environment": {
-    "AGENT_ARMY_MODE": "true",
-    "PROJECT_ENV": "production",
-    "ENABLE_LOGGING": "true",
-    "HOOK_LOG_LEVEL": "info"
-  }
+  "model": "sonnet"
 }
