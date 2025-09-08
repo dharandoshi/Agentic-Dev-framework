@@ -12,7 +12,9 @@ from collections import defaultdict
 
 class CommunicationTracker:
     def __init__(self):
-        self.logs_dir = Path('.claude/logs')
+        # Get project root from environment or use script location
+        project_root = Path(os.environ.get('CLAUDE_PROJECT_ROOT', Path(__file__).parent.parent))
+        self.logs_dir = project_root / 'logs'
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         self.stats_file = self.logs_dir / 'communication-stats.json'
         self.load_stats()
