@@ -72,9 +72,9 @@ echo -e "${BLUE}🔧 Step 2: Initializing MCP Servers${NC}"
 echo "----------------------------------------"
 
 # Check if MCP servers are already registered
-mcp_status=$(claude mcp list 2>/dev/null | grep -c "workspace\|docs\|execution\|coord\|validation" || echo "0")
+mcp_status=$(claude mcp list 2>/dev/null | grep -c "workspace\|docs\|execution\|coord\|validation\|utilities" || echo "0")
 
-if [ "$mcp_status" -ge 5 ]; then
+if [ "$mcp_status" -ge 6 ]; then
     echo -e "${GREEN}✅ MCP servers already registered${NC}"
 else
     echo "Registering MCP servers..."
@@ -129,6 +129,8 @@ if [ -f "$CLAUDE_DIR/settings.json" ] && grep -q "hooks" "$CLAUDE_DIR/settings.j
     
     # Test hook scripts
     hook_errors=0
+    
+    # Check standard hooks
     for hook in orchestrator.py communication-tracker.py smart-suggestions.py; do
         if [ -f "$CLAUDE_DIR/hooks/$hook" ]; then
             if [ -x "$CLAUDE_DIR/hooks/$hook" ]; then
@@ -142,6 +144,26 @@ if [ -f "$CLAUDE_DIR/settings.json" ] && grep -q "hooks" "$CLAUDE_DIR/settings.j
             hook_errors=$((hook_errors + 1))
         fi
     done
+    
+    # Check sound notification hook
+    if [ -f "$CLAUDE_DIR/hooks/sound-notifications.py" ]; then
+        if [ -x "$CLAUDE_DIR/hooks/sound-notifications.py" ]; then
+            echo -e "  ${GREEN}✓${NC} sound-notifications.py is executable"
+            
+            # Check if sound files exist
+            sound_count=$(ls "$CLAUDE_DIR/hooks/sounds"/*.mp3 2>/dev/null | wc -l)
+            if [ $sound_count -gt 0 ]; then
+                echo -e "  ${GREEN}✓${NC} $sound_count sound files found"
+            else
+                echo -e "  ${YELLOW}⚠${NC} No sound files found in hooks/sounds/"
+            fi
+        else
+            echo -e "  ${YELLOW}⚠${NC} sound-notifications.py is not executable, fixing..."
+            chmod +x "$CLAUDE_DIR/hooks/sound-notifications.py"
+        fi
+    else
+        echo -e "  ${YELLOW}ℹ${NC} Sound notifications not configured"
+    fi
     
     if [ $hook_errors -eq 0 ]; then
         echo -e "${GREEN}✅ All hooks verified${NC}"
@@ -224,8 +246,8 @@ else
 fi
 
 # MCP server status
-mcp_count=$(claude mcp list 2>/dev/null | grep -c "workspace\|docs\|execution\|coord\|validation" || echo "0")
-echo -e "MCP Servers:     ${GREEN}$mcp_count/5 registered${NC}"
+mcp_count=$(claude mcp list 2>/dev/null | grep -c "workspace\|docs\|execution\|coord\|validation\|utilities" || echo "0")
+echo -e "MCP Servers:     ${GREEN}$mcp_count/6 registered${NC}"
 
 # Agent status
 agent_count=$(find "$CLAUDE_DIR/agents" -name "*.md" -type f 2>/dev/null | wc -l)

@@ -70,6 +70,14 @@ mcp__logging__log_decision(
 
 1. **Starting a task:**
    ```python
+   # Get timestamp and estimate completion
+   start_time = mcp__utilities__get_current_time(format="iso")
+   estimated_completion = mcp__utilities__calculate_date(
+     base_date="now",
+     operation="add",
+     minutes=30
+   )
+   
    mcp__logging__log_task_start(
      agent="your-agent-name",
      task_id="task_id",
@@ -80,11 +88,18 @@ mcp__logging__log_decision(
 
 2. **Completing a task:**
    ```python
+   # Calculate actual duration
+   duration = mcp__utilities__date_difference(
+     start_date=start_time,
+     end_date="now",
+     unit="minutes"
+   )
+   
    mcp__logging__log_task_complete(
      agent="your-agent-name",
      task_id="task_id",
      result="success",
-     outputs={"files_created": 3, "tests_passed": 10}
+     outputs={"files_created": 3, "tests_passed": 10, "duration_minutes": duration}
    )
    ```
 
@@ -118,20 +133,26 @@ The logs appear in `.claude/logs/agents_YYYYMMDD.log` like this:
 4. **Include Context**: Add task IDs to trace work across agents
 5. **Log Failures**: Always log errors with recovery actions
 
-### Example Logging Flow
+### Example Logging Flow with Time Tracking
 
 ```python
-# 1. Start task
+# 0. Track start time
+task_start_time = mcp__utilities__get_current_time(format="iso")
+log_timestamp = mcp__utilities__format_timestamp(timestamp="now", purpose="log")
+
+# 1. Start task with time estimate
 mcp__logging__log_task_start(agent="senior-backend-engineer", task_id="BE-001", 
-                             description="Implement payment API", estimated_duration=45)
+                             description=f"{log_timestamp} Implement payment API", 
+                             estimated_duration=45)
 
 # 2. Read specification
 mcp__logging__log_file_operation(agent="senior-backend-engineer", operation="read",
                                  file_path="docs/api-spec.yaml", task_id="BE-001")
 
-# 3. Make decision
+# 3. Make decision with timestamp
+decision_time = mcp__utilities__get_current_time(format="readable")
 mcp__logging__log_decision(agent="senior-backend-engineer", 
-                          decision="Use Express.js for API",
+                          decision=f"Use Express.js for API (decided at {decision_time})",
                           rationale="Team familiarity and good ecosystem",
                           alternatives=["Fastify", "Koa"], task_id="BE-001")
 
@@ -145,9 +166,15 @@ mcp__logging__log_tool_use(agent="senior-backend-engineer",
                           tool_name="mcp__validation__lint",
                           success=True, duration_ms=500, task_id="BE-001")
 
-# 6. Complete task
+# 6. Complete task with duration
+task_duration = mcp__utilities__date_difference(
+    start_date=task_start_time,
+    end_date="now",
+    unit="minutes"
+)
 mcp__logging__log_task_complete(agent="senior-backend-engineer", task_id="BE-001",
-                               result="success", outputs={"endpoints": 5, "tests": 12})
+                               result="success", 
+                               outputs={"endpoints": 5, "tests": 12, "duration": task_duration})
 ```
 
 ## IMPORTANT: This logging helps humans understand:

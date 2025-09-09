@@ -38,13 +38,14 @@ declare -A servers=(
     ["execution"]="execution.py"
     ["coord"]="coord.py"
     ["validation"]="validation.py"
+    ["utilities"]="utilities.py"
 )
 
 # Check if servers are already registered
 echo "📋 Checking existing MCP server registration..."
-existing_servers=$(claude mcp list 2>/dev/null | grep -E "(workspace|docs|execution|coord|validation)" | wc -l || echo "0")
+existing_servers=$(claude mcp list 2>/dev/null | grep -E "(workspace|docs|execution|coord|validation|utilities)" | wc -l || echo "0")
 
-if [ "$existing_servers" -eq 5 ]; then
+if [ "$existing_servers" -eq 6 ]; then
     echo "✅ All MCP servers already registered"
     claude mcp list
     exit 0

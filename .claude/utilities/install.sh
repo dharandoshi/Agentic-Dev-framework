@@ -30,6 +30,19 @@ if ! grep -q "alias pid-agentarmy=" ~/.bashrc; then
     echo "✅ Added aliases"
 fi
 
+# Setup sound notifications (optional)
+echo ""
+read -p "Would you like to setup sound notifications? (y/n): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ -x "$CLAUDE_DIR/scripts/setup-sound-notifications.sh" ]]; then
+        "$CLAUDE_DIR/scripts/setup-sound-notifications.sh"
+    else
+        echo "Sound setup script not found. Run manually:"
+        echo "  $CLAUDE_DIR/scripts/setup-sound-notifications.sh"
+    fi
+fi
+
 echo ""
 echo "✅ Setup complete!"
 echo ""

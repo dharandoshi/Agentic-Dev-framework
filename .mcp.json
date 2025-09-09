@@ -53,6 +53,13 @@
       "env": {
         "MCP_DATA_DIR": ".claude/mcp/data/monitoring"
       }
+    },
+    "utilities": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/utilities.py"],
+      "env": {
+        "MCP_DATA_DIR": ".claude/mcp/data"
+      }
     }
   }
 }

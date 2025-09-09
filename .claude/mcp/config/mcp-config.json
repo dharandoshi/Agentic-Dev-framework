@@ -18,6 +18,23 @@
         "doc_search",
         "doc_validate_structure"
       ]
+    },
+    "utilities": {
+      "command": "python3",
+      "args": [".claude/mcp/servers/core/utilities.py"],
+      "env": {},
+      "startup": "auto",
+      "description": "Common utilities for agents including date/time operations",
+      "tools": [
+        "get_current_time",
+        "calculate_date",
+        "date_difference",
+        "convert_timezone",
+        "get_week_info",
+        "format_timestamp",
+        "is_business_day",
+        "get_next_business_day"
+      ]
     }
   },
   "settings": {
