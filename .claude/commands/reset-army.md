@@ -27,17 +27,24 @@ If component is "logs" or "all":
    - Run: rm -f data/communication/logs.db
    - Run: rm -f .claude/.claude/logs/startup-validation.log
    - Run: rm -f .claude/mcp/logs/document-registry.log
+   - Run: rm -f .claude/mcp/data/logging/*
    - Run: rm -f logs/*.jsonl
+   - Run: rm -f mcp/data/communication/*.json
+   - Run: rm -f .claude/mcp/data/communication/*.json
+   - Run: rm -rf .claude/mcp/data/communication/backups/*
    - Confirm deletion with message "All logs cleared successfully"
 
 If component is "docs" or "all":
+
 1. Use mcp__docs__reset with confirm: "RESET_ALL_DOCUMENTS"
 2. Confirm with message "Document registry reset successfully"
 
 If component is not "logs" and not "docs":
+
 1. Use mcp__coord__system_reset with component: "$1" (or "all" if not specified) and confirm: "RESET_CONFIRMED"
 
 If component is "all":
+
 1. Do the coordination reset, log deletion, AND document registry reset
 
 Warning: This will permanently clear all data for the specified component.
